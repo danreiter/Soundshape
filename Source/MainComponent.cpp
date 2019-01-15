@@ -79,6 +79,7 @@ MainComponent::MainComponent()
 	{
 		harm = -1 * (harm);
 		repaint();
+        
 	};
 
 	addButton = new TextButton("Add");
@@ -89,6 +90,7 @@ MainComponent::MainComponent()
 	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);
 	addButton->onClick = [this]
 	{
+        
 		add = -1 * (add);
 		repaint();
 	};
