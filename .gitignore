@@ -1,2 +1,4 @@
 Builds/
 JuceLibraryCode/
+.idea/
+FFTW_Windows/*
