@@ -29,6 +29,13 @@ bigTime::bigTime()
 	view.setScrollBarsShown(false, false);
 	addAndMakeVisible(view);
 
+    playTime = new Slider();
+    addAndMakeVisible(playTime);
+    playTime->setRange(0, 600, 12);
+    playTime->setSliderStyle(Slider::TwoValueHorizontal);
+    playTime->setColour(Slider::trackColourId, Colours::red);
+    playTime->setColour(Slider::thumbColourId, Colours::red);
+    playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 }
 
 bigTime::~bigTime()
@@ -37,13 +44,6 @@ bigTime::~bigTime()
 
 void bigTime::paint(Graphics& g)
 {
-	/* This demo code just fills the component's background and
-	   draws some placeholder text to get you started.
-
-	   You should replace everything in this method with your own
-	   drawing code..
-	*/
-
 	//g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 	int btnWidth = (int)(getWidth() / (*time));
 	Rectangle<float> backGround(0.0f, 0.0f, getWidth() - (getWidth() - ((*time) * btnWidth)), getHeight());
@@ -87,6 +87,7 @@ void bigTime::paint(Graphics& g)
 		{
 			flag = !flag;
 		}
+
 	}
 
 	
@@ -104,6 +105,12 @@ void bigTime::paint(Graphics& g)
 		g.setColour(Colours::red);
 		g.fillRect(profileMarkArea);
 	}
+
+
+    g.setColour(Colours::black);
+
+    playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
+
 }
 
 void bigTime::resized()

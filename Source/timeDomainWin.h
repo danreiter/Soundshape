@@ -26,5 +26,15 @@ public:
 
 private:
 	float ** soundWave;
+
+    // THIS WAS ADDED HERE FOR TESTING AUDIO DRAWING.
+//===============================
+    AudioFormatManager formatManager;
+    std::unique_ptr<AudioFormatReaderSource> readerSource;
+    AudioThumbnailCache thumbnailCache;
+    AudioThumbnail thumbnail;
+    //========================
+
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (timeDomainWin)
 };

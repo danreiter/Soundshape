@@ -129,7 +129,6 @@ void freqDomainWin::paint (Graphics& g)
 		testPrint.removeFromLeft(smallTick);
 		int t1 = (int)profile[i];
 		String temp2 = std::to_string(t1);
-		g.drawText(temp2, testPrint, Justification::centredLeft, true);
 	}
 }
 
