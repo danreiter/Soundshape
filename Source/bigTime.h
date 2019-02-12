@@ -44,6 +44,8 @@ private:
 	int *time;
 
 	OwnedArray<Component> components;
+    Slider* playTime;
+
 	template <typename ComponentType>
 	ComponentType* addToList(ComponentType * newComp)
 	{
@@ -55,7 +57,6 @@ private:
 	{
 		components.clear(true);
 	}
-
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(bigTime)
 };

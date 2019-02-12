@@ -12,11 +12,24 @@
 #include "timeDomainWin.h"
 
 //==============================================================================
-timeDomainWin::timeDomainWin()
+timeDomainWin::timeDomainWin() : thumbnailCache(5), thumbnail(50, formatManager, thumbnailCache)
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
+    // temporarily load file here for testing. Needs to be moved to code for a Load File button
+    formatManager.registerBasicFormats();
+    FileChooser chooser("Select a Wave file to play...",
+        {},
+        "*");
+    if (chooser.browseForFileToOpen())
+    {
+        File file(chooser.getResult());
+        auto* reader = formatManager.createReaderFor(file);
+        if (reader != nullptr)
+        {
+            std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader, true));
+            thumbnail.setSource(new FileInputSource(file));
+            readerSource.reset(newSource.release());
+        }
+    }
 }
 
 timeDomainWin::~timeDomainWin()
@@ -73,6 +86,7 @@ void timeDomainWin::paint (Graphics& g)
 
 	Rectangle<float> rec(0.0f, (getHeight() / 2) - (getHeight() * .1f), getWidth(), getHeight() * .2f);
 	Rectangle<float> rec1(0.0f, (getHeight() / 2) + (getHeight() * .1f), getWidth(), getHeight() * .2f);
+    Rectangle<int> waveRect = rec.toNearestInt();
 
 	for (int i = 0; i <= 50; i++)
 	{
@@ -89,6 +103,11 @@ void timeDomainWin::paint (Graphics& g)
 		rec.removeFromLeft(tick);
 		rec1.removeFromLeft(tick);
 	}
+
+    // draw thumbnail
+    g.setColour(Colours::mediumpurple);
+    g.setFont(3.0f);
+    thumbnail.drawChannels(g, waveRect, 0, thumbnail.getTotalLength(), 2.5f);
 }
 
 void timeDomainWin::resized()
