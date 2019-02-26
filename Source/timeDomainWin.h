@@ -29,10 +29,7 @@ private:
 
     // THIS WAS ADDED HERE FOR TESTING AUDIO DRAWING.
 //===============================
-    AudioFormatManager formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;
-    AudioThumbnailCache thumbnailCache;
-    AudioThumbnail thumbnail;
     //========================
 
 
