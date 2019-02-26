@@ -12,7 +12,7 @@
 #include "timeDomainWin.h"
 
 //==============================================================================
-timeDomainWin::timeDomainWin() : thumbnailCache(5), thumbnail(50, formatManager, thumbnailCache)
+timeDomainWin::timeDomainWin()
 {
     // temporarily load file here for testing. Needs to be moved to code for a Load File button
     //formatManager.registerBasicFormats();
@@ -105,9 +105,12 @@ void timeDomainWin::paint (Graphics& g)
 	}
 
     // draw thumbnail
+    // TODO replace this once the backend is set up properly (the Converter has a thumbnail object)
+    //thumbnail.drawChannels(g, waveRect, 0, thumbnail.getTotalLength(), 2.5f);
+
     g.setColour(Colours::mediumpurple);
     g.setFont(3.0f);
-    thumbnail.drawChannels(g, waveRect, 0, thumbnail.getTotalLength(), 2.5f);
+    
 }
 
 void timeDomainWin::resized()

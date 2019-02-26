@@ -7,19 +7,22 @@ public:
     ~EnvelopeParams();
 
     // setters
-    void setAttackParamPtr(AudioParameterFloat *);
-    void setDecayParamPtr(AudioParameterFloat *);
-    void setSustainParamPtr(AudioParameterFloat *);
-    void setReleaseParamPtr(AudioParameterFloat *);
+    // These actually return the pointer thats passed into them because of how registering params has to work
+    AudioParameterInt *setAttackParamPtr(AudioParameterInt *);
+    AudioParameterInt *setDecayParamPtr(AudioParameterInt *);
+    AudioParameterInt *setSustainParamPtr(AudioParameterInt *);
+    AudioParameterInt *setReleaseParamPtr(AudioParameterInt *);
 
     // getters
+    // TODO
 
 private:
     // pointers to ADSR values.
     // These need to be registered as parameters in the audio processor with addParameter().
     // values have units of samples.
-    AudioParameterFloat *attack;
-    AudioParameterFloat *decay;
-    AudioParameterFloat *sustain;
-    AudioParameterFloat *release;
+    AudioParameterInt *attack;
+    AudioParameterInt *decay;
+    AudioParameterInt *sustain;
+    AudioParameterInt *release;
+
 };

@@ -17,9 +17,9 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 #endif
 {
     // register audio parameters. Their pointers are stored in the converter object and its envelope object.
-    AudioParameterFloat *testParamPtr;
-    addParameter(testParamPtr = new AudioParameterFloat("test", "Test", 0, 1, 0.5));
-    DBG("value : " << *testParamPtr);
+    addParameter(converter.getEnvelope().setAttackParamPtr(new AudioParameterInt("attack",
+        "Attack",0,88200,11025)));
+    // TODO register the rest of the parameters here, like this.
 }
 
 Soundshape_pluginAudioProcessor::~Soundshape_pluginAudioProcessor()

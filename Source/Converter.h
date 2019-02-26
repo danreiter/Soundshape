@@ -15,6 +15,14 @@ public:
     Converter();
     ~Converter();
     EnvelopeParams& getEnvelope();
+    AudioParameterFloat *getGain();
+    void updateProfileBin(int, int, float);
+    AudioThumbnail& getThumbnail();
+
+
+    void synthesize(int, AudioBuffer<float>&);
+
+
 private:
     // The frequency domain profile of the current preset.
     // Each row is the spectrum of the desired sound for a single note at the specified time.
@@ -22,6 +30,9 @@ private:
 
     // temporary storage of last rendered DFT for crossfading
     float previousDFT[2 * SOUNDSSHAPE_CHUNK_SIZE];
+
+    AudioThumbnail thumbnail;
+    AudioThumbnailCache thumbnailCache;
 
     int maxNumChunks = 50;
     int samplesPerChunk = 32768;
@@ -32,5 +43,9 @@ private:
     AudioParameterFloat *gain;
     // the envelope contains the pointers to the ADSR values and the envelope size (which is not and audio parameter)
     EnvelopeParams envelope;
+
+    void UpdateThumbnail();
+
+    AudioFormatManager formatManager;
 
 };
