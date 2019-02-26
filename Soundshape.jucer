@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="OEfazO" name="Soundshape_plugin" projectType="audioplug"
-              jucerVersion="5.4.1" pluginFormats="buildStandalone,buildVST3"
+              jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginIsSynth">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
+      <FILE id="FvFwbF" name="EnvelopeParams.cpp" compile="1" resource="0"
+            file="Source/EnvelopeParams.cpp"/>
+      <FILE id="uZogDa" name="EnvelopeParams.h" compile="0" resource="0"
+            file="Source/EnvelopeParams.h"/>
+      <FILE id="yrKI0i" name="Converter.h" compile="0" resource="0" file="Source/Converter.h"/>
+      <FILE id="etZr21" name="Converter.cpp" compile="1" resource="0" file="Source/Converter.cpp"/>
       <FILE id="QrlAE3" name="bigTime.cpp" compile="1" resource="0" file="Source/bigTime.cpp"/>
       <FILE id="kKoBzi" name="bigTime.h" compile="0" resource="0" file="Source/bigTime.h"/>
       <FILE id="iK7uQS" name="envelope.cpp" compile="1" resource="0" file="Source/envelope.cpp"/>
