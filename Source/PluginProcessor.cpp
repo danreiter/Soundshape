@@ -139,27 +139,21 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     // update the keyboard state with new messages in MIDI buffer
     keyState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
 
-    // copy the appropriate chunk from the converter object's profile matrix
-    // Then, duplicate it according to each downed MIDI note.
-    // To determine the index of the appropriate chunk, we keep track of the
-    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
-    // we start keeping track of how many samples we process. Once this number exceeds 
-    // the number of samples that each chunk represents, we increment the index (accounting
-    // for things like looping). If there are no notes down at the moment, then
-    // we should reset the index to the beginning of the range in the UI slider.
-    // We should also skip all DSP if there are no notes down or the number of samples to process
-    // happens to be 0.
-    
-
 
     // clear all input channels (because they will be used as output, even if we dont write to them)
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear(i, 0, buffer.getNumSamples());
     }
+    // To determine the index of the appropriate chunk, we keep track of the
+    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
+    // we start keeping track of how many samples we process. Once this number exceeds
+    // the number of samples that each chunk represents, we increment the index (accounting
+    // for things like looping). If there are no notes down at the moment, then
+    // we should reset the index to the beginning of the range in the UI slider.
+    // We should also skip all DSP if there are no notes down or the number of samples to process
+    // happens to be 0.
+    converter.synthesize(currentChunk, buffer, keyState);
 
-    // Time for writing channels.
-    // write to first channel, copy first channel to second
-    auto* channelData = buffer.getWritePointer(0); //channel 0
 
 }
 

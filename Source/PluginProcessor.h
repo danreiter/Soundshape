@@ -49,6 +49,7 @@ public:
 private:
     MidiKeyboardState keyState; // tracks which MIDI keys are down
     Converter converter; // performs DSP tasks, manages some parameters.
+    int currentChunk = 0;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Soundshape_pluginAudioProcessor)

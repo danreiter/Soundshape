@@ -1,6 +1,7 @@
 #include "Converter.h"
 
-Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(50, formatManager, thumbnailCache)
+Converter::Converter() : envelope(), thumbnailCache(2), inverseTransform(SOUNDSHAPE_FFT_ORDER),
+    thumbnail(50, formatManager, thumbnailCache)
 {
     // for testing purposes ONLY.
     // make a simple profile (just the first chunk) for a simple sound.
@@ -27,7 +28,7 @@ AudioParameterFloat * Converter::getGain()
 
 void Converter::updateProfileBin(int chunk, int bin, float value)
 {
-    // TODO
+    profile[chunk][bin] = value;
 }
 
 AudioThumbnail & Converter::getThumbnail()
@@ -35,12 +36,24 @@ AudioThumbnail & Converter::getThumbnail()
     return thumbnail;
 }
 
-void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer)
+void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyboardState)
 {
     // TODO
 
     // fill the buffer with the transformed and processed data derived from row profileChunk of the profile
+    // First make local copy so profile bins used in this method won't change during synthesis
+    // copy the appropriate chunk from the converter object's profile matrix
+    // Then, duplicate it according to each downed MIDI note.
+    float localChunk[2*SOUNDSHAPE_CHUNK_SIZE];
+    for(int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++){
+        localChunk[i] = profile[profileChunk][i];
+    }
+    // TODO duplicate according to keyboardState
+    inverseTransform.performRealOnlyInverseTransform(localChunk);
+
+    buffer.copyFrom(0,0,localChunk,buffer.getNumSamples());
 }
+
 
 void Converter::UpdateThumbnail()
 {
