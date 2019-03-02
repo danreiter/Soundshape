@@ -40,25 +40,15 @@ MainComponent::MainComponent()
 	harm = -1;
 	zoom = 4.0;
 	timeBlock = 0;
-	selectedProfile = -1;
-	timeSize = 10;
-	for (int i = 0; i < 1024; i++)
-	{
-		profile[i] = -2;
-	}
-	for (int i = 0; i < 50; i++)
-	{
-		for (int j = 0; j < 2048; j++)
-		{
-			soundWaveProfile[i][j] = 0;
-		}
-	}
+	currentProfile = 0;
+
+
 
 	//------------------------------------------------------------
 
 	//------Passing references to child components----------------
 
-	fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
+	fWindow.setZoom(&zoom, &harm, &add, this, this, &(converter->getProfile(currentProfile)), 4000);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 
@@ -205,7 +195,12 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	
 	if (slider->getParentComponent() != this)
 	{
-		profile[slider->getComponentID().getIntValue()] = slider->getValue();
+		//profile[slider->getComponentID().getIntValue()] = slider->getValue();
+		converter->updateProfileBin(currentProfile, slider->getComponentID().getIntValue() , slider->getValue());
+	}
+	if (slider->getParentComponent() == &volComp)
+	{
+		//setVolume();
 	}
 	else
 	{
@@ -230,5 +225,15 @@ void MainComponent::buttonClicked(Button* button)
 		add = -1 * (add);
 		repaint();
 	}
+
+}
+
+void MainComponent::setConverter(Converter& _converter)
+{
+	converter = &_converter;
+}
+
+void MainComponent::setProfile(int _index)
+{
 
 }

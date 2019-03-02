@@ -17,6 +17,7 @@
 #include "bigTime.h"
 #include "GuiFunc.h"
 #include "envelope.h"
+#include "Converter.h"
 
 
 //==============================================================================
@@ -36,6 +37,8 @@ public:
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
+	void setConverter(Converter & _converter);
+	void setProfile(int _index);
 
 private:
 	//==============================================================================
@@ -58,11 +61,10 @@ private:
 	int freq, harm, add, timeSize;		// Varibles for tracking software and gui state
 	int timeBlock, selectedProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
-	float profile[1024];				// Varible for testing frequency profile
-	float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
+	int currentProfile;                 // track currently selected profile chuck
 	// Varible for notes in hz
 	float notes[12] = { 27.5f,29.50f,30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
-
+	Converter * converter;
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)

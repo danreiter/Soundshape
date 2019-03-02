@@ -25,11 +25,13 @@ public:
     void resized() override;
 
 	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, float* _profile, int _size);
+	void setProfile(float* _profile);
 
 private:
 	int first;
 	int * harm;
 	int *add;
+	int size;
 	float * profile;
 	Slider::Listener* parent;
 	Button::Listener* buttonParent;

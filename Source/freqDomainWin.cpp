@@ -16,8 +16,9 @@ freqDomainWin::freqDomainWin()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-	profile = new float[1024];
-	for (int i = 0; i < 1024; i++)
+	size = 4000;
+	profile = new float[size];
+	for (int i = 0; i < size; i++)
 	{
 		profile[i] = -1.0f;
 	}
@@ -88,7 +89,7 @@ void freqDomainWin::paint (Graphics& g)
 
 	float vTick = vLine.getLength() / 10;
 	float hTick = hLine.getLength() / 100;
-	float smallTick = hLine.getLength() / 1024;
+	float smallTick = hLine.getLength() / size;
 	Rectangle<float> vArea(.5f * margin, margin, margin, vLine.getLength());
 	Rectangle<float> hArea(margin, getHeight() - (1.5f * margin), hLine.getLength(), margin);
 	Rectangle<float> smallArea(margin, getHeight() - (1.25f *margin), hLine.getLength(), margin / 2);
@@ -101,7 +102,7 @@ void freqDomainWin::paint (Graphics& g)
 	//g.fillRect(hArea);
 	Rectangle<float> hTickArea(hArea);
 
-	for (int i = 0; i < 1024; i++)
+	for (int i = 0; i < size; i++)
 	{
 
 		String temp = std::to_string(i);
@@ -140,7 +141,7 @@ void freqDomainWin::paint (Graphics& g)
 	float tick = btnArea.getWidth() / 1024;
 
 
-	for (int i = 0; i < 1024; i++)
+	for (int i = 0; i < size; i++)
 	{
 
 		Path btnPath;
@@ -308,8 +309,13 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	harm = _harm;
 	add = _add;
 	parent = _parent;
-	profile = new float[_size];
+	//profile = new float[_size];
 	profile = _profile;
 	buttonParent = _bParent;
+	size = _size;
+}
 
+void freqDomainWin::setProfile(float* _profile)
+{
+	profile = _profile;
 }

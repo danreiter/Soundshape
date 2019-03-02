@@ -42,12 +42,18 @@ void volumeBox::paint(Graphics& g)
 
 	volume->setColour(Slider::thumbColourId, Colours::orange);
 	volume->setColour(Slider::trackColourId, Colours::orange);
+	volume->addListener(sListen);
 	volume->setBounds(3.5f * h, 0.0f, getWidth() - (h*6), getHeight());
 
 }
 
 void volumeBox::resized()
 {
+}
+
+void volumeBox::setListen(Slider::Listener* _sListen)
+{
+	sListen = _sListen;
 }
 
 

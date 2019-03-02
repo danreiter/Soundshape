@@ -17,8 +17,6 @@
       <FILE id="AAai59" name="envelope.h" compile="0" resource="0" file="Source/envelope.h"/>
       <FILE id="ydFNB3" name="FeqWindow.cpp" compile="1" resource="0" file="Source/FeqWindow.cpp"/>
       <FILE id="Am3ZHw" name="FeqWindow.h" compile="0" resource="0" file="Source/FeqWindow.h"/>
-      <FILE id="CgYTmt" name="freqDomain.cpp" compile="1" resource="0" file="Source/freqDomain.cpp"/>
-      <FILE id="J0U2Fr" name="freqDomain.h" compile="0" resource="0" file="Source/freqDomain.h"/>
       <FILE id="X4oxT5" name="freqDomainWin.cpp" compile="1" resource="0"
             file="Source/freqDomainWin.cpp"/>
       <FILE id="djU4Hb" name="freqDomainWin.h" compile="0" resource="0" file="Source/freqDomainWin.h"/>
@@ -27,9 +25,6 @@
       <FILE id="gP2MjR" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="X5iCTU" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-      <FILE id="S7qnjA" name="NewComponent.cpp" compile="1" resource="0"
-            file="Source/NewComponent.cpp"/>
-      <FILE id="zk99vx" name="NewComponent.h" compile="0" resource="0" file="Source/NewComponent.h"/>
       <FILE id="nqxd7E" name="smallTime.cpp" compile="1" resource="0" file="Source/smallTime.cpp"/>
       <FILE id="w7ysoi" name="smallTime.h" compile="0" resource="0" file="Source/smallTime.h"/>
       <FILE id="lCkN5i" name="timeDomainWin.cpp" compile="1" resource="0"

@@ -22,11 +22,13 @@ public:
 	volumeBox();
 	~volumeBox();
 
-	void paint(Graphics&) override;
-	
+	void paint(Graphics& g) override;
 	void resized() override;
+	void setListen(Slider::Listener * _sListen);
+
 private:
 	Slider * volume;
+	Slider::Listener* sListen;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(volumeBox)
 };
