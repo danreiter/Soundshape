@@ -3,7 +3,8 @@
 
     GuiFunc.h
     Created: 24 Dec 2018 12:44:39pm
-    Author:  danre
+    Author:  Daniel Reiter
+	Description:Custome Components that are used to control some of Soundshape's functions.
 
   ==============================================================================
 */
@@ -13,25 +14,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 //==============================================================================
-//class fundFreq : public Component
-//{
-//	fundFreq();
-//	~fundFreq();
-//
-//	void paint(Graphics& g) override;
-//	void resized() override;
-//	void updateText();
-//
-//
-////private:
-//	Label *txtBox;
-//	DrawableButton * upBtn, *downBtn;
-//	int * note;
-//private:
-//
-//	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(fundFreq)
-//};
-
+//   volumeBox is a slider component drawn in a box with volume simbols
 //==============================================================================
 class volumeBox : public Component
 {
@@ -47,6 +30,7 @@ private:
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(volumeBox)
 };
+//==============================================================================
 
 
 //==============================================================================

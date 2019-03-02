@@ -3,17 +3,8 @@
 
     bigTime.h
     Created: 24 Dec 2018 12:43:15pm
-    Author:  danre
+    Author:  Daniel Reiter
 
-  ==============================================================================
-/*
-  ==============================================================================
-
-	bigTime.h
-	Created: 20 Dec 2018 1:00:48pm
-	Author:  danre
-
-  ==============================================================================
 */
 
 #pragma once
@@ -33,15 +24,16 @@ public:
 	void paint(Graphics&) override;
 	void resized() override;
 
-	void setProfile(int * _Xpoint, int * _profile, int * _time);
+	void setProfile(int * _Xpoint,int * _profile, int * _time, Button::Listener * _parent);
 
 private:
-	timeDomainWin timeBase;
+	timeDomainWin timeBase;                   
 	Viewport view;
 
 	int * xPoint;
 	int * xProfile;
 	int *time;
+	Button::Listener* parent;
 
 	OwnedArray<Component> components;
     Slider* playTime;

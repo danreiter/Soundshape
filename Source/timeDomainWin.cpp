@@ -3,7 +3,7 @@
 
     timeDomainWin.cpp
     Created: 28 Dec 2018 11:49:15am
-    Author:  danre
+    Author:  Daniel Reiter
 
   ==============================================================================
 */

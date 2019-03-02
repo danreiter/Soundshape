@@ -1,13 +1,34 @@
 /*
   ==============================================================================
 
-	This file was auto-generated!
+	GuiFunc.cpp
+	Created: 24 Dec 2018 12:44:39pm
+	Author:  Daniel Reiter.
 
   ==============================================================================
 */
 
 #include "MainComponent.h"
 
+// Id numbers passed to sub components
+#define GUI_ID 10000
+#define FUN_FEQ_ID 10001
+#define FEQ_WINDOW_ID 13000
+#define BIG_WINDOW_ID 14000
+#define SMALL_WINDOW_ID 15000
+#define ENVOLOPE_ID 16000
+#define ATTACK_ID 16001
+#define DECAY_ID 16002
+#define SUSTAIN_ID 16003
+#define RELEASE_ID 16004
+#define VOLUME_ID 17001
+#define PLAY_ID 7002
+#define PANIC_ID 7003
+
+
+
+//==============================================================================
+//  Component declares and instaites other gui components and passes variables from 
 //==============================================================================
 MainComponent::MainComponent()
 {
@@ -37,9 +58,9 @@ MainComponent::MainComponent()
 
 	//------Passing references to child components----------------
 
-	fWindow.setZoom(&zoom, &harm, &add, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize);
-	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize);
+	fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
+	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
+	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 
 	//------------------------------------------------------------
 
@@ -69,6 +90,7 @@ MainComponent::MainComponent()
 
 	//------------Setting Button Values---------------------------
 
+	// Harmonic button to toggle harmonic filter for selecting 
 	harmonicButton = new TextButton("Harmonic");
 	harmonicButton->setClickingTogglesState(true);
 	harmonicButton->setColour(TextButton::textColourOffId, Colours::white);
@@ -82,12 +104,14 @@ MainComponent::MainComponent()
         
 	};
 
+	// Button to add friquency spike to a frequency profile
 	addButton = new TextButton("Add");
 	addButton->setClickingTogglesState(true);
 	addButton->setColour(TextButton::textColourOffId, Colours::white);
 	addButton->setColour(TextButton::textColourOnId, Colours::white);
 	addButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);
+	//addButton->addListener(this);
 	addButton->onClick = [this]
 	{
         
@@ -95,8 +119,8 @@ MainComponent::MainComponent()
 		repaint();
 	};
 
+	// Write button to save sound profiles to the preset folder
 	writeButton = new TextButton("Write");
-
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
 	zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	zoomSlider->setRange(1.0f, 20.0f, .5);
@@ -131,12 +155,14 @@ void MainComponent::paint(Graphics& g)
 
 void MainComponent::resized()
 {
+	
 	auto area = getLocalBounds();
 	Point<int> bottomRight(area.getBottomRight());
 	float margin = area.getWidth() * 0.01f;
 	float h = (area.getHeight() / 5);
 	auto sWindow = area.removeFromLeft(area.getWidth() - area.getWidth() / 10.0f);
 
+	// 
 	fWindow.setBounds(sWindow.removeFromTop(h + (2 * h / 3)).reduced(margin));
 
 	sWindow.removeFromTop(2 * margin);
@@ -172,8 +198,11 @@ void MainComponent::resized()
 
 }
 
+//------------------------------------------------------------------------------------
+// Function listento sliders of child components
 void MainComponent::sliderValueChanged(Slider * slider)
 {
+	
 	if (slider->getParentComponent() != this)
 	{
 		profile[slider->getComponentID().getIntValue()] = slider->getValue();
@@ -183,4 +212,23 @@ void MainComponent::sliderValueChanged(Slider * slider)
 		zoom = slider->getValue();
 		repaint();
 	}
+}
+//-------------------------------------------------------------------------------------
+
+void MainComponent::buttonClicked(Button* button)
+{
+	if (button->getParentComponent() == &sTWindow)
+	{
+		repaint();
+	}
+	if (button->getParentComponent() == &bTWindow)
+	{
+		repaint();
+	}
+	if (button->getParentComponent()->getComponentID() == addButton)
+	{
+		add = -1 * (add);
+		repaint();
+	}
+
 }

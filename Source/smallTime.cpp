@@ -25,6 +25,7 @@ smallTime::smallTime()
 	*xStart = 0;
 	*xProfile = -1;
 
+
 	view.setViewedComponent(&tdTest, false);
 	view.setScrollBarsShown(false,false);
 	
@@ -121,6 +122,7 @@ void smallTime::resized()
 
 		auto* tb = addToList(new TextButton("Button " + String(i + 1)));
 		tb->setRadioGroupId(34567);
+		tb->addListener(parent);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
 		tb->setColour(TextButton::textColourOffId, Colours::black);
@@ -141,13 +143,13 @@ void smallTime::resized()
 
 }
 
-void smallTime::setTimeDomain(int * _start, int * _profile, int* _time)
+void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent)
 {
 
 	xStart = _start;
 	xProfile = _profile;
 	time = _time;
-
+	parent = _parent;
 }
 
 

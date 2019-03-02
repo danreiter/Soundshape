@@ -24,7 +24,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-	void setBase(int * _harm, int * _add, Slider::Listener* _parent, float* _profile, int _size);
+	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, float* _profile, int _size);
 
 private:
 	int first;
@@ -32,6 +32,7 @@ private:
 	int *add;
 	float * profile;
 	Slider::Listener* parent;
+	Button::Listener* buttonParent;
 
 	OwnedArray<Component> components;
 	template <typename ComponentType>

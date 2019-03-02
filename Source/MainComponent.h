@@ -1,7 +1,10 @@
 /*
   ==============================================================================
 
-	This file was auto-generated!
+	MainComponent.h
+	Created: 24 Dec 2018 12:44:39pm
+	Author:  Daniel Reiter
+	Description:Main Gui Component. Parent component for all Gui components. 
 
   ==============================================================================
 */
@@ -21,7 +24,7 @@
 	This component lives inside our window, and this is where you should put all
 	your controls and content.
 */
-class MainComponent : public Component, public Slider::Listener
+class MainComponent : public Component, public Slider::Listener, public Button::Listener
 {
 public:
 	//==============================================================================
@@ -32,6 +35,7 @@ public:
 	void paint(Graphics&) override;
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
+	void buttonClicked(Button* button) override;
 
 private:
 	//==============================================================================
@@ -55,7 +59,7 @@ private:
 	int timeBlock, selectedProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	float profile[1024];				// Varible for testing frequency profile
-	float soundWaveProfile[50][2048];          // Varible for testing/store the soundWave values
+	float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
 	// Varible for notes in hz
 	float notes[12] = { 27.5f,29.50f,30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
 

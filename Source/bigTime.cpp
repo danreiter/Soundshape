@@ -148,9 +148,10 @@ void bigTime::resized()
 		selected.setStrokeThickness(4.0f);
 
 		auto* tb = addToList(new DrawableButton("Button " + String(i + 1), DrawableButton::ImageRaw));
-		//tb->setRadioGroupId(34567);
+		tb->setRadioGroupId(34567);
 		tb->setComponentID(String(i));
 		tb->setImages(&normal, &over, &selected);
+		tb->addListener(parent);
 		tb->setClickingTogglesState(true);
 		tb->onClick = [this]
 		{
@@ -167,9 +168,10 @@ void bigTime::resized()
 
 
 
-void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time)
+void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent)
 {
 	xProfile = _profile;
 	xPoint = _Xpoint;
 	time = _time;
+	parent = _parent;
 }

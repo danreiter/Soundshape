@@ -130,15 +130,10 @@ void freqDomainWin::paint (Graphics& g)
 		int t1 = (int)profile[i];
 		String temp2 = std::to_string(t1);
 	}
-}
 
-void freqDomainWin::resized()
-{
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
 	emptyList();
 
-	float margin = getHeight() *.10f;
+	margin = getHeight() *.10f;
 
 	//Rectangle<float> smallArea(margin, getHeight() - (1.25f *margin), hLine.getLength(), margin / 2);
 	Rectangle<float> btnArea(margin, getHeight() - (1.25f *margin), getWidth() - (2 * margin), margin / 4);
@@ -171,6 +166,7 @@ void freqDomainWin::resized()
 					auto * tb = addToList(new TextButton(""));
 					tb->setComponentID(String(i));
 					tb->setClickingTogglesState(true);
+					tb->addListener(buttonParent);
 					tb->onClick = [this] {
 						auto * focused = Component::getCurrentlyFocusedComponent();
 						float margin = this->getHeight() *.10f;
@@ -217,14 +213,103 @@ void freqDomainWin::resized()
 
 
 	}
+}
+
+void freqDomainWin::resized()
+{
+    // This method is where you should set the bounds of any child
+    // components that your component contains..
+	//emptyList();
+
+	//float margin = getHeight() *.10f;
+
+	////Rectangle<float> smallArea(margin, getHeight() - (1.25f *margin), hLine.getLength(), margin / 2);
+	//Rectangle<float> btnArea(margin, getHeight() - (1.25f *margin), getWidth() - (2 * margin), margin / 4);
+	//float tick = btnArea.getWidth() / 1024;
+
+
+	//for (int i = 0; i < 1024; i++)
+	//{
+
+	//	Path btnPath;
+	//	DrawablePath normal, down, over;
+
+	//	btnArea.removeFromLeft(tick);
+
+	//	if (profile[i] < 0)
+	//	{
+	//		if (*add > 0)
+	//		{
+	//			if (harm && first > 0 && (i % first == 0))
+	//			{
+
+	//			}
+	//			else if (harm && first > 0)
+	//			{
+
+	//			}
+	//			else
+	//			{
+
+	//				auto * tb = addToList(new TextButton(""));
+	//				tb->setComponentID(String(i));
+	//				tb->setClickingTogglesState(true);
+	//				tb->onClick = [this] {
+	//					auto * focused = Component::getCurrentlyFocusedComponent();
+	//					float margin = this->getHeight() *.10f;
+	//					this->profile[focused->getComponentID().getIntValue()] = 0.0f;
+	//					if (this->first < 0)
+	//					{
+	//						this->first = this->getComponentID().getIntValue();
+	//					}
+	//					focused->setVisible(false);
+
+	//					auto * sb = this->createSlider();
+	//					sb->setRange(0.0, 100.0, 0.1);
+	//					sb->setSliderStyle(Slider::LinearBarVertical);
+	//					sb->setComponentID(String(focused->getComponentID().getIntValue()));
+	//					sb->setValue((double)(profile[focused->getComponentID().getIntValue()]), sendNotificationAsync);
+	//					sb->setColour(Slider::trackColourId, Colours::red);
+	//					sb->setTextBoxIsEditable(false);
+	//					sb->setPopupDisplayEnabled(true, true, this);
+	//					sb->addListener(parent);
+	//					sb->setBounds(focused->getX() + ((margin * 3) / 8), margin, margin / 2, this->getHeight() - (2 * margin));
+	//					this->repaint();
+	//				};
+	//				tb->setColour(TextButton::textColourOnId, Colours::black);
+	//				tb->setColour(TextButton::buttonColourId, Colours::white);
+	//				tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
+	//				tb->setColour(TextButton::textColourOffId, Colours::black);
+	//				tb->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		auto * sb = createSlider();
+	//		sb->setRange(0.0, 100.0, 0.1);
+	//		sb->setSliderStyle(Slider::LinearBarVertical);
+	//		sb->setComponentID(String(i));
+	//		sb->setValue((double)(profile[i]), sendNotificationAsync);
+	//		sb->setColour(Slider::trackColourId, Colours::red);
+	//		sb->setTextBoxIsEditable(false);
+	//		sb->setPopupDisplayEnabled(true, true, this);
+	//		sb->addListener(parent);
+	//		sb->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+	//	}
+
+
+	//}
 
 }
 
-void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, float* _profile, int _size)
+void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size)
 {
 	harm = _harm;
 	add = _add;
 	parent = _parent;
 	profile = new float[_size];
 	profile = _profile;
+	buttonParent = _bParent;
+
 }

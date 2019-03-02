@@ -28,10 +28,10 @@ FeqWindow::~FeqWindow()
 
 
 
-void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent, float * _profile, int _size)
+void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  float * _profile, int _size)
 {
 	zoom = _zoom;
-	base.setBase(_harm, _add, _parent, _profile, _size);
+	base.setBase(_harm, _add, _parent, _bParent, _profile, _size);
 }
 
 void FeqWindow::paint(Graphics& g)

@@ -24,7 +24,7 @@ public:
 
 	void paint(Graphics&) override;
 	void resized() override;
-	void setTimeDomain(int * _start, int * _profile, int * _time);
+	void setTimeDomain(int * _start, int * _profile, int * _time, Button::Listener* _parent);
 
 
 private:
@@ -33,6 +33,7 @@ private:
 	timeDomainWin tdTest;
 	Viewport view;
 	int * time;
+	Button::Listener* parent;
 
 	OwnedArray<Component> components;
 	template <typename ComponentType>

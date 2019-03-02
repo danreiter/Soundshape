@@ -30,7 +30,7 @@ private:
     // THIS WAS ADDED HERE FOR TESTING AUDIO DRAWING.
 //===============================
     std::unique_ptr<AudioFormatReaderSource> readerSource;
-    //========================
+//========================
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (timeDomainWin)
