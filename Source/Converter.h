@@ -18,7 +18,7 @@ public:
     AudioParameterFloat *getGain();
     void updateProfileBin(int, int, float);
     AudioThumbnail& getThumbnail();
-
+    float getProfileBin(int chunk, int bin);
 
     void synthesize(int, AudioBuffer<float>&);
 

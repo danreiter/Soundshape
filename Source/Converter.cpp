@@ -30,6 +30,10 @@ void Converter::updateProfileBin(int chunk, int bin, float value)
     // TODO
 }
 
+float Converter::getProfileBin(int chunk, int bin) {
+    return profile[chunk][bin];
+}
+
 AudioThumbnail & Converter::getThumbnail()
 {
     return thumbnail;

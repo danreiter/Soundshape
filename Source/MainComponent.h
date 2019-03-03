@@ -17,7 +17,7 @@
 #include "bigTime.h"
 #include "GuiFunc.h"
 #include "envelope.h"
-
+#include "Converter.h"
 
 //==============================================================================
 /*
@@ -36,6 +36,7 @@ public:
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
+	void setConverter(Converter* _converter);
 
 private:
 	//==============================================================================
@@ -63,7 +64,7 @@ private:
 	// Varible for notes in hz
 	float notes[12] = { 27.5f,29.50f,30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
 
-
+    Converter *converterPtr;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

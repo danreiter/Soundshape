@@ -144,6 +144,12 @@ MainComponent::~MainComponent()
 {
 }
 
+
+void MainComponent::setConverter(Converter *_converter) {
+	converterPtr = _converter;
+}
+
+
 //==============================================================================
 void MainComponent::paint(Graphics& g)
 {
@@ -220,6 +226,9 @@ void MainComponent::buttonClicked(Button* button)
 	if (button->getParentComponent() == &sTWindow)
 	{
 		repaint();
+		DBG(button->getComponentID());
+		float val = converterPtr->getProfileBin(0,440);
+		DBG(val);
 	}
 	if (button->getParentComponent() == &bTWindow)
 	{
