@@ -25,6 +25,7 @@ public:
 	void paint(Graphics&) override;
 	void resized() override;
 	void setZoom(double* _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, float * _profile, int _size);
+	void setProfile(float* _profile);
 
 private:
 	freqDomainWin base;

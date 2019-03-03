@@ -40,7 +40,7 @@ MainComponent::MainComponent()
 	harm = -1;
 	zoom = 4.0;
 	timeBlock = 0;
-	currentProfile = 0;
+	selectedProfile = 0;
 
 
 
@@ -218,6 +218,8 @@ void MainComponent::buttonClicked(Button* button)
 	}
 	if (button->getParentComponent() == &bTWindow)
 	{
+
+		setProfile(selectedProfile);
 		repaint();
 	}
 	if (button->getParentComponent()->getComponentID() == addButton)
@@ -235,5 +237,5 @@ void MainComponent::setConverter(Converter& _converter)
 
 void MainComponent::setProfile(int _index)
 {
-
+	fWindow.setProfile(converter->getProfile(selectedProfile));
 }

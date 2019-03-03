@@ -70,3 +70,8 @@ void FeqWindow::resized()
 
 
 }
+
+void FeqWindow::setProfile(float* _profile)
+{
+	base.setProfile(_profile);
+}
