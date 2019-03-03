@@ -48,6 +48,7 @@ MainComponent::MainComponent()
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
+	enve.setListener(this);
 
 	//------------------------------------------------------------
 
@@ -232,6 +233,31 @@ void MainComponent::sliderValueChanged(Slider * slider)
 
 		// use slider->getValue()
 	}
+
+	// on change update attack settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_ATTACK)
+	{
+		//Needs set up with back end calls
+	}
+
+	// on change update decay settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_DECAY)
+	{
+		//Needs set up with back end calls
+	}
+
+	// on change update release settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_RELEASE)
+	{
+		//Needs set up with back end calls
+	}
+
+	// on change update sustain settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_SUSTAIN)
+	{
+		//Needs set up with back end calls
+	}
+
 }
 //-------------------------------------------------------------------------------------
 

@@ -3,7 +3,8 @@
 
     GuiFunc.cpp
     Created: 24 Dec 2018 12:44:39pm
-    Author:  danre
+    Author:  Daniel Reiter
+	Description:Custom Components that are used to control some of Soundshape's functions.
 
   ==============================================================================
 */
@@ -11,6 +12,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "GuiFunc.h"
 
+//==============================================================================
+//  volumeBox contains slider for volume and draws box and shapes for volume controls
 //==============================================================================
 volumeBox::volumeBox()
 {

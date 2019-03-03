@@ -4,7 +4,7 @@
     GuiFunc.h
     Created: 24 Dec 2018 12:44:39pm
     Author:  Daniel Reiter
-	Description:Custome Components that are used to control some of Soundshape's functions.
+	Description:Custom Components that are used to control some of Soundshape's functions.
 
   ==============================================================================
 */
@@ -20,7 +20,7 @@
 #define FUND_FREQ_BUTTON 2005
 
 //==============================================================================
-//   volumeBox is a slider component drawn in a box with volume simbols
+//   volumeBox is a slider component drawn in a box with volume symbols
 //==============================================================================
 class volumeBox : public Component
 {
@@ -41,7 +41,7 @@ private:
 
 
 //==============================================================================
-//  
+//  GuiFunc contains volume component and expor, play, and panic buttons
 //==============================================================================
 class GuiFunc : public Component
 {
@@ -55,9 +55,11 @@ public:
 
 
 private:
-	Slider::Listener * sListen;
-	Button::Listener * bListen;
-	OwnedArray<Component> components;
+	Slider::Listener * sListen;							// reference to parent for slider listener
+	Button::Listener * bListen;							// refernence to parent for button listener
+	
+	//List of components
+	OwnedArray<Component> components;					
 	template <typename ComponentType>
 	ComponentType* addToList(ComponentType * newComp)
 	{
@@ -65,6 +67,8 @@ private:
 		addAndMakeVisible(newComp);
 		return newComp;
 	}
+
+	// emptys list
 	void emptyList()
 	{
 		components.clear(true);
@@ -75,7 +79,7 @@ private:
 //==============================================================================
 
 //==============================================================================
-//
+//Component contains controls and displays fundemental frequency
 //==============================================================================
 class fundFreq : public Component
 {
@@ -90,9 +94,11 @@ public:
 	void setListener(Button::Listener* _listener);
 
 private:
-	Label *txtBox;
-	int num;
-	Button::Listener * bListener;
+	Label *txtBox;							// displays fundmental frequency
+	int num;								// tracks the current fundmental frequency
+	Button::Listener * bListener;			// reference to parent as button listener
+
+	// list of components
 	OwnedArray<Component> components;
 	template <typename ComponentType>
 	ComponentType* addToList(ComponentType * newComp)
@@ -101,6 +107,8 @@ private:
 		addAndMakeVisible(newComp);
 		return newComp;
 	}
+
+	// clears component list
 	void emptyList()
 	{
 		components.clear(true);

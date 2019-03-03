@@ -3,7 +3,8 @@
 
     envelope.cpp
     Created: 24 Dec 2018 1:00:17pm
-    Author:  danre
+    Author:  Daniel Reiter
+	Description: Component contains slider for the user to manipulate the envelope settings
 
   ==============================================================================
 */
@@ -29,6 +30,7 @@ envelope::envelope()
 	addAndMakeVisible(Release);
 
 	Attack->setRange(0, 100, 1.0);
+	Attack->setComponentID((String)ENVELOPE_ATTACK);
 	Attack->setSliderStyle(Slider::LinearVertical);
 	Attack->setColour(Slider::trackColourId, Colours::orange);
 	Attack->setColour(Slider::thumbColourId, Colours::orange);
@@ -36,6 +38,7 @@ envelope::envelope()
 	Attack->setTextValueSuffix("Attack");
 
 	Decay->setRange(0, 100, 1.0);
+	Decay->setComponentID((String)ENVELOPE_DECAY);
 	Decay->setSliderStyle(Slider::LinearVertical);
 	Decay->setColour(Slider::trackColourId, Colours::orange);
 	Decay->setColour(Slider::thumbColourId, Colours::orange);
@@ -43,6 +46,7 @@ envelope::envelope()
 	Decay->setTextValueSuffix("Decay");
 
 	Sustain->setRange(0, 100, 1.0);
+	Sustain->setComponentID((String)ENVELOPE_SUSTAIN);
 	Sustain->setSliderStyle(Slider::LinearVertical);
 	Sustain->setColour(Slider::trackColourId, Colours::orange);
 	Sustain->setColour(Slider::thumbColourId, Colours::orange);
@@ -50,6 +54,7 @@ envelope::envelope()
 	Sustain->setTextValueSuffix("Sustain");
 
 	Release->setRange(0, 100, 1.0);
+	Release->setComponentID((String)ENVELOPE_RELEASE);
 	Release->setSliderStyle(Slider::LinearVertical);
 	Release->setColour(Slider::trackColourId, Colours::orange);
 	Release->setColour(Slider::thumbColourId, Colours::orange);
@@ -73,22 +78,19 @@ void envelope::paint (Graphics& g)
        drawing code..
     */
 
-    //g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 	g.fillAll(Colours::darkgrey);
-
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
     g.setColour (Colours::white);
     g.setFont (getHeight() * .15f);
-    g.drawText ("ADSR Envelope", getLocalBounds(),
-                Justification::centredTop, true);   // draw some placeholder text
+    g.drawText ("ADSR Envelope", getLocalBounds(), Justification::centredTop, true);   // draw some placeholder text
 	auto area = getLocalBounds().removeFromLeft(getWidth()/5);
 	float margin = area.getHeight() * .15f;
 	Line<float> l1(area.getWidth() / 2.0f, margin, area.getWidth() / 2.0f, area.getHeight() - margin);
 	Line<float> l2(area.getWidth() * .2f, margin, area.getWidth() * .8f, margin);
 	Line<float> l3(area.getWidth() * .2f, area.getHeight() - margin, area.getWidth() * .8f, area.getHeight() - margin);
 
+	// draws scale 
 	area.reduce(0.0f, area.getHeight() * .08f);
 	g.setFont(getHeight() *.08f);
 	g.drawText("Max", area, Justification::centredTop, true);
@@ -113,6 +115,8 @@ void envelope::paint (Graphics& g)
 
 	float wid = getWidth() / 5.0f;
 	g.setFont(margin*.75f);
+
+	//  sets bounds and location for Attack, Decay, Release and Sustain sliders
 	Rectangle<float> labelArea(wid, getHeight() - margin, getWidth() - wid, margin);
 	Attack->setBounds(wid, (getHeight()*.15f) / 2, getWidth() * .1f, getHeight() - margin);
 	Decay->setBounds(wid * 2, (getHeight()*.15f) / 2, getWidth() * .1f, getHeight() - margin);
@@ -127,30 +131,15 @@ void envelope::paint (Graphics& g)
 void envelope::resized()
 {
     // This method is where you should set the bounds of any child
-    // components that your component contains..
-	//emptyList();
-	auto area = getLocalBounds();
-	area.reduce(0.0f,(getHeight() * .15f)/2);
-	area.removeFromLeft(getWidth() / 5);
-	auto rec1 = area.removeFromLeft(getWidth() / 2.5f);
-	area.removeFromLeft(getWidth() / 2.5f);
-	auto rec2 = area.removeFromLeft(getWidth() / 2.5f);
-	area.removeFromLeft(getWidth() / 2.5f);
-	/*auto * attack = createSlider(new Slider());
-	attack->setRange(0, 100, 1.0);
-	attack->setSliderStyle(Slider::LinearVertical);*/
-	//attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	//attack->setBounds(getWidth() / 5, getHeight() * .15f, area.getWidth() / 5, area.getHeight());
-	//Attack->setBounds(rec1);
-	//area.removeFromLeft(getWidth() / 2.5f);
-	//attack->setTextValueSuffix("Attack");
 
-	//attack = createSlider(new Slider());
-	//attack->setRange(0, 100, 1.0);
-	//attack->setSliderStyle(Slider::LinearVertical);
-	//Decay->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	//Decay->setBounds(getWidth() / 5, getHeight() * .15f, area.getWidth() / 5, area.getHeight());
-	//Decay->setBounds(rec2);
-	//area.removeFromLeft(getWidth() / 2.5f);
-	//attack->setTextValueSuffix("Decay");
+}
+
+
+// adds reference listener 
+void envelope::setListener(Slider::Listener* _listener)
+{
+	Attack->addListener(_listener);
+	Decay->addListener(_listener);
+	Release->addListener(_listener);
+	Sustain->addListener(_listener);
 }

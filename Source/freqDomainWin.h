@@ -3,7 +3,9 @@
 
     freqDomainWin.h
     Created: 28 Dec 2018 11:48:50am
-    Author:  danre
+    Author:  Daniel Reiter
+	Component: Render current frequency seleced frequency profile and allow users to 
+			   add and modify frequency spikes using sliders and buttons
 
   ==============================================================================
 */
@@ -25,19 +27,19 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-
 	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, float* _profile, int _size);
 	void setProfileControl(float * _profile, int _size);
 
 private:
-	int first;
-	int * harm;
-	int *add;
-	float * profile;
-	Slider::Listener* parent;
-	Button::Listener* buttonParent;
+	int first;                          // Variable to track for first harmonic value                                 
+	int * harm;                         // flag harmonic correctness is on/off 
+	int *add;							// flag add button is on/off
+	float * profile;					// reference to current frequency profile's values
+	Slider::Listener* parent;			// reference to parent as a slider listener
+	Button::Listener* buttonParent;     // reference to parent as a button listener
 
-	OwnedArray<TextButton> components;
+	// list of buttons to add frquency spikes
+	OwnedArray<TextButton> components;		
 	TextButton* addToList(TextButton * newComp)
 	{
 		components.add(newComp);
@@ -57,6 +59,7 @@ private:
 		return newComp;
 	}
 
+	// list of slides to modify frequnecy spikes
 	OwnedArray<Slider> sliders;
 	Slider * createSlider()
 	{
@@ -66,6 +69,7 @@ private:
 		return s;
 	}
 
+	// clears both slider and button lists
 	void emptyList()
 	{
 		components.clear(true);

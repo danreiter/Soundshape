@@ -3,14 +3,17 @@
 
     freqDomainWin.cpp
     Created: 28 Dec 2018 11:48:50am
-    Author:  danre
-
+    Author:  Daniel Reiter
+	Component: Render current frequency seleced frequency profile and allow users to 
+			   add and modify frequency spikes using sliders and buttons
   ==============================================================================
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "freqDomainWin.h"
 
+//==============================================================================
+//  freqDomainWin constructor set default values to variables to allow a GUI to open
 //==============================================================================
 freqDomainWin::freqDomainWin()
 {
@@ -27,17 +30,22 @@ freqDomainWin::freqDomainWin()
 	}
 	setProfileControl(&profile[0], 4000);
 
-	first = -1;
-	int temp = -1;
+	first = -1;           
+	int temp = -1;		  
 	add = &temp;
 	harm = &temp;
 
 }
 
+
 freqDomainWin::~freqDomainWin()
 {
 }
+//==============================================================================
 
+//==============================================================================
+//  Paint Funciton
+//==============================================================================
 void freqDomainWin::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
@@ -54,6 +62,8 @@ void freqDomainWin::paint (Graphics& g)
 	bool flag = true;
 	Colour c1;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
+
+	// draw color of background
 	for (int i = 0; i <= n; i++)
 	{
 
@@ -79,7 +89,6 @@ void freqDomainWin::paint (Graphics& g)
 
 	g.setColour(Colours::grey);
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-
 	g.setColour(Colours::black);
 	g.setFont(14.0f);
 	g.drawText("Base Window", getLocalBounds(),
@@ -89,19 +98,17 @@ void freqDomainWin::paint (Graphics& g)
 	Line<float> hLine(margin, getHeight() - margin, getWidth() - margin, getHeight() - margin);
 	g.drawLine(vLine);
 	g.drawLine(hLine);
-
 	float vTick = vLine.getLength() / 10;
 	float hTick = hLine.getLength() / 100;
 	float smallTick = hLine.getLength() / 4000;
 	Rectangle<float> vArea(.5f * margin, margin, margin, vLine.getLength());
 	Rectangle<float> hArea(margin, getHeight() - (1.5f * margin), hLine.getLength(), margin);
 	Rectangle<float> smallArea(margin, getHeight() - (1.25f *margin), hLine.getLength(), margin / 2);
-
 	Rectangle<float> testPrint(margin, 1.25f *margin, hLine.getLength(), margin / 2);
-
 	g.setFont(vTick * .8f);
 	Rectangle<float> hTickArea(hArea);
 
+	// draw horizontal scale
 	for (int i = 0; i < 4000; i++)
 	{
 
@@ -132,22 +139,24 @@ void freqDomainWin::paint (Graphics& g)
 	Rectangle<float> btnArea(margin, getHeight() - (1.25f *margin), getWidth() - (2 * margin), margin / 4);
 	float tick = btnArea.getWidth() / 1024;
 
-
+	// loop sets location, bounds, and visiblity of sliders and buttons
 	for (int i = 0; i < 4000; i++)
 	{
 
 		Path btnPath;
 		DrawablePath normal, down, over;
-
 		btnArea.removeFromLeft(tick);
 
 		if (profile[i] < 0)
 		{
-
+			// set laction and bounds for each slider and button
 			components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
 			sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+			
+			// If add button is on - set add buttons visilbe to true
 			if (*add > 0)
 			{
+				// harmonic correctness case 
 				if (harm && first > 0 && (i % first == 0))
 				{
 
@@ -156,6 +165,7 @@ void freqDomainWin::paint (Graphics& g)
 				{
 
 				}
+				// no harmonic correctness case
 				else
 				{
 
@@ -163,12 +173,14 @@ void freqDomainWin::paint (Graphics& g)
 
 				}
 			}
+			// hide add buttons
 			else
 			{
 
 				components[i]->setVisible(false);
 			}
 		}
+		// show slider that are being used
 		else
 		{
 			sliders[i]->setVisible(true);
@@ -177,20 +189,30 @@ void freqDomainWin::paint (Graphics& g)
 
 	}
 }
+//==============================================================================
 
+//==============================================================================
+//  Resize Funciton
+//==============================================================================
 void freqDomainWin::resized()
 {
 
 }
+//==============================================================================
 
+//==============================================================================
+//  setBase passes need references to freqDomainWin
+//==============================================================================
 void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size)
 {
-	harm = _harm;
-	add = _add;
-	parent = _parent;
-	profile = new float[_size];
-	profile = _profile;
-	buttonParent = _bParent;
+	harm = _harm;                // flag for harmonic correctness is on/off
+	add = _add;                  // flag for add buttons visiblity on/off
+	parent = _parent;            // slider listener 
+	profile = new float[_size];  // allocate for new sound profile space
+	profile = _profile;          // set frequency profile values
+	buttonParent = _bParent;	 // button listener
+
+	// set button and slider listeners to parent
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->addListener(buttonParent);
@@ -198,10 +220,18 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	}
 
 }
+//==============================================================================
 
+//==============================================================================
+//  setProfileControl Funciton sets values of a frequency profile to a list of 
+//  sliders, declares and instaniates a list of sliders and a list of buttons
+//==============================================================================
 void freqDomainWin::setProfileControl(float * _profile, int _size)
 {
+	// sets list to empty
 	emptyList();
+
+	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < _size; i++)
 	{
 		auto * tb = addToList(new TextButton(""));
@@ -234,3 +264,4 @@ void freqDomainWin::setProfileControl(float * _profile, int _size)
 	}
 
 }
+//==============================================================================
