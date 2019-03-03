@@ -13,6 +13,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "timeDomainWin.h"
 
+#define PROFILE_SELECT_BUTTON 5001
+
 //==============================================================================
 /*
 */

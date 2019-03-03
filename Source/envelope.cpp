@@ -11,6 +11,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "envelope.h"
 
+
+
 //==============================================================================
 envelope::envelope()
 {

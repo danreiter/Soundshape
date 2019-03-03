@@ -12,6 +12,11 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#define ENVELOPE_ATTACK 7002
+#define ENVELOPE_DECAY 7003
+#define ENVELOPE_SUSTAIN 7004
+#define ENVELOPE_RELEASE 7005
+
 //==============================================================================
 /*
 */

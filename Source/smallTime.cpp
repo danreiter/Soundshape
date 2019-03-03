@@ -10,7 +10,9 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "smallTime.h"
-//#include "DemoUtilities.h"
+
+
+ 
 
 //==============================================================================
 smallTime::smallTime()
@@ -24,6 +26,8 @@ smallTime::smallTime()
 	*time = 10;
 	*xStart = 0;
 	*xProfile = -1;
+
+
 
 
 	view.setViewedComponent(&tdTest, false);
@@ -120,8 +124,8 @@ void smallTime::resized()
 	for (int i = 0; i < 5; ++i)
 	{
 
-		auto* tb = addToList(new TextButton("Button " + String(i + 1)));
-		tb->setRadioGroupId(34567);
+		auto* tb = addToList(new TextButton("Sec " + String(i + 1) + "/5"));
+		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
 		tb->addListener(parent);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
