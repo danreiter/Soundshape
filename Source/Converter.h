@@ -19,7 +19,7 @@ public:
     AudioParameterFloat *getGain();
     void updateProfileBin(int, int, float);
     AudioThumbnail& getThumbnail();
-    void 
+    float *getProfile(int chunk);
 
     void synthesize(int, AudioBuffer<float>&, MidiKeyboardState&);
 

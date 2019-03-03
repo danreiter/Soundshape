@@ -48,7 +48,7 @@ MainComponent::MainComponent()
 
 	//------Passing references to child components----------------
 
-	fWindow.setZoom(&zoom, &harm, &add, this, this, &(converter->getProfile(currentProfile)), 4000);
+	fWindow.setZoom(&zoom, &harm, &add, this, this, (converter->getProfile(selectedProfile)), 4000);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 
