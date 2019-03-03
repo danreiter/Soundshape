@@ -48,13 +48,13 @@ MainComponent::MainComponent()
 
 	//------Passing references to child components----------------
 
-	fWindow.setZoom(&zoom, &harm, &add, this, this, (converter->getProfile(selectedProfile)), 4000);
+	//fWindow.setZoom(&zoom, &harm, &add, this, this, (converter->getProfile(selectedProfile)), 4000);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 
 	//------------------------------------------------------------
 
-	addAndMakeVisible(fWindow);
+	//addAndMakeVisible(fWindow);
 	addAndMakeVisible(sTWindow);
 	addAndMakeVisible(bTWindow);
 	addAndMakeVisible(fund);
@@ -153,7 +153,7 @@ void MainComponent::resized()
 	auto sWindow = area.removeFromLeft(area.getWidth() - area.getWidth() / 10.0f);
 
 	// 
-	fWindow.setBounds(sWindow.removeFromTop(h + (2 * h / 3)).reduced(margin));
+	//fWindow.setBounds(sWindow.removeFromTop(h + (2 * h / 3)).reduced(margin));
 
 	sWindow.removeFromTop(2 * margin);
 	sTWindow.setBounds(sWindow.removeFromTop(h).reduced(margin));
@@ -161,7 +161,8 @@ void MainComponent::resized()
 	sWindow.setWidth(getLocalBounds().getWidth());
 	bTWindow.setBounds(sWindow.removeFromTop(h).reduced(margin));
 
-	Rectangle<float> topButtonArea(fWindow.getBounds().getTopRight().getX(), fWindow.getBounds().getTopRight().getY(), bottomRight.getX() - fWindow.getBounds().getTopRight().getX(), fWindow.getHeight());
+	//Rectangle<float> topButtonArea(fWindow.getBounds().getTopRight().getX(), fWindow.getBounds().getTopRight().getY(), bottomRight.getX() - fWindow.getBounds().getTopRight().getX(), fWindow.getHeight());
+	Rectangle<float> topButtonArea(sWindow.getTopRight().getX(), sWindow.getTopRight().getY(), bottomRight.getX() - sWindow.getTopRight().getX(), sWindow.getHeight());
 	int h1 = (int)(topButtonArea.getHeight() * .15f);
 	topButtonArea.reduce(topButtonArea.getWidth() * .15f, topButtonArea.getHeight() * .15f);
 	zoomSlider->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), 2 * h1);
@@ -237,5 +238,5 @@ void MainComponent::setConverter(Converter& _converter)
 
 void MainComponent::setProfile(int _index)
 {
-	fWindow.setProfile(converter->getProfile(selectedProfile));
+	//fWindow.setProfile(converter->getProfile(selectedProfile));
 }

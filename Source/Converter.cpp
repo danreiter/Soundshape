@@ -38,7 +38,12 @@ AudioThumbnail & Converter::getThumbnail()
 
 // Returns a pointer to the specified chunk of the entire profile
 float* Converter::getProfile(int chunk){
-    return profile[chunk];
+	float * tempArr = new float[4000];
+	for (int i = 0; i < 4000; i++)
+	{
+		tempArr[i] = profile[chunk][i];
+	}
+	return &tempArr[0];
 }
 
 void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyboardState)

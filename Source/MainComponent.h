@@ -43,7 +43,7 @@ public:
 private:
 	//==============================================================================
 	// Your private member variables go here...
-	FeqWindow fWindow;  // Window displays the selected frequency profile element
+	//FeqWindow fWindow;  // Window displays the selected frequency profile element
 	smallTime sTWindow; // Window displays a zoomed in view of the time domain 
 	bigTime bTWindow;	// Window displays the time domain
 	fundFreq fund;		// Component handles seeting for the fundmental frequency for redering the time domain

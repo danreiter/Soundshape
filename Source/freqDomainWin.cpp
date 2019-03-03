@@ -128,8 +128,8 @@ void freqDomainWin::paint (Graphics& g)
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
-		int t1 = (int)profile[i];
-		String temp2 = std::to_string(t1);
+		//int t1 = (int)profile[i];
+		//String temp2 = std::to_string(t1);
 	}
 
 	emptyList();
@@ -309,7 +309,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	harm = _harm;
 	add = _add;
 	parent = _parent;
-	//profile = new float[_size];
+	//profile = new float[size];
 	profile = _profile;
 	buttonParent = _bParent;
 	size = _size;
@@ -317,5 +317,6 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 
 void freqDomainWin::setProfile(float* _profile)
 {
+	//profile = new float[size];
 	profile = _profile;
 }

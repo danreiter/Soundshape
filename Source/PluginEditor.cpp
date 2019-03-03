@@ -20,6 +20,7 @@ Soundshape_pluginAudioProcessorEditor::Soundshape_pluginAudioProcessorEditor(Sou
     setResizable(true, true);
     setResizeLimits(300, 300, 1920, 1080);
     setSize(700, 600);
+	//mainComponent.setConverter(p.getConverter());
     addAndMakeVisible(&mainComponent);
 
 
