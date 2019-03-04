@@ -5,7 +5,8 @@
 // A DFT of size 2**16 gives us 1Hz precision. Output is real-valued so we only need 2**15 samples per row
 // 2**15 is 32768.
 // We decided to give a maximum of 50 chunks.
-#define SOUNDSSHAPE_CHUNK_SIZE 32768
+#define SOUNDSHAPE_FFT_ORDER 15
+#define SOUNDSHAPE_CHUNK_SIZE (1 << SOUNDSHAPE_FFT_ORDER)
 #define SOUNDSHAPE_PROFILE_ROWS 50
 
 // Stores parameters like the envelope and performs common tasks for time domain <-> frequency domain transformations.
@@ -20,16 +21,16 @@ public:
     AudioThumbnail& getThumbnail();
     float getProfileBin(int chunk, int bin);
 
-    void synthesize(int, AudioBuffer<float>&);
+    void synthesize(int currentChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState);
 
 
 private:
     // The frequency domain profile of the current preset.
     // Each row is the spectrum of the desired sound for a single note at the specified time.
-    float profile[SOUNDSHAPE_PROFILE_ROWS][SOUNDSSHAPE_CHUNK_SIZE];
+    float profile[SOUNDSHAPE_PROFILE_ROWS][SOUNDSHAPE_CHUNK_SIZE];
 
     // temporary storage of last rendered DFT for crossfading
-    float previousDFT[2 * SOUNDSSHAPE_CHUNK_SIZE];
+    float previousDFT[2 * SOUNDSHAPE_CHUNK_SIZE];
 
     AudioThumbnail thumbnail;
     AudioThumbnailCache thumbnailCache;
@@ -47,5 +48,7 @@ private:
     void UpdateThumbnail();
 
     AudioFormatManager formatManager;
+
+    dsp::FFT inverseTransform;
 
 };

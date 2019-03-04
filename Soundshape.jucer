@@ -40,7 +40,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="libfftw3-3.lib&#10;">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
                        defines="SOUNDSHAPE_RUN_TESTS = 1"/>
