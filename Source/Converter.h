@@ -15,29 +15,56 @@ class Converter
 public:
     Converter();
     ~Converter();
+
+    // getters for AudioParameter stuff
     EnvelopeParams& getEnvelope();
     AudioParameterFloat *getGain();
-    void updateProfileBin(int, int, float);
-    AudioThumbnail& getThumbnail();
-    float getProfileBin(int chunk, int bin);
 
+    // getters/setters for managin the profile
+    void setSampleRate(double _sampleRate);
+    void updateFrequencyValue(int chunk, int freq, float value);
+    float getFrequencyValue(int chunk, int bin);
+
+    AudioThumbnail& getThumbnail();
+
+    // Fill the buffer with the processed inverse discrete fourier transform of
+    // the data in row currentChunk of the profile, according to which keys are pressed in the
+    // key state
     void synthesize(int currentChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState);
 
 
 private:
+
+    int freqToBin(int);
+    float getProfileRawPoint(int chunk, int i);
+    void setProfileRawPoint(int chunk, int i, float value);
+
+
+    //*===================================
+    //* THESE STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE 
+    //* MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK
+
     // The frequency domain profile of the current preset.
     // Each row is the spectrum of the desired sound for a single note at the specified time.
-    float profile[SOUNDSHAPE_PROFILE_ROWS][SOUNDSHAPE_CHUNK_SIZE];
+    // Implemented 1-dimensionally. This class's interface still treats this 2-dimensionally
+    std::vector<float> profile;
+
+    // Temporary chunks for copying/intermediate work during synthesis.
+    // These are twice as long as the actual chunks because the IFFT might need the extra samples to work
+    std::vector<float> localChunk;
+    std::vector<float> tempChunk;
 
     // temporary storage of last rendered DFT for crossfading
-    float previousDFT[2 * SOUNDSHAPE_CHUNK_SIZE];
+    std::vector<float> previousDFT;
+
+    //*======================================
+
 
     AudioThumbnail thumbnail;
     AudioThumbnailCache thumbnailCache;
 
-    int maxNumChunks = 50;
-    int samplesPerChunk = 32768;
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
+    double sampleRate;
 
     // the converter logically stores the audio parameters for better abstraction,
     // but these actually need to be setup in the audio processor with addParameter().

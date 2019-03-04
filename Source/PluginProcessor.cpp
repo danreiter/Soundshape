@@ -91,8 +91,18 @@ bool Soundshape_pluginAudioProcessor::hasEditor() const
 //==============================================================================
 void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    // The Converter needs to know about the sample rate in order to convert
+    // between frequency values and indexes for its internal structure
+    converter.setSampleRate(sampleRate);
+
+    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
+    converter.updateFrequencyValue(0, 1  * 440, 500.0f);
+    converter.updateFrequencyValue(0, 2  * 440, 300.0f);
+    converter.updateFrequencyValue(0, 4  * 440, 200.0f);
+    converter.updateFrequencyValue(0, 6  * 440, 100.0f);
+    converter.updateFrequencyValue(0, 8  * 440,  50.0f);
+    converter.updateFrequencyValue(0, 10 * 440,  25.0f);
+    converter.updateFrequencyValue(0, 12 * 440,  12.0f);
 }
 
 void Soundshape_pluginAudioProcessor::releaseResources()

@@ -229,7 +229,7 @@ void MainComponent::buttonClicked(Button* button)
 	{
 		repaint();
 		DBG(button->getComponentID());
-		float val = converterPtr->getProfileBin(0,440);
+        float val = converterPtr->getFrequencyValue(0, 440);
 		DBG(val);
 	}
 	if (button->getParentComponent() == &bTWindow)
