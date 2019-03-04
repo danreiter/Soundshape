@@ -1,6 +1,5 @@
 #include "Converter.h"
 
-
 Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(50, formatManager, thumbnailCache),
     inverseTransform(SOUNDSHAPE_FFT_ORDER)
 {
@@ -55,13 +54,24 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     // copy the appropriate chunk from the converter object's profile matrix
     // Then, duplicate it according to each downed MIDI note.
     float localChunk[2 * SOUNDSHAPE_CHUNK_SIZE] = { 0.0f };
+    float tempChunk[2 * SOUNDSHAPE_CHUNK_SIZE] = { 0.0f }; // so we don't overwrite previousDFT before it's used
     for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
         localChunk[i] = profile[profileChunk][i];
     }
     // TODO duplicate according to keyboardState
     inverseTransform.performRealOnlyInverseTransform(localChunk);
 
-    buffer.copyFrom(0, 0, localChunk, buffer.getNumSamples());
+    for (int i = 0; i < buffer.getNumSamples(); i++) {
+        // copy the current DFT into the temporary chunk
+        tempChunk[i] = localChunk[currentIndex];
+        currentIndex += 1;
+        if (currentIndex == SOUNDSHAPE_CHUNK_SIZE) {
+            currentIndex = 0;
+        }
+    }
+
+    buffer.copyFrom(0,0, tempChunk, buffer.getNumSamples());
+    buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples());
 }
 
 void Converter::UpdateThumbnail()

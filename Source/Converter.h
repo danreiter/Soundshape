@@ -51,4 +51,6 @@ private:
 
     dsp::FFT inverseTransform;
 
+    int currentIndex = 0;
+
 };
