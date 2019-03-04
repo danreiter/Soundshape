@@ -309,7 +309,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	add = _add;
 	parent = _parent;
 	profile = new float[_size];
-	profile = _profile;
+	//profile = _profile;
 	buttonParent = _bParent;
 
 }
