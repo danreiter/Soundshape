@@ -18,6 +18,7 @@
 #include "GuiFunc.h"
 #include "envelope.h"
 #include "Converter.h"
+#include "PluginProcessor.h"
 
 //==============================================================================
 /*
@@ -28,7 +29,7 @@ class MainComponent : public Component, public Slider::Listener, public Button::
 {
 public:
 	//==============================================================================
-	MainComponent();
+	MainComponent(Soundshape_pluginAudioProcessor& p);
 	~MainComponent();
 
 	//==============================================================================

@@ -30,10 +30,13 @@
 //==============================================================================
 //  Component declares and instaites other gui components and passes variables from 
 //==============================================================================
-MainComponent::MainComponent()
+MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 {
-	//----------Default settings----------------------------------
-
+	
+    setConverter(&(p.getConverter()));
+    
+    //----------Default settings----------------------------------
+    
 	amp = 0.0f;
 	freq = 0;
 	add = -1;
@@ -57,7 +60,6 @@ MainComponent::MainComponent()
 	//------------------------------------------------------------
 
 	//------Passing references to child components----------------
-
 	fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
