@@ -4,8 +4,6 @@
               jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginIsSynth">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
-    <FILE id="eZeQun" name="kiss_fftr.c" compile="1" resource="0" file="Source/kissfft/kiss_fftr.c"/>
-    <FILE id="l10tGo" name="kiss_fftr.h" compile="0" resource="0" file="Source/kissfft/kiss_fftr.h"/>
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
       <FILE id="FvFwbF" name="EnvelopeParams.cpp" compile="1" resource="0"
             file="Source/EnvelopeParams.cpp"/>
@@ -53,6 +51,8 @@
       <FILE id="unmlQs" name="kiss_fft.h" compile="0" resource="0" file="Source/kissfft/kiss_fft.h"/>
       <FILE id="WcQVyC" name="kissfft.hh" compile="0" resource="0" file="Source/kissfft/kissfft.hh"/>
       <FILE id="TPeutw" name="kissfft_i32.hh" compile="0" resource="0" file="Source/kissfft/kissfft_i32.hh"/>
+      <FILE id="eZeQun" name="kiss_fftr.c" compile="1" resource="0" file="Source/kissfft/kiss_fftr.c"/>
+      <FILE id="l10tGo" name="kiss_fftr.h" compile="0" resource="0" file="Source/kissfft/kiss_fftr.h"/>
       <FILE id="EhD9pi" name="Makefile" compile="0" resource="1" file="Source/kissfft/Makefile"/>
       <FILE id="Q64xwi" name="README" compile="0" resource="1" file="Source/kissfft/README"/>
       <FILE id="VRxdLQ" name="README.md" compile="0" resource="1" file="Source/kissfft/README.md"/>
@@ -155,6 +155,5 @@
     <WINDOWS/>
     <LINUX/>
   </LIVE_SETTINGS>
-  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"
-               JUCE_DSP_USE_STATIC_FFTW="1"/>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
 </JUCERPROJECT>

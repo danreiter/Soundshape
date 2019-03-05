@@ -1,6 +1,7 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EnvelopeParams.h"
+#include "kissfft/kiss_fftr.h"
 
 // A DFT of size 2**16 gives us 1Hz precision. Output is real-valued so we only need 2**15 samples per row
 // 2**15 is 32768.
@@ -36,7 +37,7 @@ public:
 private:
 
     int freqToBin(int);
-    float getProfileRawPoint(int chunk, int i);
+    kiss_fft_cpx getProfileRawPoint(int chunk, int i);
     void setProfileRawPoint(int chunk, int i, float value);
 
 
@@ -47,11 +48,12 @@ private:
     // The frequency domain profile of the current preset.
     // Each row is the spectrum of the desired sound for a single note at the specified time.
     // Implemented 1-dimensionally. This class's interface still treats this 2-dimensionally
-    std::vector<float> profile;
+    // Data is complex
+    std::vector<kiss_fft_cpx> profile;
 
     // Temporary chunks for copying/intermediate work during synthesis.
     // These are twice as long as the actual chunks because the IFFT might need the extra samples to work
-    std::vector<float> localChunk;
+    std::vector<kiss_fft_cpx> localChunk;
     std::vector<float> tempChunk;
 
     // temporary storage of last rendered DFT for crossfading
@@ -76,7 +78,9 @@ private:
 
     AudioFormatManager formatManager;
 
-    dsp::FFT inverseTransform;
+    // object for inverse FFT during synthesis
+    //dsp::FFT inverseTransform;
+    kiss_fftr_cfg inverseFFT;
 
     int currentIndex = 0;
 
