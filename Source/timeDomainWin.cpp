@@ -4,6 +4,8 @@
     timeDomainWin.cpp
     Created: 28 Dec 2018 11:49:15am
     Author:  Daniel Reiter
+	Description: Time domain object renders sound in the time domain and draw center line with a
+					scale.
 
   ==============================================================================
 */
@@ -12,9 +14,13 @@
 #include "timeDomainWin.h"
 
 //==============================================================================
+//  Constructor
+//==============================================================================
 timeDomainWin::timeDomainWin()
 {
     // temporarily load file here for testing. Needs to be moved to code for a Load File button
+
+	//// Code for loading a sound
     //formatManager.registerBasicFormats();
     //FileChooser chooser("Select a Wave file to play...",
     //    {},
@@ -35,7 +41,11 @@ timeDomainWin::timeDomainWin()
 timeDomainWin::~timeDomainWin()
 {
 }
+//==============================================================================
 
+//==============================================================================
+// Function Paint
+//==============================================================================
 void timeDomainWin::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
@@ -45,49 +55,18 @@ void timeDomainWin::paint (Graphics& g)
        drawing code..
     */
 
-	//float pixel = getWidth() * .01f;
-	//int n = getWidth() * 10;
-	//float xMark = 0.0f;
-	//int colourMod = 0;
-	//bool flag = true;
-	//Colour c1;
-	//g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-	//for (int i = 0; i <= n; i++)
-	//{
-
-
-	//	Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-	//	xMark += pixel;
-	//	if (flag)
-	//	{
-	//		c1 = Colour(255, (170 + colourMod), 0);
-	//	}
-	//	else
-	//	{
-	//		c1 = Colour(255, (200 - colourMod), 0);
-	//	}
-	//	g.setColour(c1);
-	//	g.fillRect(rec5);
-	//	colourMod = (++colourMod % 31);
-	//	if (colourMod == 0)
-	//	{
-	//		flag = !flag;
-	//	}
-	//}
-
+	// draw center line across window 
 	g.setColour(Colours::black);
 	Point<float> centerStart(0.0f, getHeight() / 2.0f);
 	Point<float> centerEnd(getWidth(), getHeight()/2.0f);
 	Line<float> centerLine(centerStart, centerEnd);
 	g.drawLine(centerLine, 2.0f);
 
+	// draw tick marks and numbers across center line
 	float tick = getWidth() / 50.0f;
-
-
 	Rectangle<float> rec(0.0f, (getHeight() / 2) - (getHeight() * .1f), getWidth(), getHeight() * .2f);
 	Rectangle<float> rec1(0.0f, (getHeight() / 2) + (getHeight() * .1f), getWidth(), getHeight() * .2f);
     Rectangle<int> waveRect = rec.toNearestInt();
-
 	for (int i = 0; i <= 50; i++)
 	{
 		Point<float> p1(rec.getTopLeft());
@@ -112,10 +91,15 @@ void timeDomainWin::paint (Graphics& g)
     g.setFont(3.0f);
     
 }
+//==============================================================================
 
+//==============================================================================
+//  Function Repaint
+//==============================================================================
 void timeDomainWin::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
 
 }
+//==============================================================================

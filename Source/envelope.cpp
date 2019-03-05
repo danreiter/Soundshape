@@ -29,6 +29,8 @@ envelope::envelope()
 	addAndMakeVisible(Sustain);
 	addAndMakeVisible(Release);
 
+
+	// Attack slider
 	Attack->setRange(0, 100, 1.0);
 	Attack->setComponentID((String)ENVELOPE_ATTACK);
 	Attack->setSliderStyle(Slider::LinearVertical);
@@ -37,6 +39,7 @@ envelope::envelope()
 	Attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Attack->setTextValueSuffix("Attack");
 
+	// Decay Slider
 	Decay->setRange(0, 100, 1.0);
 	Decay->setComponentID((String)ENVELOPE_DECAY);
 	Decay->setSliderStyle(Slider::LinearVertical);
@@ -45,6 +48,7 @@ envelope::envelope()
 	Decay->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Decay->setTextValueSuffix("Decay");
 
+	// Sustain slider
 	Sustain->setRange(0, 100, 1.0);
 	Sustain->setComponentID((String)ENVELOPE_SUSTAIN);
 	Sustain->setSliderStyle(Slider::LinearVertical);
@@ -53,6 +57,7 @@ envelope::envelope()
 	Sustain->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Sustain->setTextValueSuffix("Sustain");
 
+	// Release slider
 	Release->setRange(0, 100, 1.0);
 	Release->setComponentID((String)ENVELOPE_RELEASE);
 	Release->setSliderStyle(Slider::LinearVertical);
