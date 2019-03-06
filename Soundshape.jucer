@@ -5,6 +5,27 @@
               pluginCharacteristicsValue="pluginIsSynth">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
+      <GROUP id="{8C251B4E-3C59-D64A-3236-C68731CC14F3}" name="kissfft">
+        <GROUP id="{69F1FDCC-8941-BD9C-FBB3-803151807BC7}" name="LICENSES">
+          <FILE id="n02fw2" name="BSD-3-Clause" compile="0" resource="1" file="Source/kissfft/LICENSES/BSD-3-Clause"/>
+          <FILE id="fCO9HK" name="Unlicense" compile="0" resource="1" file="Source/kissfft/LICENSES/Unlicense"/>
+        </GROUP>
+        <FILE id="iwt5xH" name="_kiss_fft_guts.h" compile="0" resource="0"
+              file="Source/kissfft/_kiss_fft_guts.h"/>
+        <FILE id="MdjpRs" name="CHANGELOG" compile="0" resource="1" file="Source/kissfft/CHANGELOG"/>
+        <FILE id="juV7ZN" name="COPYING" compile="0" resource="1" file="Source/kissfft/COPYING"/>
+        <FILE id="IT4hMX" name="kiss_fft.c" compile="1" resource="0" file="Source/kissfft/kiss_fft.c"/>
+        <FILE id="unmlQs" name="kiss_fft.h" compile="0" resource="0" file="Source/kissfft/kiss_fft.h"/>
+        <FILE id="WcQVyC" name="kissfft.hh" compile="0" resource="0" file="Source/kissfft/kissfft.hh"/>
+        <FILE id="TPeutw" name="kissfft_i32.hh" compile="0" resource="0" file="Source/kissfft/kissfft_i32.hh"/>
+        <FILE id="eZeQun" name="kiss_fftr.c" compile="1" resource="0" file="Source/kissfft/kiss_fftr.c"/>
+        <FILE id="l10tGo" name="kiss_fftr.h" compile="0" resource="0" file="Source/kissfft/kiss_fftr.h"/>
+        <FILE id="EhD9pi" name="Makefile" compile="0" resource="1" file="Source/kissfft/Makefile"/>
+        <FILE id="Q64xwi" name="README" compile="0" resource="1" file="Source/kissfft/README"/>
+        <FILE id="VRxdLQ" name="README.md" compile="0" resource="1" file="Source/kissfft/README.md"/>
+        <FILE id="BKDU6Y" name="README.simd" compile="0" resource="1" file="Source/kissfft/README.simd"/>
+        <FILE id="KSSgsE" name="TIPS" compile="0" resource="1" file="Source/kissfft/TIPS"/>
+      </GROUP>
       <FILE id="FvFwbF" name="EnvelopeParams.cpp" compile="1" resource="0"
             file="Source/EnvelopeParams.cpp"/>
       <FILE id="uZogDa" name="EnvelopeParams.h" compile="0" resource="0"
@@ -38,33 +59,11 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="fFd9zY" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
-    <GROUP id="{8C251B4E-3C59-D64A-3236-C68731CC14F3}" name="kissfft">
-      <GROUP id="{69F1FDCC-8941-BD9C-FBB3-803151807BC7}" name="LICENSES">
-        <FILE id="n02fw2" name="BSD-3-Clause" compile="0" resource="1" file="Source/kissfft/LICENSES/BSD-3-Clause"/>
-        <FILE id="fCO9HK" name="Unlicense" compile="0" resource="1" file="Source/kissfft/LICENSES/Unlicense"/>
-      </GROUP>
-      <FILE id="iwt5xH" name="_kiss_fft_guts.h" compile="0" resource="0"
-            file="Source/kissfft/_kiss_fft_guts.h"/>
-      <FILE id="MdjpRs" name="CHANGELOG" compile="0" resource="1" file="Source/kissfft/CHANGELOG"/>
-      <FILE id="juV7ZN" name="COPYING" compile="0" resource="1" file="Source/kissfft/COPYING"/>
-      <FILE id="IT4hMX" name="kiss_fft.c" compile="1" resource="0" file="Source/kissfft/kiss_fft.c"/>
-      <FILE id="unmlQs" name="kiss_fft.h" compile="0" resource="0" file="Source/kissfft/kiss_fft.h"/>
-      <FILE id="WcQVyC" name="kissfft.hh" compile="0" resource="0" file="Source/kissfft/kissfft.hh"/>
-      <FILE id="TPeutw" name="kissfft_i32.hh" compile="0" resource="0" file="Source/kissfft/kissfft_i32.hh"/>
-      <FILE id="eZeQun" name="kiss_fftr.c" compile="1" resource="0" file="Source/kissfft/kiss_fftr.c"/>
-      <FILE id="l10tGo" name="kiss_fftr.h" compile="0" resource="0" file="Source/kissfft/kiss_fftr.h"/>
-      <FILE id="EhD9pi" name="Makefile" compile="0" resource="1" file="Source/kissfft/Makefile"/>
-      <FILE id="Q64xwi" name="README" compile="0" resource="1" file="Source/kissfft/README"/>
-      <FILE id="VRxdLQ" name="README.md" compile="0" resource="1" file="Source/kissfft/README.md"/>
-      <FILE id="BKDU6Y" name="README.simd" compile="0" resource="1" file="Source/kissfft/README.simd"/>
-      <FILE id="KSSgsE" name="TIPS" compile="0" resource="1" file="Source/kissfft/TIPS"/>
-    </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
-                       defines="SOUNDSHAPE_RUN_TESTS = 1"/>
+        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
                        defines="SOUNDSHAPE_RUN_TESTS = 0"/>
       </CONFIGURATIONS>

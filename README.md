@@ -13,18 +13,5 @@ Soundshape is a software synthesizer that creates sound from an easy-to-use spec
 ## Building
 ### Requirements 
 - [JUCE 5](https://shop.juce.com/get-juce)
-
-### Building for Windows x64 (Visual C++)
-Soundshape relies on the [FFTW3 library](www.fftw.org).
-Extract the Windows DLLs into a folder called `FFTW_Windows` that's in the same directory as the `.jucer` file. Enter this directory in Visual Studio's Developer Command Prompt and run
-
-
-`lib /machine:x64 /def:libfftw3-3.def`.
-
-
-Open the `.jucer` file in the Projucer, and export a Visual Studio Project. 
-
-### Building for Linux
-...
-
-
+- On Windows, Soundshape can be built by using JUCE to generate a Visual Studio solution.
+- Linux users can build using the Linux Makefile exporter target in the Projucer to generate a Makefile

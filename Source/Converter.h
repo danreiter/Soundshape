@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "EnvelopeParams.h"
 #include "kissfft/kiss_fftr.h"
@@ -11,7 +12,7 @@
 #define SOUNDSHAPE_PROFILE_ROWS 50
 
 // Stores parameters like the envelope and performs common tasks for time domain <-> frequency domain transformations.
-class Converter
+class Converter : public MidiKeyboardStateListener
 {
 public:
     Converter();
@@ -37,9 +38,15 @@ public:
 private:
 
     int freqToBin(int);
+    float binToFreq(int bin);
     kiss_fft_cpx getProfileRawPoint(int chunk, int i);
     void setProfileRawPoint(int chunk, int i, float value);
+    void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
+    void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
+    void midiPanic(); // turn off all notes
 
+    // Prepares that buffer for an inverse FFT representing currently pressed keys
+    void addShiftedProfiles(int chunk);
 
     //*===================================
     //* THESE STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE 
@@ -53,14 +60,17 @@ private:
 
     // Temporary chunks for copying/intermediate work during synthesis.
     // These are twice as long as the actual chunks because the IFFT might need the extra samples to work
-    std::vector<kiss_fft_cpx> localChunk;
+    std::vector<kiss_fft_cpx> shiftedProfile;
     std::vector<float> tempChunk;
 
     // temporary storage of last rendered DFT for crossfading
     std::vector<float> previousDFT;
-
+    
     //*======================================
 
+
+    // stores velocity information for each note, 0 to 127 (128 possible notes)
+    std::array<float, 128> noteVelocities;
 
     AudioThumbnail thumbnail;
     AudioThumbnailCache thumbnailCache;
@@ -82,6 +92,7 @@ private:
     //dsp::FFT inverseTransform;
     kiss_fftr_cfg inverseFFT;
 
+    // TODO : This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading)
     int currentIndex = 0;
 
 };
