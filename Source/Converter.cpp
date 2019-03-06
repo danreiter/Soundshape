@@ -31,7 +31,10 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     // copy the appropriate chunk from the converter object's profile matrix
     // Then, duplicate it according to each downed MIDI note.
 
-    // shift profile to match pressed keys (writes to shiftedProfile)
+    // clear the current shifted profile data, then shift profile to match pressed keys (writes to shiftedProfile)
+    //for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
+    //    shiftedProfile[i].r = 0.0f;
+    //}
     addShiftedProfiles(profileChunk);
     
 
@@ -70,8 +73,11 @@ void Converter::addShiftedProfiles(int chunk)
             
             for (int j = 0; j < profile.size(); j++) {
                 if (profile[j].r != 0) {
-                    int bin = freqToBin(j * ratio);
-                    shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;
+                    float targetFreq = binToFreq(j) * ratio;
+                    if (targetFreq < sampleRate / 2) { // avoid aliasing
+                        int bin = freqToBin(targetFreq * ratio);
+                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;
+                    }
                 }
             }
         }
@@ -80,8 +86,8 @@ void Converter::addShiftedProfiles(int chunk)
 
 void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
-        // Possibl;y change this in the future to only work for user-specified MIDI channels?
-        noteVelocities[midiNoteNumber] = velocity;
+    // Possibl;y change this in the future to only work for user-specified MIDI channels?
+    noteVelocities[midiNoteNumber] = velocity;
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)

@@ -20,6 +20,9 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
     addParameter(converter.getEnvelope().setAttackParamPtr(new AudioParameterInt("attack",
         "Attack",0,88200,11025)));
     // TODO register the rest of the parameters here, like this.
+
+    // add the converter as a listener to the midi keyboard state
+    keyState.addListener(&converter);
 }
 
 Soundshape_pluginAudioProcessor::~Soundshape_pluginAudioProcessor()

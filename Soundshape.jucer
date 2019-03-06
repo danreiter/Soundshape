@@ -63,7 +63,7 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1"/>
+        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1" isDebug="1"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
                        defines="SOUNDSHAPE_RUN_TESTS = 0"/>
       </CONFIGURATIONS>
