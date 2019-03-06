@@ -35,27 +35,26 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     //for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
     //    shiftedProfile[i].r = 0.0f;
     //}
+    kiss_fft_cpx zeroCpx = { 0,0 };
+    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx);
     addShiftedProfiles(profileChunk);
     
 
-    //inverseTransform.performRealOnlyInverseTransform(localChunk.data());
+    // TODO : change this to only be computed when it NEEDS to be.
     kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
 
-    //for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
-        //DBG(localChunk[i]);
-    //}
     for (int i = 0; i < buffer.getNumSamples(); i++) {
         
         // copy the current DFT into the temporary chunk
-        tempChunk[i] = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE;
+        tempChunk[i] = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE; // kissfft inverse real-only needs scaled by fft size
         currentIndex += 1;
         if (currentIndex == SOUNDSHAPE_CHUNK_SIZE) {
             currentIndex = 0;
         }
     }
 
-    buffer.copyFrom(0,0, tempChunk.data(), buffer.getNumSamples());
-    buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples());
+    buffer.copyFrom(0,0, tempChunk.data(), buffer.getNumSamples()); // left channel
+    buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
 }
 
 
@@ -71,11 +70,11 @@ void Converter::addShiftedProfiles(int chunk)
             float noteFreq = (float)MidiMessage::getMidiNoteInHertz(i);
             float ratio = noteFreq / referenceFrequency;
             
-            for (int j = 0; j < profile.size(); j++) {
-                if (profile[j].r != 0) {
+            for (int j = 0; j < SOUNDSHAPE_CHUNK_SIZE; j++) {
+                if (profile[j].r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
                     float targetFreq = binToFreq(j) * ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
-                        int bin = freqToBin(targetFreq * ratio);
+                        int bin = freqToBin(targetFreq);
                         shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;
                     }
                 }
@@ -86,7 +85,7 @@ void Converter::addShiftedProfiles(int chunk)
 
 void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
-    // Possibl;y change this in the future to only work for user-specified MIDI channels?
+    // Possibly change this in the future to only work for user-specified MIDI channels?
     noteVelocities[midiNoteNumber] = velocity;
 }
 
