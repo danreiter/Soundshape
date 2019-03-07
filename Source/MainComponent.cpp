@@ -75,6 +75,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 	cb.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
 	cb.setColour(ComboBox::arrowColourId, Colours::black);
 	cb.setColour(ComboBox::textColourId, Colours::black);
+    cb.setTooltip("Contains all the current presets");
 
 	//------------------------------------------------------------
 
@@ -87,6 +88,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 	harmonicButton->setColour(TextButton::textColourOnId, Colours::white);
 	harmonicButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	harmonicButton->setColour(TextButton::buttonOnColourId, Colours::orange);
+    harmonicButton->setTooltip("When enabled, the harmonic setting will only allow the creation of new frequency spikes at harmonically correct frequencies");
 	harmonicButton->onClick = [this]
 	{
 		harm = -1 * (harm);
@@ -102,6 +104,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 	addButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);
 	addButton->addListener(this);
+    addButton->setTooltip("Allows the creation of a frequency spike at any available frequency");
 	addButton->onClick = [this]
 	{
         
@@ -111,6 +114,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 
 	// Write button to save sound profiles to the preset folder
 	writeButton = new TextButton("Write");
+    writeButton->setTooltip("Writes the chosen preset");
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
 	zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	zoomSlider->setRange(1.0f, 20.0f, .5);

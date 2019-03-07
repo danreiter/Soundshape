@@ -48,7 +48,7 @@ private:
 	fundFreq fund;		// Component handles seeting for the fundmental frequency for redering the time domain
 	GuiFunc volComp;	// Component handles volume settings
 	envelope enve;		// Component handles Envelope settings
-
+    TooltipWindow ttp;  // Component handles tooltip messages
 
 
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile

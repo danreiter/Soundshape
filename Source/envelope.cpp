@@ -38,6 +38,7 @@ envelope::envelope()
 	Attack->setColour(Slider::thumbColourId, Colours::orange);
 	Attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Attack->setTextValueSuffix("Attack");
+    Attack->setTooltip("Controls how fast the sound reaches its max volume");
 
 	// Decay Slider
 	Decay->setRange(0, 100, 1.0);
@@ -47,6 +48,7 @@ envelope::envelope()
 	Decay->setColour(Slider::thumbColourId, Colours::orange);
 	Decay->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Decay->setTextValueSuffix("Decay");
+    Decay->setTooltip("Controls how fast the sound goes from max volume to sustain volume");
 
 	// Sustain slider
 	Sustain->setRange(0, 100, 1.0);
@@ -56,6 +58,7 @@ envelope::envelope()
 	Sustain->setColour(Slider::thumbColourId, Colours::orange);
 	Sustain->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Sustain->setTextValueSuffix("Sustain");
+    Sustain->setTooltip("Controls the volume of the sound while a note is held");
 
 	// Release slider
 	Release->setRange(0, 100, 1.0);
@@ -65,7 +68,7 @@ envelope::envelope()
 	Release->setColour(Slider::thumbColourId, Colours::orange);
 	Release->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Release->setTextValueSuffix("Release-");
-
+    Release->setTooltip("Controls how fast the sound fades out when a note is released");
 
 
 }
