@@ -63,9 +63,11 @@ private:
 	float profile[4000];				// Varible for testing frequency profile
 	float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
 	// Varible for notes in hz
-	float notes[12] = { 27.5f,29.50f,30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
+    static float notes[12];
+    float currentNoteFreq = 27.5;
 
     Converter *converterPtr;
+    Soundshape_pluginAudioProcessor& processor;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

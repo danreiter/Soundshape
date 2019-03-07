@@ -143,7 +143,7 @@ void GuiFunc::resized()
 	playBtn->addListener(bListen);
 	playBtn->setImages(&Normal, &Over, &Clicked);
 	playBtn->setBounds(playArea);
-	playBtn->setClickingTogglesState(false);
+	playBtn->setClickingTogglesState(true);
 
 	// add volume slider component
 	auto * vBox = addToList(new volumeBox());

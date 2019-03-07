@@ -83,6 +83,18 @@ const String Soundshape_pluginAudioProcessor::getProgramName (int index)
 void Soundshape_pluginAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
+
+void Soundshape_pluginAudioProcessor::panic()
+{
+    for (int i = 0; i < 16; i++) {
+        keyState.allNotesOff(i);
+    }
+}
+
+void Soundshape_pluginAudioProcessor::playFreq(float freq)
+{
+    keyState.noteOn(1, freqToMidiNote( freq ,440.0f), 1.0f);
+}
 bool Soundshape_pluginAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -200,4 +212,9 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 // accessor for the converter (for changing parameters that the converter manages)
 Converter& Soundshape_pluginAudioProcessor::getConverter() {
     return converter;
+}
+
+int Soundshape_pluginAudioProcessor::freqToMidiNote(float freq, float freqOfA)
+{
+    return (int)std::round( 12 * std::log2(freq/freqOfA) + 69 );
 }

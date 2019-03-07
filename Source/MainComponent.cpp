@@ -10,15 +10,18 @@
 
 #include "MainComponent.h"
 
+
+float MainComponent::notes[12] = { 27.5f, 29.50f, 30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
+
 // Id numbers passed to sub components
 
 //==============================================================================
 //  Component declares and instaites other gui components and passes variables from 
 //==============================================================================
-MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
+MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
+    processor(p)
 {
-	
-    setConverter(&(p.getConverter()));
+    setConverter(&(processor.getConverter()));
     
     //----------Default settings----------------------------------
     
@@ -297,7 +300,13 @@ void MainComponent::buttonClicked(Button* button)
 	// Play button
 	if (button->getComponentID().getIntValue() == PLAY_BUTTON)
 	{
-		// need back end call for play
+        if (button->getToggleState() == true) {
+            float freq = fund.getNote();
+            processor.playFreq(16.0f * notes[fund.getNote()]);
+        }
+        else {
+            processor.panic();
+        }
 	}
 
 	// Export button
@@ -310,6 +319,7 @@ void MainComponent::buttonClicked(Button* button)
 	if (button->getComponentID().getIntValue() == PANIC_BUTTON)
 	{
 		// need back end call for panic
+        processor.panic();
 	}
 
 	// Funmental fruquency setting buttons
