@@ -127,6 +127,7 @@ void smallTime::resized()
 		tb->setColour(TextButton::textColourOnId, Colours::black);
 		tb->setColour(TextButton::buttonColourId, Colours::orange);
 		tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		tb->setTooltip("Click here to see this part of the spectrum");
 		tb->onClick = [this]
 		{
 			auto * focused = Component::getCurrentlyFocusedComponent();

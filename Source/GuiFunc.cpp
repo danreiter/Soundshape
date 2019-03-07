@@ -15,6 +15,7 @@
 volumeBox::volumeBox()
 {
 	volume = new Slider();
+	volume->setTooltip("Controls the volume of the whole sound");
 
 	addAndMakeVisible(volume);
 
@@ -102,6 +103,7 @@ void GuiFunc::resized()
 	btn1->setColour(TextButton::buttonColourId, Colours::red);
 	btn1->setColour(TextButton::buttonOnColourId, Colours::orange);
 	btn1->setBounds(buttonArea.removeFromTop(h));
+	btn1->setTooltip("Halts all audio");
 	buttonArea.removeFromTop(h/2);
 
 	auto * btn2 = addToList(new TextButton("Export"));
@@ -109,6 +111,7 @@ void GuiFunc::resized()
 	btn2->setColour(TextButton::textColourOnId, Colours::black);
 	btn2->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	btn2->setColour(TextButton::buttonOnColourId, Colours::orange);
+	btn2->setTooltip("Saves the sound to a specified file location");
 	btn2->setBounds(buttonArea.removeFromTop(h));
 
 	playArea.removeFromBottom(buttonArea.getHeight());
@@ -138,6 +141,7 @@ void GuiFunc::resized()
 	btn3->setImages(&Normal, &Over, &Clicked);
 	btn3->setBounds(playArea);
 	btn3->setClickingTogglesState(false);
+	btn3->setTooltip("Plays the sound");
 
 	auto * vBox = addToList(new volumeBox());
 	vBox->setBounds(area.removeFromTop(h));
@@ -230,6 +234,7 @@ void fundFreq::resized()
 	btn->setImages(&upNormal, &upOver, &upClicked);
 	btn->setBounds(upArea);
 	btn->setClickingTogglesState(false);
+	btn->setTooltip("Cycles up the list of keys");
 	btn->onClick = [this] {
 		num = (num++) % 12;
 		updateText();
@@ -240,6 +245,7 @@ void fundFreq::resized()
 	btn2->setImages(&downNormal, &downOver, &downClicked);
 	btn2->setBounds(downArea);
 	btn2->setClickingTogglesState(false);
+	btn2->setTooltip("Cycles down the list of keys");
 	btn2->onClick = [this] {
 		if (num <= 0)
 		{

@@ -36,6 +36,7 @@ bigTime::bigTime()
     playTime->setColour(Slider::trackColourId, Colours::red);
     playTime->setColour(Slider::thumbColourId, Colours::red);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	playTime->setTooltip("Controls how much of the sound is played when the Play Button is pressed");
 }
 
 bigTime::~bigTime()
@@ -152,6 +153,7 @@ void bigTime::resized()
 		tb->setComponentID(String(i));
 		tb->setImages(&normal, &over, &selected);
 		tb->setClickingTogglesState(true);
+		tb->setTooltip("Click here to see this part of the sound in the middle window");
 		tb->onClick = [this]
 		{
 			auto * focused = Component::getCurrentlyFocusedComponent();

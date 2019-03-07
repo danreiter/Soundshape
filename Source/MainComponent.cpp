@@ -64,6 +64,8 @@ MainComponent::MainComponent()
 	cb.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
 	cb.setColour(ComboBox::arrowColourId, Colours::black);
 	cb.setColour(ComboBox::textColourId, Colours::black);
+	cb.setTooltip("Contains all the current presets");
+
 
 	//------------------------------------------------------------
 
@@ -75,6 +77,7 @@ MainComponent::MainComponent()
 	harmonicButton->setColour(TextButton::textColourOnId, Colours::white);
 	harmonicButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	harmonicButton->setColour(TextButton::buttonOnColourId, Colours::orange);
+	harmonicButton->setTooltip("When enabled, the harmonic setting will only allow the creation of new frequency spikes at harmonically correct frequencies");
 	harmonicButton->onClick = [this]
 	{
 		harm = -1 * (harm);
@@ -88,6 +91,7 @@ MainComponent::MainComponent()
 	addButton->setColour(TextButton::textColourOnId, Colours::white);
 	addButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);
+	addButton->setTooltip("Allows the creation of a frequency spike at any available frequency");
 	addButton->onClick = [this]
 	{
         
@@ -96,6 +100,7 @@ MainComponent::MainComponent()
 	};
 
 	writeButton = new TextButton("Write");
+	writeButton->setTooltip("Writes the chosen preset");
 
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
 	zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
