@@ -154,6 +154,7 @@ void Converter::setSampleRate(double _sampleRate)
 // the frequency freq
 void Converter::updateFrequencyValue(int chunk, int freq, float value)
 {
+    DBG(freq);
     setProfileRawPoint(chunk, freqToBin(freq), value);
 }
 

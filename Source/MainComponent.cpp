@@ -219,7 +219,8 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	if (slider->getParentComponent()->getComponentID().getIntValue() == FREQ_DOMAIN)
 	{
 		profile[slider->getComponentID().getIntValue()] = slider->getValue();
-		converterPtr->updateProfileBin(selectedProfile, slider->getComponentID().getIntValue(), profile[slider->getComponentID().getIntValue()]);
+        float input = (selectedProfile < 0) ? 0 : selectedProfile;
+		converterPtr->updateFrequencyValue(input, slider->getComponentID().getIntValue(), profile[slider->getComponentID().getIntValue()]);
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
