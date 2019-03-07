@@ -11,21 +11,6 @@
 #include "MainComponent.h"
 
 // Id numbers passed to sub components
-#define GUI_ID 10000
-#define FUN_FEQ_ID 10001
-#define FEQ_WINDOW_ID 13000
-#define BIG_WINDOW_ID 14000
-#define SMALL_WINDOW_ID 15000
-#define ENVOLOPE_ID 16000
-#define ATTACK_ID 16001
-#define DECAY_ID 16002
-#define SUSTAIN_ID 16003
-#define RELEASE_ID 16004
-#define VOLUME_ID 17001
-#define PLAY_ID 7002
-#define PANIC_ID 7003
-
-
 
 //==============================================================================
 //  Component declares and instaites other gui components and passes variables from 
@@ -45,7 +30,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 	timeBlock = 0;
 	selectedProfile = -1;
 	timeSize = 10;
-	for (int i = 0; i < 1024; i++)
+	for (int i = 0; i < 4000; i++)
 	{
 		profile[i] = -2;
 	}
@@ -63,6 +48,9 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 	fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
+	volComp.setListeners(this, this);
+	fund.setListener(this);
+	enve.setListener(this);
 
 	//------------------------------------------------------------
 
@@ -113,7 +101,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p)
 	addButton->setColour(TextButton::textColourOnId, Colours::white);
 	addButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);
-	//addButton->addListener(this);
+	addButton->addListener(this);
 	addButton->onClick = [this]
 	{
         
@@ -156,90 +144,176 @@ void MainComponent::setConverter(Converter *_converter) {
 void MainComponent::paint(Graphics& g)
 {
 	//// (Our component is opaque, so we must completely fill the background with a solid colour)
-	//g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	g.fillAll(Colours::lightgrey);
 
-}
-
-void MainComponent::resized()
-{
-	
+	// setting the boundary components for the child components
 	auto area = getLocalBounds();
 	Point<int> bottomRight(area.getBottomRight());
 	float margin = area.getWidth() * 0.01f;
 	float h = (area.getHeight() / 5);
 	auto sWindow = area.removeFromLeft(area.getWidth() - area.getWidth() / 10.0f);
 
-	// 
+	// sets the frequency domain window location and bounds
 	fWindow.setBounds(sWindow.removeFromTop(h + (2 * h / 3)).reduced(margin));
 
 	sWindow.removeFromTop(2 * margin);
+
+	// sets the small time domain window location and bounds
 	sTWindow.setBounds(sWindow.removeFromTop(h).reduced(margin));
 	sWindow.removeFromLeft(-(area.getWidth() - area.getWidth() / 15.0f, 0));
 	sWindow.setWidth(getLocalBounds().getWidth());
-	bTWindow.setBounds(sWindow.removeFromTop(h).reduced(margin));
 
+	// sets the big time domain window location and bounds
+	bTWindow.setBounds(sWindow.removeFromTop(h).reduced(margin));
+	
+	// parameters to help layout soundshape's GUI controls (sliders, buttons, and combo boxes, i.e. non-widow components)
 	Rectangle<float> topButtonArea(fWindow.getBounds().getTopRight().getX(), fWindow.getBounds().getTopRight().getY(), bottomRight.getX() - fWindow.getBounds().getTopRight().getX(), fWindow.getHeight());
 	int h1 = (int)(topButtonArea.getHeight() * .15f);
 	topButtonArea.reduce(topButtonArea.getWidth() * .15f, topButtonArea.getHeight() * .15f);
+
+	// sets zoom slider location and bounds
 	zoomSlider->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), 2 * h1);
-	topButtonArea.removeFromTop((2*h1) + (h1*.5));
+	topButtonArea.removeFromTop((2 * h1) + (h1*.5));
+
+	// sets harmonic button location and bounds
 	harmonicButton->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), h1);
 	topButtonArea.removeFromTop(h1 + (h1*.5));
+
+	// sets add button location and bounds
 	addButton->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), h1);
 
+	// sets the fundumental frequency controls location and bounds
 	Rectangle<float> fundFreqArea(sTWindow.getBounds().getTopRight().getX(), sTWindow.getBounds().getTopRight().getY(), bottomRight.getX() - sTWindow.getBounds().getTopRight().getX(), sTWindow.getHeight());
 	fundFreqArea.reduce(fundFreqArea.getWidth() * .15f, 0.0f);
 	fund.setBounds(fundFreqArea.getX(), fundFreqArea.getY(), fundFreqArea.getWidth(), h1);
 
+	// sets the volume control location and bounds
 	auto lowerRightQuad = sWindow.removeFromLeft(getLocalBounds().getWidth() / 3);
 	auto lowerMiddleQuad = sWindow.removeFromLeft(getLocalBounds().getWidth() / 3);
 	lowerRightQuad.reduce(lowerRightQuad.getWidth() * .10f, lowerRightQuad.getHeight() * .10f);
 	volComp.setBounds(lowerRightQuad);
-	
+
 	float h2 = lowerMiddleQuad.getHeight() * .20f;
 	lowerMiddleQuad.reduce(lowerMiddleQuad.getWidth() * .05f, lowerMiddleQuad.getHeight() * .20f);
-	cb.setBounds(lowerMiddleQuad.removeFromLeft((lowerMiddleQuad.getWidth() * 3) / 4).removeFromTop( h2));
+
+	// sets the pre-sets and write button location and bounds
+	cb.setBounds(lowerMiddleQuad.removeFromLeft((lowerMiddleQuad.getWidth() * 3) / 4).removeFromTop(h2));
 	writeButton->setBounds(lowerMiddleQuad.removeFromTop(h2));
+
+	// sets the envolope location and bounds
 	sWindow.reduce(sWindow.getWidth() * .05f, sWindow.getHeight() * .05f);
 	enve.setBounds(sWindow);
 
 }
 
+void MainComponent::resized()
+{
+
+}
+
 //------------------------------------------------------------------------------------
-// Function listento sliders of child components
+// Function listens to sliders of child components
 void MainComponent::sliderValueChanged(Slider * slider)
 {
-	
-	if (slider->getParentComponent() != this)
+	// on change of a frequency spike slider updates conveter with new value
+	if (slider->getParentComponent()->getComponentID().getIntValue() == FREQ_DOMAIN)
 	{
 		profile[slider->getComponentID().getIntValue()] = slider->getValue();
+		converterPtr->updateProfileBin(selectedProfile, slider->getComponentID().getIntValue(), profile[slider->getComponentID().getIntValue()]);
 	}
-	else
+	// on change of zoom slider updates zoom for frequency domain view
+	if(slider == zoomSlider)
 	{
 		zoom = slider->getValue();
 		repaint();
 	}
+
+	// on change update volume settings
+	if (slider->getComponentID().getIntValue() == VOLUME_SLIDER)
+	{
+		//Needs hook up to back end
+
+		// use slider->getValue()
+	}
+
+	// on change update attack settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_ATTACK)
+	{
+		//Needs set up with back end calls
+	}
+
+	// on change update decay settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_DECAY)
+	{
+		//Needs set up with back end calls
+	}
+
+	// on change update release settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_RELEASE)
+	{
+		//Needs set up with back end calls
+	}
+
+	// on change update sustain settings
+	if (slider->getComponentID().getIntValue() == ENVELOPE_SUSTAIN)
+	{
+		//Needs set up with back end calls
+	}
+
 }
 //-------------------------------------------------------------------------------------
 
+//-------------------------------------------------------------------------------------
+// Function listens to buttons of child components
 void MainComponent::buttonClicked(Button* button)
 {
-	if (button->getParentComponent() == &sTWindow)
+	// On frequnecy profile selection updates new frequency profile 
+	if(button->getRadioGroupId() == PROFILE_SELECT_BUTTON)
 	{
 		repaint();
 		DBG(button->getComponentID());
         float val = converterPtr->getFrequencyValue(0, 440);
 		DBG(val);
 	}
+
+	// On Time domain selection repaint GUI
 	if (button->getParentComponent() == &bTWindow)
 	{
 		repaint();
 	}
+
+	// add Button hides and shows buttons to add frequency spikes 
 	if (button->getParentComponent()->getComponentID() == addButton)
 	{
 		add = -1 * (add);
 		repaint();
 	}
 
+	// Play button
+	if (button->getComponentID().getIntValue() == PLAY_BUTTON)
+	{
+		// need back end call for play
+	}
+
+	// Export button
+	if (button->getComponentID().getIntValue() == EXPORT_BUTTON)
+	{
+		// need back end call for export
+	}
+
+	// Panic button
+	if (button->getComponentID().getIntValue() == PANIC_BUTTON)
+	{
+		// need back end call for panic
+	}
+
+	// Funmental fruquency setting buttons
+	if (button->getComponentID().getIntValue() == FUND_FREQ_BUTTON)
+	{
+		// need back end call for fundmental frequency
+		// to button->getParentComonent()->getNote() to get the index 
+		// for the notes array
+		// i.e. - notes[button->getParentComonent()->getNote()]
+	}
 }
+//-------------------------------------------------------------------------------------

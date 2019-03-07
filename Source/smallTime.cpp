@@ -3,15 +3,18 @@
 
 	smallTime.cpp
 	Created: 20 Dec 2018 1:00:26pm
-	Author:  danre
+	Author: Daniel Reiter
+	Description: Window has a time domian object that it show in a viewport at one second intervals. The component has five 
+					 buttons used to select the current frequency profile.
 
   ==============================================================================
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "smallTime.h"
-//#include "DemoUtilities.h"
 
+//==============================================================================
+//	Constructor
 //==============================================================================
 smallTime::smallTime()
 {
@@ -25,17 +28,20 @@ smallTime::smallTime()
 	*xStart = 0;
 	*xProfile = -1;
 
-
+	// Viewport settings
 	view.setViewedComponent(&tdTest, false);
 	view.setScrollBarsShown(false,false);
-	
 	addAndMakeVisible(view);
 }
 
 smallTime::~smallTime()
 {
 }
+//==============================================================================
 
+//==============================================================================
+//	Sets viewport focus and draws background
+//==============================================================================
 void smallTime::paint(Graphics& g)
 {
 	/* This demo code just fills the component's background and
@@ -44,30 +50,28 @@ void smallTime::paint(Graphics& g)
 	   You should replace everything in this method with your own
 	   drawing code..
 	*/
+
 	int btnWidth = (int)(getWidth() / 5);
 	int width = getWidth() - (getWidth() - (5 * btnWidth));
 	Rectangle<float> backGround(0.0f, 0.0f, width, getHeight() * .8f);
 	g.setColour(Colours::white);
-	//g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 	g.fillRect(backGround);
-
 	g.setColour (Colours::black);
 	g.drawRect (backGround, 1);   // draw an outline around the component
-
-	//g.setColour (Colours::white);
 	g.setFont (14.0f);
 	g.drawText ("smallTime", getLocalBounds(),
 	            Justification::centred, true);   // draw some placeholder text
 
+	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 
+	//  Draws background color
 	float pixel = (getWidth() - (getWidth() - (5 * btnWidth))) * .01f;
 	int n = (getWidth() - (getWidth() - (5 * btnWidth))) * 10;
 	float xMark = 0.0f;
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-
 	while (xMark + pixel  <= (n / 10))
 	{
 
@@ -92,7 +96,7 @@ void smallTime::paint(Graphics& g)
 		}
 	}
 
-
+	// Draws red mark over currently selected frequnecy profile section 
 	int profileMark = *xProfile - (*xStart*5);
 	if (profileMark >= 0 && profileMark < 5)
 	{
@@ -101,27 +105,33 @@ void smallTime::paint(Graphics& g)
 		g.fillRect(profileArea);
 	}
 }
+//==============================================================================
 
+//==============================================================================
+//	Function on resize sets button and viewport bounds and locations
+//==============================================================================
 void smallTime::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
+	
+	// Clears component list
 	emptyList();
+
+	// Sets viewport position and location
 	int btnWidth = (int)(getWidth() / 5);
 	int width = btnWidth * 5;
-	//view.setBounds(0.0f, 0.0f, width, getHeight() * .8f);
 	tdTest.setSize(width*(*time), getHeight() - (getHeight() * .20f));
-
 	view.setBoundsRelative( 0.0f, 0.0f, 1.0f, 1.0f);
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 	view.setBounds(0.0f, 0.0f, width, getHeight() * .8f);
 
-
+	//  loop creates buttons 
 	for (int i = 0; i < 5; ++i)
 	{
 
-		auto* tb = addToList(new TextButton("Button " + String(i + 1)));
-		tb->setRadioGroupId(34567);
+		auto* tb = addToList(new TextButton("Sec " + String(i + 1) + "/5"));
+		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
 		tb->addListener(parent);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
@@ -139,10 +149,12 @@ void smallTime::resized()
 		tb->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
 			| ((i != -1) ? Button::ConnectedOnRight : 0));
 	}
-
-
 }
+//==============================================================================
 
+//==============================================================================
+//  Function pass references from parent
+//==============================================================================
 void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent)
 {
 
@@ -151,6 +163,6 @@ void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::
 	time = _time;
 	parent = _parent;
 }
-
+//==============================================================================
 
 
