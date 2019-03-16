@@ -108,8 +108,12 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
 {
     // The Converter needs to know about the sample rate in order to convert
     // between frequency values and indexes for its internal structure
+    
+    // BUG HERE : When the converter's sample rate gets reset, the converter needs
+    // to reorganize its internal data structure!
     converter.setSampleRate(sampleRate);
-
+    DBG(sampleRate);
+    
     // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
     converter.updateFrequencyValue(0, 1  * 440, 500.0f);
     converter.updateFrequencyValue(0, 2  * 440, 300.0f);

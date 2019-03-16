@@ -2,6 +2,7 @@
 
 Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(50, formatManager, thumbnailCache),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
+    tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
@@ -72,9 +73,9 @@ void Converter::addShiftedProfiles(int chunk)
             
             for (int j = 0; j < SOUNDSHAPE_CHUNK_SIZE; j++) {
                 if (profile[j].r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
-                    float targetFreq = binToFreq(j) * ratio;
+                    float targetFreq = binToFreq(j, sampleRate) * ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
-                        int bin = freqToBin(targetFreq);
+                        int bin = freqToBin(targetFreq, sampleRate);
                         shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;
                     }
                 }
@@ -107,12 +108,12 @@ void Converter::UpdateThumbnail()
 }
 
 
-int Converter::freqToBin(int freq) {
-    return (int)std::round(SOUNDSHAPE_CHUNK_SIZE * freq / sampleRate);
+int Converter::freqToBin(int freq, double rate) {
+    return (int)std::round(SOUNDSHAPE_CHUNK_SIZE * freq / rate);
 }
 
-float Converter::binToFreq(int bin) {
-    return sampleRate * bin / SOUNDSHAPE_CHUNK_SIZE;
+float Converter::binToFreq(int bin, double rate) {
+    return rate * bin / SOUNDSHAPE_CHUNK_SIZE;
 }
 
 
@@ -145,7 +146,29 @@ AudioParameterFloat * Converter::getGain()
 // The sample rate is set when the plugin becomes ready-to-play
 void Converter::setSampleRate(double _sampleRate)
 {
-    sampleRate = _sampleRate;
+    double oldSampleRate = sampleRate;
+    sampleRate = _sampleRate; // new value for sample rate
+
+    // the internal profile data structure needs to be completely remade when
+    // the sample rate changes.
+    // The current profile data structure needs to be zero'd out, and
+    // replaced with a new version of its old self with spikes' locations shifted.
+
+    for (int i = 0; i < profile.size(); i++) {
+        tempProfile[i] = profile[i];
+        profile[i] = { 0,0 };
+    }
+    for (int sourceBin = 0; sourceBin < tempProfile.size(); sourceBin++) {
+        // recopy frequency spikes from the old profile, putting them in the correct bins (by using the old sample rate)
+        int destinationBin = freqToBin(binToFreq(sourceBin, oldSampleRate), sampleRate);
+        if (destinationBin < tempProfile.size() / 2) {
+            profile[destinationBin] = tempProfile[sourceBin];
+        }
+
+        // cleanup temporary structure for future use
+        tempProfile[sourceBin] = { 0,0 };
+    }
+
 }
 
 
@@ -155,14 +178,15 @@ void Converter::setSampleRate(double _sampleRate)
 void Converter::updateFrequencyValue(int chunk, int freq, float value)
 {
     DBG(freq);
-    setProfileRawPoint(chunk, freqToBin(freq), value);
+    // TODO : We probably need to check for index out-of-bounds here
+    setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
 }
 
 
 
 float Converter::getFrequencyValue(int chunk, int freq) {
 
-    return getProfileRawPoint(chunk, freqToBin(freq)).r;
+    return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
 }
 
 

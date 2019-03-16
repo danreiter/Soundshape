@@ -37,8 +37,8 @@ public:
 
 private:
 
-    int freqToBin(int);
-    float binToFreq(int bin);
+    int freqToBin(int freq, double rate);
+    float binToFreq(int bin, double rate);
     kiss_fft_cpx getProfileRawPoint(int chunk, int i);
     void setProfileRawPoint(int chunk, int i, float value);
     void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
@@ -65,6 +65,9 @@ private:
 
     // temporary storage of last rendered DFT for crossfading
     std::vector<float> previousDFT;
+
+    // temporary storage for data rearrangement when sample rate changes
+    std::vector<kiss_fft_cpx> tempProfile;
     
     //*======================================
 
