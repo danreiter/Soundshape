@@ -34,6 +34,7 @@ public:
     // key state
     void synthesize(int currentChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState);
 
+    void setSustain(bool sustainState);
 
 private:
 
@@ -73,8 +74,11 @@ private:
 
 
     // stores velocity information for each note, 0 to 127 (128 possible notes)
+    // these are the notes that are currently pressed
     std::array<float, 128> noteVelocities;
-
+    // and these are the ones that arent pressed but are being sustained by the pedal
+    std::array<float, 128> sustainedNoteVelocities;
+    
     AudioThumbnail thumbnail;
     AudioThumbnailCache thumbnailCache;
 
@@ -97,5 +101,7 @@ private:
 
     // TODO : This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading)
     int currentIndex = 0;
+
+    bool sustainPressed = false;
 
 };

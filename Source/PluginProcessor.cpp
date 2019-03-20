@@ -167,7 +167,17 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
     // update the keyboard state with new messages in MIDI buffer
     keyState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
-
+    MidiBuffer::Iterator messagesIter(midiMessages);
+    MidiMessage currentMessage;
+    int sampleNum;
+    while (messagesIter.getNextEvent(currentMessage, sampleNum)) {
+        if (currentMessage.isSustainPedalOn()) {
+            converter.setSustain(true);
+        }
+        else if (currentMessage.isSustainPedalOff()) {
+            converter.setSustain(false);
+        }
+    }
 
     // clear all input channels (because they will be used as output, even if we dont write to them)
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {

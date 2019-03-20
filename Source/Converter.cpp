@@ -6,7 +6,8 @@ Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(50, formatMana
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
-    noteVelocities({{0}})
+    noteVelocities({{0}}),
+    sustainedNoteVelocities({{0}})
 {
 
     // set up inverse FFT config object
@@ -58,16 +59,20 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
 }
 
-
+// *******************
+// TODO : instead of building the shifted profile while synthesizing each chunk, should it be gradually built as
+// each MIDI messaage is received?
+// *******************
 void Converter::addShiftedProfiles(int chunk)
 {
     // cycles through active notes (noteVelocities), adding a shifted profile to a temporary "profile structure" for each.
     for (int i = 0; i < noteVelocities.size(); i++) {
-        if (noteVelocities[i] != 0) { // expensive operation, so should only be done when absolutely necessary
+        if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) { // expensive operation, so should only be done when absolutely necessary
             
             // Calculate as a percentage of max value. This can be changed to something more appropriate if needed (exponential?)
             // It probably also needs to be considered how a change in velocity would change the frequency domain
-            float velocityScale = noteVelocities[i] / 127; 
+
+            float velocityScale = noteVelocities[i] / 127; // TODO : or get velocity form sustained note
             float noteFreq = (float)MidiMessage::getMidiNoteInHertz(i);
             float ratio = noteFreq / referenceFrequency;
             
@@ -76,7 +81,7 @@ void Converter::addShiftedProfiles(int chunk)
                     float targetFreq = binToFreq(j, sampleRate) * ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
                         int bin = freqToBin(targetFreq, sampleRate);
-                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;
+                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;// *velocityScale;
                     }
                 }
             }
@@ -92,7 +97,21 @@ void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int mi
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
+    if (sustainPressed == true) {
+        sustainedNoteVelocities[midiNoteNumber] = noteVelocities[midiNoteNumber];
+    }
     noteVelocities[midiNoteNumber] = 0;
+}
+
+void Converter::setSustain(bool sustainState)
+{
+    sustainPressed = sustainState;
+    if (sustainState == false) {
+        // turn off all notes that arent currently pressed
+        for (int i = 0; i < 128; i++) {
+            sustainedNoteVelocities[i] = 0.0f;
+        }
+    }
 }
 
 void Converter::midiPanic() {
