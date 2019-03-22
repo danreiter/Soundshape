@@ -23,9 +23,10 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
+	void setTumbnail(AudioThumbnail * _tn);
 
 private:
-	float ** soundWave;
+	AudioThumbnail *thumbnail;
 
     // THIS WAS ADDED HERE FOR TESTING AUDIO DRAWING.
 //===============================

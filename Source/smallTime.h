@@ -30,7 +30,7 @@ public:
 	void resized() override;
 
 	// Function passes references from parent
-	void setTimeDomain(int * _start, int * _profile, int * _time, Button::Listener* _parent);
+	void setTimeDomain(int * _start, int * _profile, int * _time, Button::Listener* _parent, AudioThumbnail * _tn);
 
 
 private:

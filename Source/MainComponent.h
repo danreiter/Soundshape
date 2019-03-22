@@ -49,6 +49,7 @@ private:
 	GuiFunc volComp;	// Component handles volume settings
 	envelope enve;		// Component handles Envelope settings
     TooltipWindow ttp;  // Component handles tooltip messages
+	AudioThumbnail * thumbnail //reference to audio rendered in time domain
 
 
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile

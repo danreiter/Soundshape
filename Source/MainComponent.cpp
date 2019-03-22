@@ -31,26 +31,17 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
 	harm = -1;
 	zoom = 4.0;
 	timeBlock = 0;
-	selectedProfile = -1;
+	selectedProfile = 0;
 	timeSize = 10;
-	for (int i = 0; i < 4000; i++)
-	{
-		profile[i] = -2;
-	}
-	for (int i = 0; i < 50; i++)
-	{
-		for (int j = 0; j < 2048; j++)
-		{
-			soundWaveProfile[i][j] = 0;
-		}
-	}
+	thumbnail = converterPtr->getThumbnail();
+	
 
 	//------------------------------------------------------------
 
 	//------Passing references to child components----------------
-	fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
-	//fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr->getFrequencyValue(0,0), (sizeof(profile) / sizeof(*profile)));
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
+	//fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
+	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
+	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, thumbnail);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
@@ -228,7 +219,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		profile[slider->getComponentID().getIntValue()] = slider->getValue();
         float input = (selectedProfile < 0) ? 0 : selectedProfile;
-		converterPtr->updateFrequencyValue(input, slider->getComponentID().getIntValue(), profile[slider->getComponentID().getIntValue()]);
+		converterPtr->updateFrequencyValue(input, slider->getComponentID().getIntValue(), slider->getComponentID().getIntValue());
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)

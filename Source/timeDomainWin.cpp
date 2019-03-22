@@ -19,7 +19,7 @@
 timeDomainWin::timeDomainWin()
 {
     // temporarily load file here for testing. Needs to be moved to code for a Load File button
-
+	thumbnail = NULL;
 	//// Code for loading a sound
  //   formatManager.registerBasicFormats();
  //   FileChooser chooser("Select a Wave file to play...",
@@ -85,7 +85,10 @@ void timeDomainWin::paint (Graphics& g)
 
     // draw thumbnail
     // TODO replace this once the backend is set up properly (the Converter has a thumbnail object)
-    //thumbnail.drawChannels(g, waveRect, 0, thumbnail.getTotalLength(), 2.5f);
+	if (thumbnail != NULL)
+	{
+		thumbnail->drawChannels(g, waveRect, 0, thumbnail->getTotalLength(), 2.5f);
+	}
 
     g.setColour(Colours::mediumpurple);
     g.setFont(3.0f);
@@ -100,6 +103,18 @@ void timeDomainWin::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
+
+}
+//==============================================================================
+
+//==============================================================================
+//  setTumbnail setter ofr Audio thumbnail
+//==============================================================================
+void timeDomainWin::setTumbnail(AudioThumbnail * _tn)
+{
+	// This method is where you should set the bounds of any child
+	// components that your component contains..
+	thumbnail = _tn;
 
 }
 //==============================================================================

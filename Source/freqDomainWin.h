@@ -13,6 +13,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Converter.h"
 
 #define FREQ_DOMAIN 3000
 
@@ -27,14 +28,16 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, float* _profile, int _size);
-	void setProfileControl(float * _profile, int _size);
+	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
+	void setProfileControl(Converter * _profile, int _size, int *_chunk);
 
 private:
-	int first;                          // Variable to track for first harmonic value                                 
+	int first;                          // Variable to track for first harmonic value 
+	int size;
 	int * harm;                         // flag harmonic correctness is on/off 
 	int *add;							// flag add button is on/off
-	float * profile;					// reference to current frequency profile's values
+	int *chunk;
+	Converter * profile;				// reference to current frequency profile's values
 	Slider::Listener* parent;			// reference to parent as a slider listener
 	Button::Listener* buttonParent;     // reference to parent as a button listener
 
@@ -47,7 +50,7 @@ private:
 		newComp->onClick = [this] {
 			auto * focused = Component::getCurrentlyFocusedComponent();
 			float margin = this->getHeight() *.10f;
-			this->profile[focused->getComponentID().getIntValue()] = 0.0f;
+			profile->updateFrequencyValue(*this->chunk,focused->getComponentID().getIntValue(), 0.0f);
 			if (this->first < 0)
 			{
 				this->first = this->getComponentID().getIntValue();

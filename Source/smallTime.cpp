@@ -153,13 +153,14 @@ void smallTime::resized()
 //==============================================================================
 //  Function pass references from parent
 //==============================================================================
-void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent)
+void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent, AudioThumbnail * _tn)
 {
 
 	xStart = _start;
 	xProfile = _profile;
 	time = _time;
 	parent = _parent;
+	tdTest.setTumbnail(_tn);
 
 	for (int i = 0; i < components.size(); i++)
 	{

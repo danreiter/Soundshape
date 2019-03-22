@@ -27,7 +27,7 @@ public:
 	void resized() override;
 
 	// Function get referneces from the parent component
-	void setZoom(double* _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, float * _profile, int _size);
+	void setZoom(double* _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, Converter * _profile, int _size, int * _chunk);
 
 private:
 	freqDomainWin base;	   // Frequency domian for the GUI 

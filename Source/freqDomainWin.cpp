@@ -22,13 +22,14 @@ freqDomainWin::freqDomainWin()
 	setComponentID((String)FREQ_DOMAIN);
 	parent = NULL;
 	buttonParent = NULL;
-	profile = new float[4000];
-	for (int i = 0; i < 4000; i++)
-	{
-		profile[i] = -1.0f;
+	size = 0;
+	//profile = new float[4000];
+	//for (int i = 0; i < 4000; i++)
+	//{
+	//	profile[i] = -1.0f;
 
-	}
-	setProfileControl(&profile[0], 4000);
+	//}
+	//setProfileControl(&profile[0], 4000);
 
 	first = -1;           
 	int temp = -1;		  
@@ -109,7 +110,7 @@ void freqDomainWin::paint (Graphics& g)
 	Rectangle<float> hTickArea(hArea);
 
 	// draw horizontal scale
-	for (int i = 0; i < 4000; i++)
+	for (int i = 0; i < size; i++)
 	{
 
 		String temp = std::to_string(i);
@@ -131,7 +132,7 @@ void freqDomainWin::paint (Graphics& g)
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
-		int t1 = (int)profile[i];
+		int t1 = (int)profile->getFrequencyValue(*chunk, i);
 		String temp2 = std::to_string(t1);
 	}
 
@@ -140,14 +141,14 @@ void freqDomainWin::paint (Graphics& g)
 	float tick = btnArea.getWidth() / 1024;
 
 	// loop sets location, bounds, and visiblity of sliders and buttons
-	for (int i = 0; i < 4000; i++)
+	for (int i = 0; i < size; i++)
 	{
 
 		Path btnPath;
 		DrawablePath normal, down, over;
 		btnArea.removeFromLeft(tick);
 
-		if (profile[i] <= 0)
+		if (profile->getFrequencyValue(*chunk, i) <= 0)
 		{
 			// set laction and bounds for each slider and button
 			components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
@@ -203,14 +204,16 @@ void freqDomainWin::resized()
 //==============================================================================
 //  setBase passes need references to freqDomainWin
 //==============================================================================
-void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size)
+void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk)
 {
 	harm = _harm;                // flag for harmonic correctness is on/off
 	add = _add;                  // flag for add buttons visiblity on/off
 	parent = _parent;            // slider listener 
-	profile = new float[_size];  // allocate for new sound profile space
 	profile = _profile;          // set frequency profile values
 	buttonParent = _bParent;	 // button listener
+	chunk = _chunk;
+
+	setProfileControl(_profile, _size, _chunk);
 
 	// set button and slider listeners to parent
 	for (int i = 0; i < components.size(); i++)
@@ -219,6 +222,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 		sliders[i]->addListener(parent);
 	}
 
+
 }
 //==============================================================================
 
@@ -226,11 +230,11 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 //  setProfileControl Funciton sets values of a frequency profile to a list of 
 //  sliders, declares and instaniates a list of sliders and a list of buttons
 //==============================================================================
-void freqDomainWin::setProfileControl(float * _profile, int _size)
+void freqDomainWin::setProfileControl(Converter * _profile, int _size, int * _chunk)
 {
 	// sets list to empty
 	emptyList();
-
+	size = _size;
 	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < _size; i++)
 	{
@@ -252,7 +256,7 @@ void freqDomainWin::setProfileControl(float * _profile, int _size)
 		sb->setRange(0.0, 100.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
 		sb->setComponentID(String(i));
-		sb->setValue((double)(_profile[i]), sendNotificationAsync);
+		sb->setValue((double)(profile->getFrequencyValue(*_chunk, i)), sendNotificationAsync);
 		sb->setColour(Slider::trackColourId, Colours::red);
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);

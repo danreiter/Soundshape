@@ -34,10 +34,10 @@ FeqWindow::~FeqWindow()
 //==============================================================================
 // Function set zoom to a reference from the parent and passes refences to the frequency domain component
 //==============================================================================
-void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  float * _profile, int _size)
+void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  Converter * _profile, int _size, int* _chunk)
 {
 	zoom = _zoom;                                                   // pass reference to zoom
-	base.setBase(_harm, _add, _parent, _bParent, _profile, _size);  // passes referneces to frequency domain component
+	base.setBase(_harm, _add, _parent, _bParent, _profile, _size, _chunk);  // passes referneces to frequency domain component
 }
 //==============================================================================
 
