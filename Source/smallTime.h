@@ -42,9 +42,8 @@ private:
 	Button::Listener* parent; //   Refences of the parent to listen to buttons
 
 	// List of components
-	OwnedArray<Component> components;
-	template <typename ComponentType>
-	ComponentType* addToList(ComponentType * newComp)
+	OwnedArray<TextButton> components;
+	TextButton* addToList(TextButton * newComp)
 	{
 		components.add(newComp);
 		addAndMakeVisible(newComp);

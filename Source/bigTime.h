@@ -39,9 +39,8 @@ private:
 	Slider* playTime;		  // Slide to pick the section of time domian to to play
 
 	// list of components
-	OwnedArray<Component> components;
-	template <typename ComponentType>
-	ComponentType* addToList(ComponentType * newComp)
+	OwnedArray<TextButton> components;
+	TextButton* addToList(TextButton * newComp)
 	{
 		components.add(newComp);
 		addAndMakeVisible(newComp);

@@ -41,6 +41,23 @@ bigTime::bigTime()
     playTime->setColour(Slider::trackColourId, Colours::red);
     playTime->setColour(Slider::thumbColourId, Colours::red);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+
+	// Create buttons
+	for (int i = 0; i < *time; ++i)
+	{
+		auto* tb = addToList(new TextButton("Sec " + String(i + 1)));
+		tb->setClickingTogglesState(false);
+		tb->setComponentID(String(i));
+		tb->setColour(TextButton::textColourOffId, Colours::black);
+		tb->setColour(TextButton::textColourOnId, Colours::black);
+		tb->setColour(TextButton::buttonColourId, Colours::orange);
+		tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		tb->onClick = [this]
+		{
+			auto * focused = Component::getCurrentlyFocusedComponent();
+			*xPoint = focused->getComponentID().getIntValue();
+		};
+	}
 }
 
 bigTime::~bigTime()
@@ -112,6 +129,13 @@ void bigTime::paint(Graphics& g)
 		g.fillRect(profileMarkArea);
 	}
 
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
+		components[i]->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
+			| ((i != -1) ? Button::ConnectedOnRight : 0));
+	}
+
 	// Set bounds and location for the play time slider
     g.setColour(Colours::black);
     playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
@@ -133,31 +157,6 @@ void bigTime::resized()
 	view.setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 	timeBase.setSize(getWidth() - (getWidth()- (btnWidth* (*time))), getHeight() - rec.getHeight());
 
-	// clear comonent list
-	emptyList();
-
-	// Create buttons
-	for (int i = 0; i < *time; ++i)
-	{
-		auto* tb = addToList(new TextButton("Sec " + String(i + 1)));
-		tb->addListener(parent);
-		tb->setClickingTogglesState(false);
-		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xPoint = focused->getComponentID().getIntValue();
-			repaint();
-		};
-		tb->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
-		tb->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
-			| ((i != -1) ? Button::ConnectedOnRight : 0));
-	}
-
 }
 //==============================================================================
 
@@ -170,6 +169,10 @@ void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Lis
 	xProfile = _profile;
 	xPoint = _Xpoint;
 	time = _time;
-	parent = _parent;
+	parent = _parent;		
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->addListener(parent);
+	}
 }
 //==============================================================================

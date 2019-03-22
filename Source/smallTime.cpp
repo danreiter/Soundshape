@@ -32,6 +32,26 @@ smallTime::smallTime()
 	view.setViewedComponent(&tdTest, false);
 	view.setScrollBarsShown(false,false);
 	addAndMakeVisible(view);
+
+	//  loop creates buttons 
+	for (int i = 0; i < 5; ++i)
+	{
+
+		auto* tb = addToList(new TextButton("Sec " + String(i + 1) + "/5"));
+		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
+		tb->setClickingTogglesState(false);
+		tb->setComponentID(String(i));
+		tb->setColour(TextButton::textColourOffId, Colours::black);
+		tb->setColour(TextButton::textColourOnId, Colours::black);
+		tb->setColour(TextButton::buttonColourId, Colours::orange);
+		tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		tb->onClick = [this]
+		{
+			auto * focused = Component::getCurrentlyFocusedComponent();
+			*xProfile = focused->getComponentID().getIntValue() + (*xStart * 5);
+			repaint();
+		};
+	}
 }
 
 smallTime::~smallTime()
@@ -104,6 +124,12 @@ void smallTime::paint(Graphics& g)
 		g.setColour(Colours::red);
 		g.fillRect(profileArea);
 	}
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
+		components[i]->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
+			| ((i != -1) ? Button::ConnectedOnRight : 0));
+	}
 }
 //==============================================================================
 
@@ -114,41 +140,13 @@ void smallTime::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
-	
-	// Clears component list
-	emptyList();
 
 	// Sets viewport position and location
-	int btnWidth = (int)(getWidth() / 5);
-	int width = btnWidth * 5;
+	int width = (int)(getWidth() / 5) * 5;
 	tdTest.setSize(width*(*time), getHeight() - (getHeight() * .20f));
 	view.setBoundsRelative( 0.0f, 0.0f, 1.0f, 1.0f);
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 	view.setBounds(0.0f, 0.0f, width, getHeight() * .8f);
-
-	//  loop creates buttons 
-	for (int i = 0; i < 5; ++i)
-	{
-
-		auto* tb = addToList(new TextButton("Sec " + String(i + 1) + "/5"));
-		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
-		tb->addListener(parent);
-		tb->setClickingTogglesState(false);
-		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xProfile = focused->getComponentID().getIntValue() + (*xStart * 5);
-			repaint();
-		};
-		tb->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
-		tb->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
-			| ((i != -1) ? Button::ConnectedOnRight : 0));
-	}
 }
 //==============================================================================
 
@@ -162,6 +160,11 @@ void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::
 	xProfile = _profile;
 	time = _time;
 	parent = _parent;
+
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->addListener(parent);
+	}
 }
 //==============================================================================
 

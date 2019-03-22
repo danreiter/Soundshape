@@ -147,7 +147,7 @@ void freqDomainWin::paint (Graphics& g)
 		DrawablePath normal, down, over;
 		btnArea.removeFromLeft(tick);
 
-		if (profile[i] < 0)
+		if (profile[i] <= 0)
 		{
 			// set laction and bounds for each slider and button
 			components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);

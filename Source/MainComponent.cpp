@@ -49,6 +49,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
 
 	//------Passing references to child components----------------
 	fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
+	//fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr->getFrequencyValue(0,0), (sizeof(profile) / sizeof(*profile)));
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this);
 	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
 	volComp.setListeners(this, this);
@@ -293,7 +294,7 @@ void MainComponent::buttonClicked(Button* button)
 	// add Button hides and shows buttons to add frequency spikes 
 	if (button->getParentComponent()->getComponentID() == addButton)
 	{
-		add = -1 * (add);
+		//add = -1 * (add);
 		repaint();
 	}
 

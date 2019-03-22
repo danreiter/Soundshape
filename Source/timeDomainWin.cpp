@@ -21,21 +21,21 @@ timeDomainWin::timeDomainWin()
     // temporarily load file here for testing. Needs to be moved to code for a Load File button
 
 	//// Code for loading a sound
-    //formatManager.registerBasicFormats();
-    //FileChooser chooser("Select a Wave file to play...",
-    //    {},
-    //    "*");
-    //if (chooser.browseForFileToOpen())
-    //{
-    //    File file(chooser.getResult());
-    //    auto* reader = formatManager.createReaderFor(file);
-    //    if (reader != nullptr)
-    //    {
-    //        std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader, true));
-    //        thumbnail.setSource(new FileInputSource(file));
-    //        readerSource.reset(newSource.release());
-    //    }
-    //}
+ //   formatManager.registerBasicFormats();
+ //   FileChooser chooser("Select a Wave file to play...",
+ //       {},
+ //       "*");
+ //   if (chooser.browseForFileToOpen())
+ //   {
+ //       File file(chooser.getResult());
+ //       auto* reader = formatManager.createReaderFor(file);
+ //       if (reader != nullptr)
+ //       {
+ //           std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader, true));
+ //           thumbnail.setSource(new FileInputSource(file));
+ //           readerSource.reset(newSource.release());
+ //       }
+ //   }
 }
 
 timeDomainWin::~timeDomainWin()
