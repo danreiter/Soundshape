@@ -46,16 +46,19 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    // accessors
-    Converter& getConverter();
 
+    // accessors
+    Converter &getConverter();
+
+    AudioProcessorValueTreeState &getTreeState();
 
 private:
+
     int freqToMidiNote(float freq, float freqOfA);
     MidiKeyboardState keyState; // tracks which MIDI keys are down
     Converter converter; // performs DSP tasks, manages some parameters.
     int currentChunk = 0;
-
+    AudioProcessorValueTreeState valueTreeState;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Soundshape_pluginAudioProcessor)
 };

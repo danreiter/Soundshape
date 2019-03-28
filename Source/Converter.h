@@ -11,6 +11,8 @@
 #define SOUNDSHAPE_CHUNK_SIZE (1 << SOUNDSHAPE_FFT_ORDER)
 #define SOUNDSHAPE_PROFILE_ROWS 50
 
+#define SOUNDSHAPE_PREVIEW_CHUNK_SIZE 128 // how many samples of each rendered chunk to save for drawing
+
 // Stores parameters like the envelope and performs common tasks for time domain <-> frequency domain transformations.
 class Converter : public MidiKeyboardStateListener
 {
@@ -27,7 +29,7 @@ public:
     void updateFrequencyValue(int chunk, int freq, float value);
     float getFrequencyValue(int chunk, int bin);
 
-    AudioThumbnail& getThumbnail();
+    AudioThumbnail * getThumbnail();
 
     // Fill the buffer with the processed inverse discrete fourier transform of
     // the data in row currentChunk of the profile, according to which keys are pressed in the
@@ -36,14 +38,18 @@ public:
 
     void setSustain(bool sustainState);
 
+    void renderPreview(int chunk);
+    float getPreviewSample(int chunk, int index);
+
+
 private:
 
     int freqToBin(int freq, double rate);
     float binToFreq(int bin, double rate);
     kiss_fft_cpx getProfileRawPoint(int chunk, int i);
     void setProfileRawPoint(int chunk, int i, float value);
-    void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
-    void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
+    void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity);
+    void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity);
     void midiPanic(); // turn off all notes
 
     // Prepares that buffer for an inverse FFT representing currently pressed keys
@@ -72,6 +78,8 @@ private:
     
     //*======================================
 
+    std::vector<float> previewChunks;
+    std::vector<float> tempRenderbuffer;
 
     // stores velocity information for each note, 0 to 127 (128 possible notes)
     // these are the notes that are currently pressed

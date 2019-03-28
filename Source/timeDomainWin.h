@@ -27,6 +27,8 @@ public:
 
 private:
 	AudioThumbnail *thumbnail;
+    
+    
 
     // THIS WAS ADDED HERE FOR TESTING AUDIO DRAWING.
 //===============================

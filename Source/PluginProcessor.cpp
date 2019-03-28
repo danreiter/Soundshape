@@ -2,27 +2,71 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#define CATCH_CONFIG_RUNNER
+#include "catch.h"
+
 //==============================================================================
 Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
-    , converter()
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", AudioChannelSet::stereo(), true)
+#endif
+    )
+    , converter(),
+    valueTreeState(*this, nullptr, Identifier("Soundshape"), {
+                                std::make_unique<AudioParameterFloat>(
+                                    "gain",
+                                    "Gain",
+                                    0.00f,
+                                    0.99f,
+                                    0.80f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "attack",
+                                    "Attack",
+                                    0.00f,
+                                    2.50f,
+                                    0.25f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "decay",
+                                    "Decay",
+                                    0.00f,
+                                    2.50f,
+                                    0.25f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "sustain",
+                                    "Sustain",
+                                    0.00f,
+                                    0.99f,
+                                    0.75f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "release",
+                                    "Release",
+                                    0.00f,
+                                    2.50f,
+                                    0.25f)
+                                }
+    )
 #endif
 {
-    // register audio parameters. Their pointers are stored in the converter object and its envelope object.
-    addParameter(converter.getEnvelope().setAttackParamPtr(new AudioParameterInt("attack",
-        "Attack",0,88200,11025)));
+
     // TODO register the rest of the parameters here, like this.
+
+    valueTreeState.addParameterListener("attack", &converter.getEnvelope());
+    valueTreeState.addParameterListener("decay", &converter.getEnvelope());
+    valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
+    valueTreeState.addParameterListener("release", &converter.getEnvelope());
 
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);
+
+    if (SOUNDSHAPE_RUN_TESTS) {
+        int result = Catch::Session().run();
+    }
+
 }
 
 Soundshape_pluginAudioProcessor::~Soundshape_pluginAudioProcessor()
@@ -113,7 +157,7 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
     // to reorganize its internal data structure!
     converter.setSampleRate(sampleRate);
     DBG(sampleRate);
-    
+
     // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
     converter.updateFrequencyValue(0, 1  * 440, 500.0f);
     converter.updateFrequencyValue(0, 2  * 440, 300.0f);
@@ -122,6 +166,8 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
     converter.updateFrequencyValue(0, 8  * 440,  50.0f);
     converter.updateFrequencyValue(0, 10 * 440,  25.0f);
     converter.updateFrequencyValue(0, 12 * 440,  12.0f);
+
+    converter.renderPreview(0);
 }
 
 void Soundshape_pluginAudioProcessor::releaseResources()
@@ -199,7 +245,7 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
 AudioProcessorEditor* Soundshape_pluginAudioProcessor::createEditor()
 {
-    return new Soundshape_pluginAudioProcessorEditor (*this);
+    return new Soundshape_pluginAudioProcessorEditor (*this, valueTreeState);
 }
 
 //==============================================================================
@@ -226,6 +272,11 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 // accessor for the converter (for changing parameters that the converter manages)
 Converter& Soundshape_pluginAudioProcessor::getConverter() {
     return converter;
+}
+
+AudioProcessorValueTreeState & Soundshape_pluginAudioProcessor::getTreeState()
+{
+    return valueTreeState;
 }
 
 int Soundshape_pluginAudioProcessor::freqToMidiNote(float freq, float freqOfA)

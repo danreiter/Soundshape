@@ -20,7 +20,7 @@
 class Soundshape_pluginAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
-    Soundshape_pluginAudioProcessorEditor (Soundshape_pluginAudioProcessor&);
+    Soundshape_pluginAudioProcessorEditor (Soundshape_pluginAudioProcessor&, AudioProcessorValueTreeState& _valueTreeState);
     ~Soundshape_pluginAudioProcessorEditor();
 
     //==============================================================================

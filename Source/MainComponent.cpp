@@ -18,11 +18,13 @@ float MainComponent::notes[12] = { 27.5f, 29.50f, 30.87f, 16.35f, 17.32f, 18.35f
 //==============================================================================
 //  Component declares and instaites other gui components and passes variables from 
 //==============================================================================
-MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
-    processor(p)
+MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorValueTreeState& _valueTreeState) :
+    processor(p),
+    enve(_valueTreeState),
+    valueTreeState(_valueTreeState)
 {
     setConverter(&(processor.getConverter()));
-    
+
     //----------Default settings----------------------------------
     
 	amp = 0.0f;
@@ -203,6 +205,24 @@ void MainComponent::paint(Graphics& g)
 	sWindow.reduce(sWindow.getWidth() * .05f, sWindow.getHeight() * .05f);
 	enve.setBounds(sWindow);
 
+
+
+
+}
+
+void MainComponent::paintOverChildren(Graphics &g) {
+    // Instead of using AudioThumbnail, draw the backend's waveform
+// by stroking a path. 
+    Path wavePath;
+
+    wavePath.startNewSubPath(0, getHeight() / 2);
+    for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
+        float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
+        float y =  ((float)getHeight()) / 2.0f - 0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i);
+        wavePath.lineTo(x, y);
+    }
+    g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
+    g.strokePath(wavePath, PathStrokeType(2.0f));
 }
 
 void MainComponent::resized()

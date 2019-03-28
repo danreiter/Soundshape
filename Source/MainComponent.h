@@ -29,11 +29,12 @@ class MainComponent : public Component, public Slider::Listener, public Button::
 {
 public:
 	//==============================================================================
-	MainComponent(Soundshape_pluginAudioProcessor& p);
+	MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorValueTreeState& _valueTreeState);
 	~MainComponent();
 
 	//==============================================================================
 	void paint(Graphics&) override;
+    void paintOverChildren(Graphics &g) override;
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
@@ -49,7 +50,7 @@ private:
 	GuiFunc volComp;	// Component handles volume settings
 	envelope enve;		// Component handles Envelope settings
     TooltipWindow ttp;  // Component handles tooltip messages
-	AudioThumbnail * thumbnail //reference to audio rendered in time domain
+    AudioThumbnail * thumbnail; //reference to audio rendered in time domain
 
 
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile
@@ -69,6 +70,7 @@ private:
 
     Converter *converterPtr;
     Soundshape_pluginAudioProcessor& processor;
+    AudioProcessorValueTreeState& valueTreeState; // back-end parameters
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

@@ -24,7 +24,7 @@
 class envelope    : public Component
 {
 public:
-    envelope();
+    envelope(AudioProcessorValueTreeState& _valueTreeState);
     ~envelope();
 
     void paint (Graphics&) override;
@@ -34,6 +34,14 @@ public:
 
 private:
 	Slider * Attack, *Decay, *Sustain, *Release;  // Sliders for the ADSR Envelope
+
+    // attachments to the back-end parameters
+    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+    std::unique_ptr<SliderAttachment> attackAttachment;
+    std::unique_ptr<SliderAttachment> decayAttachment;
+    std::unique_ptr<SliderAttachment> sustainAttachment;
+    std::unique_ptr<SliderAttachment> releaseAttachment;
+    AudioProcessorValueTreeState& valueTreeState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (envelope)
 };

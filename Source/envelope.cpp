@@ -15,7 +15,8 @@
 
 
 //==============================================================================
-envelope::envelope()
+envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
+    valueTreeState(_valueTreeState)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -25,13 +26,19 @@ envelope::envelope()
 	Release = new Slider();
 
 	addAndMakeVisible(Attack);
-	addAndMakeVisible(Decay);
-	addAndMakeVisible(Sustain);
-	addAndMakeVisible(Release);
+    attackAttachment.reset(new SliderAttachment(valueTreeState, "attack", *Attack));
 
+	addAndMakeVisible(Decay);
+    decayAttachment.reset(new SliderAttachment(valueTreeState, "decay", *Decay));
+
+	addAndMakeVisible(Sustain);
+    sustainAttachment.reset(new SliderAttachment(valueTreeState, "sustain", *Sustain));
+
+	addAndMakeVisible(Release);
+    releaseAttachment.reset(new SliderAttachment(valueTreeState, "release", *Release));
 
 	// Attack slider
-	Attack->setRange(0, 100, 1.0);
+	//Attack->setRange(0, 100, 1.0);
 	Attack->setComponentID((String)ENVELOPE_ATTACK);
 	Attack->setSliderStyle(Slider::LinearVertical);
 	Attack->setColour(Slider::trackColourId, Colours::orange);
@@ -41,7 +48,7 @@ envelope::envelope()
     Attack->setTooltip("Controls how fast the sound reaches its max volume");
 
 	// Decay Slider
-	Decay->setRange(0, 100, 1.0);
+	//Decay->setRange(0, 100, 1.0);
 	Decay->setComponentID((String)ENVELOPE_DECAY);
 	Decay->setSliderStyle(Slider::LinearVertical);
 	Decay->setColour(Slider::trackColourId, Colours::orange);
@@ -51,7 +58,7 @@ envelope::envelope()
     Decay->setTooltip("Controls how fast the sound goes from max volume to sustain volume");
 
 	// Sustain slider
-	Sustain->setRange(0, 100, 1.0);
+	//Sustain->setRange(0, 100, 1.0);
 	Sustain->setComponentID((String)ENVELOPE_SUSTAIN);
 	Sustain->setSliderStyle(Slider::LinearVertical);
 	Sustain->setColour(Slider::trackColourId, Colours::orange);
@@ -61,7 +68,7 @@ envelope::envelope()
     Sustain->setTooltip("Controls the volume of the sound while a note is held");
 
 	// Release slider
-	Release->setRange(0, 100, 1.0);
+	//Release->setRange(0, 100, 1.0);
 	Release->setComponentID((String)ENVELOPE_RELEASE);
 	Release->setSliderStyle(Slider::LinearVertical);
 	Release->setColour(Slider::trackColourId, Colours::orange);

@@ -1,28 +1,28 @@
 #include "Converter.h"
 
-Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(50, formatManager, thumbnailCache),
+Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(2, formatManager, thumbnailCache),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
+    previewChunks(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_PREVIEW_CHUNK_SIZE),
+    tempRenderbuffer(2*SOUNDSHAPE_CHUNK_SIZE),
     noteVelocities({{0}}),
     sustainedNoteVelocities({{0}})
 {
 
+    thumbnail.reset(1, 44100,44100);
+
     // set up inverse FFT config object
     // This needs manually freed (use destructor)
     inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
-
-    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE; i++) {
-        //DBG(profile[i]);
-    }
+    envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
 }
 
 Converter::~Converter() {
     kiss_fftr_free(inverseFFT);
 }
-
 
 void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState)
 {
@@ -56,7 +56,10 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     }
 
     buffer.copyFrom(0,0, tempChunk.data(), buffer.getNumSamples()); // left channel
+    // apply envelope
+    envelope.adsrEnvelope.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
     buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
+    
 }
 
 // *******************
@@ -89,10 +92,27 @@ void Converter::addShiftedProfiles(int chunk)
     }
 }
 
+void Converter::renderPreview(int chunk)
+{
+    // do an IFFT 
+    kiss_fftri(inverseFFT, profile.data(), tempRenderbuffer.data());
+    // write some samples to the structure that the GUI can use for drawing
+    for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
+        previewChunks[chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE + i] = tempRenderbuffer[i]/SOUNDSHAPE_CHUNK_SIZE;
+    }
+}
+
+float Converter::getPreviewSample(int chunk, int index)
+{
+    return previewChunks[chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE + index];
+}
+
+
 void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
     // Possibly change this in the future to only work for user-specified MIDI channels?
     noteVelocities[midiNoteNumber] = velocity;
+    envelope.adsrEnvelope.noteOn();
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
@@ -101,15 +121,33 @@ void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int m
         sustainedNoteVelocities[midiNoteNumber] = noteVelocities[midiNoteNumber];
     }
     noteVelocities[midiNoteNumber] = 0;
+    // if no notes being sustained, go into release phase
+    bool isTimeForRelease = true;
+    for (int i = 0; i < 128; i++) {
+        if (sustainedNoteVelocities[i] != 0) {
+            isTimeForRelease = false;
+        }
+    }
+    if (isTimeForRelease) {
+        envelope.adsrEnvelope.noteOff();
+    }
 }
 
 void Converter::setSustain(bool sustainState)
 {
     sustainPressed = sustainState;
     if (sustainState == false) {
-        // turn off all notes that arent currently pressed
+        // turn off all notes that arent currently pressed,
+        // and check if any notes are still pressed.
+        bool isTimeForRelease = true;
         for (int i = 0; i < 128; i++) {
             sustainedNoteVelocities[i] = 0.0f;
+            if (noteVelocities[i] != 0) {
+                isTimeForRelease = false;
+            }
+        }
+        if (isTimeForRelease) {
+            envelope.adsrEnvelope.noteOff();
         }
     }
 }
@@ -188,6 +226,9 @@ void Converter::setSampleRate(double _sampleRate)
         tempProfile[sourceBin] = { 0,0 };
     }
 
+    // we also need to inform the envelope
+    envelope.adsrEnvelope.setSampleRate(_sampleRate);
+
 }
 
 
@@ -210,8 +251,8 @@ float Converter::getFrequencyValue(int chunk, int freq) {
 
 
 
-AudioThumbnail & Converter::getThumbnail()
+AudioThumbnail * Converter::getThumbnail()
 {
-    return thumbnail;
+    return &thumbnail;
 }
 

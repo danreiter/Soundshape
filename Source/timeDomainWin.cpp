@@ -87,8 +87,9 @@ void timeDomainWin::paint (Graphics& g)
     // TODO replace this once the backend is set up properly (the Converter has a thumbnail object)
 	if (thumbnail != NULL)
 	{
-		thumbnail->drawChannels(g, waveRect, 0, thumbnail->getTotalLength(), 2.5f);
+		thumbnail->drawChannels(g, waveRect, 0, 0.01f, 13.0f);
 	}
+
 
     g.setColour(Colours::mediumpurple);
     g.setFont(3.0f);

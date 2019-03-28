@@ -28,6 +28,7 @@
       </GROUP>
       <FILE id="FvFwbF" name="EnvelopeParams.cpp" compile="1" resource="0"
             file="Source/EnvelopeParams.cpp"/>
+      <FILE id="XA1c8K" name="catch.h" compile="0" resource="0" file="Source/catch.h"/>
       <FILE id="uZogDa" name="EnvelopeParams.h" compile="0" resource="0"
             file="Source/EnvelopeParams.h"/>
       <FILE id="yrKI0i" name="Converter.h" compile="0" resource="0" file="Source/Converter.h"/>
