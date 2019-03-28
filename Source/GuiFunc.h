@@ -25,7 +25,7 @@
 class volumeBox : public Component
 {
 public:
-	volumeBox();
+	volumeBox(AudioProcessorValueTreeState& _valueTreeState);
 	~volumeBox();
 
 	void paint(Graphics&) override;
@@ -33,7 +33,10 @@ public:
 	void resized() override;
 	void setVolumeListener(Slider::Listener * _listener);
 private:
+    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 	Slider * volume;
+    std::unique_ptr<SliderAttachment> gainAttachment; // lets the back and front end volume control each other
+    
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(volumeBox)
 };
@@ -46,7 +49,7 @@ private:
 class GuiFunc : public Component
 {
 public:
-	GuiFunc();
+	GuiFunc(AudioProcessorValueTreeState& _valueTreeState);
 	~GuiFunc();
 
 	void paint(Graphics&) override;
@@ -55,6 +58,7 @@ public:
 
 
 private:
+    AudioProcessorValueTreeState& valueTreeState;
 	Slider::Listener * sListen;							// reference to parent for slider listener
 	Button::Listener * bListen;							// refernence to parent for button listener
 	

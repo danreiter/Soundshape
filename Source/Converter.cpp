@@ -1,6 +1,6 @@
 #include "Converter.h"
 
-Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(2, formatManager, thumbnailCache),
+Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState(_valueTreeState), envelope(), thumbnailCache(2), thumbnail(2, formatManager, thumbnailCache),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
@@ -13,7 +13,7 @@ Converter::Converter() : envelope(), thumbnailCache(2), thumbnail(2, formatManag
 {
 
     thumbnail.reset(1, 44100,44100);
-
+    
     // set up inverse FFT config object
     // This needs manually freed (use destructor)
     inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
@@ -40,7 +40,6 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     kiss_fft_cpx zeroCpx = { 0,0 };
     std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx);
     addShiftedProfiles(profileChunk);
-    
 
     // TODO : change this to only be computed when it NEEDS to be.
     kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
@@ -58,6 +57,8 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     buffer.copyFrom(0,0, tempChunk.data(), buffer.getNumSamples()); // left channel
     // apply envelope
     envelope.adsrEnvelope.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
+    // apply gain
+    buffer.applyGain(gain);
     buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
     
 }
@@ -192,11 +193,11 @@ EnvelopeParams & Converter::getEnvelope()
     return envelope;
 }
 
-
-
-AudioParameterFloat * Converter::getGain()
+void Converter::parameterChanged(const String & parameterID, float newValue)
 {
-    return gain;
+    if (parameterID == "gain") {
+        gain = newValue;
+    }
 }
 
 

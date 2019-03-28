@@ -14,15 +14,16 @@
 #define SOUNDSHAPE_PREVIEW_CHUNK_SIZE 128 // how many samples of each rendered chunk to save for drawing
 
 // Stores parameters like the envelope and performs common tasks for time domain <-> frequency domain transformations.
-class Converter : public MidiKeyboardStateListener
+class Converter : public MidiKeyboardStateListener, public AudioProcessorValueTreeState::Listener
 {
 public:
-    Converter();
+    Converter(AudioProcessorValueTreeState& _valueTreeState);
     ~Converter();
 
     // getters for AudioParameter stuff
     EnvelopeParams& getEnvelope();
-    AudioParameterFloat *getGain();
+
+    void parameterChanged(const String &parameterID, float newValue) override;
 
     // getters/setters for managin the profile
     void setSampleRate(double _sampleRate);
@@ -54,6 +55,10 @@ private:
 
     // Prepares that buffer for an inverse FFT representing currently pressed keys
     void addShiftedProfiles(int chunk);
+
+    AudioProcessorValueTreeState& valueTreeState;
+    // updated whenever the actual audioparameter changes
+    float gain = 0.99;
 
     //*===================================
     //* THESE STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE 
@@ -93,10 +98,7 @@ private:
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
     double sampleRate;
 
-    // the converter logically stores the audio parameters for better abstraction,
-    // but these actually need to be setup in the audio processor with addParameter().
-    AudioParameterFloat *gain;
-    // the envelope contains the pointers to the ADSR values and the envelope size (which is not and audio parameter)
+    // manages the adsr envelope and lsitens for when they get changed
     EnvelopeParams envelope;
 
     void UpdateThumbnail();

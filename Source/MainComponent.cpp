@@ -1,15 +1,4 @@
-/*
-  ==============================================================================
-
-	GuiFunc.cpp
-	Created: 24 Dec 2018 12:44:39pm
-	Author:  Daniel Reiter.
-
-  ==============================================================================
-*/
-
 #include "MainComponent.h"
-
 
 float MainComponent::notes[12] = { 27.5f, 29.50f, 30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
 
@@ -21,7 +10,8 @@ float MainComponent::notes[12] = { 27.5f, 29.50f, 30.87f, 16.35f, 17.32f, 18.35f
 MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorValueTreeState& _valueTreeState) :
     processor(p),
     enve(_valueTreeState),
-    valueTreeState(_valueTreeState)
+    valueTreeState(_valueTreeState),
+    volComp(_valueTreeState)
 {
     setConverter(&(processor.getConverter()));
 

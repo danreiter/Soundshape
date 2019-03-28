@@ -15,8 +15,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 #endif
         .withOutput("Output", AudioChannelSet::stereo(), true)
 #endif
-    )
-    , converter(),
+    ),
     valueTreeState(*this, nullptr, Identifier("Soundshape"), {
                                 std::make_unique<AudioParameterFloat>(
                                     "gain",
@@ -49,7 +48,8 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     2.50f,
                                     0.25f)
                                 }
-    )
+    ),
+    converter(valueTreeState)
 #endif
 {
 
@@ -59,6 +59,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
     valueTreeState.addParameterListener("decay", &converter.getEnvelope());
     valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
     valueTreeState.addParameterListener("release", &converter.getEnvelope());
+    valueTreeState.addParameterListener("gain", &converter);
 
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);

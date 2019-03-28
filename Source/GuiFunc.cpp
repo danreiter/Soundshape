@@ -15,15 +15,15 @@
 //==============================================================================
 //  volumeBox contains slider for volume and draws box and shapes for volume controls
 //==============================================================================
-volumeBox::volumeBox()
+volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 {
 	// slider to control volume
 	volume = new Slider();
+    gainAttachment.reset(new SliderAttachment(_valueTreeState, "gain", *volume));
 	addAndMakeVisible(volume);
 	volume->setComponentID((String)VOLUME_SLIDER);
 	volume->setSliderStyle(Slider::LinearHorizontal);
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	volume->setRange(0.0f, 100.0f, 1.0);
 }
 volumeBox::~volumeBox(){}
 
@@ -66,9 +66,8 @@ void volumeBox::setVolumeListener(Slider::Listener * _listener)
 //  Fuction GuiFunc add and draw buttons for soundshap's play, export, and panic 
 //		controls and volume slider
 //==============================================================================
-GuiFunc::GuiFunc()
+GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState(_valueTreeState)
 {
-
 }
 
 GuiFunc::~GuiFunc()
@@ -146,7 +145,7 @@ void GuiFunc::resized()
 	playBtn->setClickingTogglesState(true);
 
 	// add volume slider component
-	auto * vBox = addToList(new volumeBox());
+	auto * vBox = addToList(new volumeBox(valueTreeState));
 	vBox->setVolumeListener(sListen);
 	vBox->setBounds(area.removeFromTop(h));
 }

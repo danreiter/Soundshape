@@ -10,7 +10,7 @@ public:
     EnvelopeParams();
     ~EnvelopeParams();
 
-    void parameterChanged(const String &parameterID, float newValue);
+    void parameterChanged(const String &parameterID, float newValue) override;
 
     ADSR adsrEnvelope;
 
