@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="OEfazO" name="Soundshape_plugin" projectType="audioplug"
               jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
-              pluginCharacteristicsValue="pluginIsSynth">
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
       <GROUP id="{8C251B4E-3C59-D64A-3236-C68731CC14F3}" name="kissfft">
