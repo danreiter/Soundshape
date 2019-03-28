@@ -2,24 +2,72 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#define CATCH_CONFIG_RUNNER
+#include "catch.h"
+
 //==============================================================================
 Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
-    , converter()
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", AudioChannelSet::stereo(), true)
+#endif
+    ),
+    valueTreeState(*this, nullptr, Identifier("Soundshape"), {
+                                std::make_unique<AudioParameterFloat>(
+                                    "gain",
+                                    "Gain",
+                                    0.00f,
+                                    0.99f,
+                                    0.80f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "attack",
+                                    "Attack",
+                                    0.00f,
+                                    2.50f,
+                                    0.25f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "decay",
+                                    "Decay",
+                                    0.00f,
+                                    2.50f,
+                                    0.25f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "sustain",
+                                    "Sustain",
+                                    0.00f,
+                                    0.99f,
+                                    0.75f),
+                                std::make_unique<AudioParameterFloat>(
+                                    "release",
+                                    "Release",
+                                    0.00f,
+                                    2.50f,
+                                    0.25f)
+                                }
+    ),
+    converter(valueTreeState)
 #endif
 {
-    // register audio parameters. Their pointers are stored in the converter object and its envelope object.
-    addParameter(converter.getEnvelope().setAttackParamPtr(new AudioParameterInt("attack",
-        "Attack",0,88200,11025)));
+
     // TODO register the rest of the parameters here, like this.
+
+    valueTreeState.addParameterListener("attack", &converter.getEnvelope());
+    valueTreeState.addParameterListener("decay", &converter.getEnvelope());
+    valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
+    valueTreeState.addParameterListener("release", &converter.getEnvelope());
+    valueTreeState.addParameterListener("gain", &converter);
+
+    // add the converter as a listener to the midi keyboard state
+    keyState.addListener(&converter);
+
+    if (SOUNDSHAPE_RUN_TESTS) {
+        int result = Catch::Session().run();
+    }
+
 }
 
 Soundshape_pluginAudioProcessor::~Soundshape_pluginAudioProcessor()
@@ -80,6 +128,18 @@ const String Soundshape_pluginAudioProcessor::getProgramName (int index)
 void Soundshape_pluginAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
+
+void Soundshape_pluginAudioProcessor::panic()
+{
+    for (int i = 0; i < 16; i++) {
+        keyState.allNotesOff(i);
+    }
+}
+
+void Soundshape_pluginAudioProcessor::playFreq(float freq)
+{
+    keyState.noteOn(1, freqToMidiNote( freq ,440.0f), 1.0f);
+}
 bool Soundshape_pluginAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -91,8 +151,24 @@ bool Soundshape_pluginAudioProcessor::hasEditor() const
 //==============================================================================
 void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    // The Converter needs to know about the sample rate in order to convert
+    // between frequency values and indexes for its internal structure
+    
+    // BUG HERE : When the converter's sample rate gets reset, the converter needs
+    // to reorganize its internal data structure!
+    converter.setSampleRate(sampleRate);
+    DBG(sampleRate);
+
+    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
+    converter.updateFrequencyValue(0, 1  * 440, 500.0f);
+    converter.updateFrequencyValue(0, 2  * 440, 300.0f);
+    converter.updateFrequencyValue(0, 4  * 440, 200.0f);
+    converter.updateFrequencyValue(0, 6  * 440, 100.0f);
+    converter.updateFrequencyValue(0, 8  * 440,  50.0f);
+    converter.updateFrequencyValue(0, 10 * 440,  25.0f);
+    converter.updateFrequencyValue(0, 12 * 440,  12.0f);
+
+    converter.renderPreview(0);
 }
 
 void Soundshape_pluginAudioProcessor::releaseResources()
@@ -131,42 +207,46 @@ bool Soundshape_pluginAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     int numSamples = buffer.getNumSamples();
 
     // update the keyboard state with new messages in MIDI buffer
     keyState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
-
-    // copy the appropriate chunk from the converter object's profile matrix
-    // Then, duplicate it according to each downed MIDI note.
-    // To determine the index of the appropriate chunk, we keep track of the
-    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
-    // we start keeping track of how many samples we process. Once this number exceeds 
-    // the number of samples that each chunk represents, we increment the index (accounting
-    // for things like looping). If there are no notes down at the moment, then
-    // we should reset the index to the beginning of the range in the UI slider.
-    // We should also skip all DSP if there are no notes down or the number of samples to process
-    // happens to be 0.
-    
-
+    MidiBuffer::Iterator messagesIter(midiMessages);
+    MidiMessage currentMessage;
+    int sampleNum;
+    while (messagesIter.getNextEvent(currentMessage, sampleNum)) {
+        if (currentMessage.isSustainPedalOn()) {
+            converter.setSustain(true);
+        }
+        else if (currentMessage.isSustainPedalOff()) {
+            converter.setSustain(false);
+        }
+    }
 
     // clear all input channels (because they will be used as output, even if we dont write to them)
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear(i, 0, buffer.getNumSamples());
     }
-
-    // Time for writing channels.
-    // write to first channel, copy first channel to second
-    auto* channelData = buffer.getWritePointer(0); //channel 0
+    // To determine the index of the appropriate chunk, we keep track of the
+    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
+    // we start keeping track of how many samples we process. Once this number exceeds
+    // the number of samples that each chunk represents, we increment the index (accounting
+    // for things like looping). If there are no notes down at the moment, then
+    // we should reset the index to the beginning of the range in the UI slider.
+    // We should also skip all DSP if there are no notes down or the number of samples to process
+    // happens to be 0.
+    converter.synthesize(currentChunk, buffer, keyState);
+    
 
 }
 
 
 AudioProcessorEditor* Soundshape_pluginAudioProcessor::createEditor()
 {
-    return new Soundshape_pluginAudioProcessorEditor (*this);
+    return new Soundshape_pluginAudioProcessorEditor (*this, valueTreeState);
 }
 
 //==============================================================================
@@ -193,4 +273,14 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 // accessor for the converter (for changing parameters that the converter manages)
 Converter& Soundshape_pluginAudioProcessor::getConverter() {
     return converter;
+}
+
+AudioProcessorValueTreeState & Soundshape_pluginAudioProcessor::getTreeState()
+{
+    return valueTreeState;
+}
+
+int Soundshape_pluginAudioProcessor::freqToMidiNote(float freq, float freqOfA)
+{
+    return (int)std::round( 12 * std::log2(freq/freqOfA) + 69 );
 }

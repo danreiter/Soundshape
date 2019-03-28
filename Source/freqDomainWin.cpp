@@ -3,8 +3,9 @@
 
     freqDomainWin.cpp
     Created: 28 Dec 2018 11:48:50am
-    Author:  danre
-
+    Author:  Daniel Reiter
+	Component: Render current frequency seleced frequency profile and allow users to 
+			   add and modify frequency spikes using sliders and buttons
   ==============================================================================
 */
 
@@ -12,26 +13,40 @@
 #include "freqDomainWin.h"
 
 //==============================================================================
+//  freqDomainWin constructor set default values to variables to allow a GUI to open
+//==============================================================================
 freqDomainWin::freqDomainWin()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-	profile = new float[1024];
-	for (int i = 0; i < 1024; i++)
-	{
-		profile[i] = -1.0f;
-	}
-	first = -1;
-	int temp = -1;
+	setComponentID((String)FREQ_DOMAIN);
+	parent = NULL;
+	buttonParent = NULL;
+	size = 0;
+	//profile = new float[4000];
+	//for (int i = 0; i < 4000; i++)
+	//{
+	//	profile[i] = -1.0f;
+
+	//}
+	//setProfileControl(&profile[0], 4000);
+
+	first = -1;           
+	int temp = -1;		  
 	add = &temp;
 	harm = &temp;
 
 }
 
+
 freqDomainWin::~freqDomainWin()
 {
 }
+//==============================================================================
 
+//==============================================================================
+//  Paint Funciton
+//==============================================================================
 void freqDomainWin::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
@@ -41,8 +56,6 @@ void freqDomainWin::paint (Graphics& g)
        drawing code..
     */
 
-	//g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));   // clear the background
-
 	float pixel = getWidth() * .01f;
 	int n = getWidth() * 10;
 	float xMark = 0.0f;
@@ -50,6 +63,8 @@ void freqDomainWin::paint (Graphics& g)
 	bool flag = true;
 	Colour c1;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
+
+	// draw color of background
 	for (int i = 0; i <= n; i++)
 	{
 
@@ -75,7 +90,6 @@ void freqDomainWin::paint (Graphics& g)
 
 	g.setColour(Colours::grey);
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-
 	g.setColour(Colours::black);
 	g.setFont(14.0f);
 	g.drawText("Base Window", getLocalBounds(),
@@ -85,23 +99,18 @@ void freqDomainWin::paint (Graphics& g)
 	Line<float> hLine(margin, getHeight() - margin, getWidth() - margin, getHeight() - margin);
 	g.drawLine(vLine);
 	g.drawLine(hLine);
-
 	float vTick = vLine.getLength() / 10;
 	float hTick = hLine.getLength() / 100;
-	float smallTick = hLine.getLength() / 1024;
+	float smallTick = hLine.getLength() / 4000;
 	Rectangle<float> vArea(.5f * margin, margin, margin, vLine.getLength());
 	Rectangle<float> hArea(margin, getHeight() - (1.5f * margin), hLine.getLength(), margin);
 	Rectangle<float> smallArea(margin, getHeight() - (1.25f *margin), hLine.getLength(), margin / 2);
-
 	Rectangle<float> testPrint(margin, 1.25f *margin, hLine.getLength(), margin / 2);
-
 	g.setFont(vTick * .8f);
-
-	//g.fillRect(vArea);
-	//g.fillRect(hArea);
 	Rectangle<float> hTickArea(hArea);
 
-	for (int i = 0; i < 1024; i++)
+	// draw horizontal scale
+	for (int i = 0; i < size; i++)
 	{
 
 		String temp = std::to_string(i);
@@ -116,47 +125,39 @@ void freqDomainWin::paint (Graphics& g)
 		if (i % 10 == 0)
 		{
 			g.drawText(temp, hTickArea, Justification::bottomLeft, true);
-			//g.drawText(temp, smallArea, Justification::centred, true);
-			/*hArea.removeFromLeft(hTick)*/;
-			//Line<float> tLine(hArea.getBottomLeft(), hArea.getTopLeft());
 			Line<float> tLine(hTickArea.getBottomLeft(), hTickArea.getTopLeft());
 			g.drawLine(tLine);
 		}
 
-		//smallArea.removeFromLeft(smallTick);
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
-		int t1 = (int)profile[i];
+		int t1 = (int)profile->getFrequencyValue(*chunk, i);
 		String temp2 = std::to_string(t1);
 	}
-}
 
-void freqDomainWin::resized()
-{
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
-	emptyList();
-
-	float margin = getHeight() *.10f;
-
-	//Rectangle<float> smallArea(margin, getHeight() - (1.25f *margin), hLine.getLength(), margin / 2);
+	margin = getHeight() *.10f;
 	Rectangle<float> btnArea(margin, getHeight() - (1.25f *margin), getWidth() - (2 * margin), margin / 4);
 	float tick = btnArea.getWidth() / 1024;
 
-
-	for (int i = 0; i < 1024; i++)
+	// loop sets location, bounds, and visiblity of sliders and buttons
+	for (int i = 0; i < size; i++)
 	{
 
 		Path btnPath;
 		DrawablePath normal, down, over;
-
 		btnArea.removeFromLeft(tick);
 
-		if (profile[i] < 0)
+		if (profile->getFrequencyValue(*chunk, i) <= 0)
 		{
+			// set laction and bounds for each slider and button
+			components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
+			sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+			
+			// If add button is on - set add buttons visilbe to true
 			if (*add > 0)
 			{
+				// harmonic correctness case 
 				if (harm && first > 0 && (i % first == 0))
 				{
 
@@ -165,66 +166,106 @@ void freqDomainWin::resized()
 				{
 
 				}
+				// no harmonic correctness case
 				else
 				{
 
-					auto * tb = addToList(new TextButton(""));
-					tb->setComponentID(String(i));
-					tb->setClickingTogglesState(true);
-					tb->onClick = [this] {
-						auto * focused = Component::getCurrentlyFocusedComponent();
-						float margin = this->getHeight() *.10f;
-						this->profile[focused->getComponentID().getIntValue()] = 0.0f;
-						if (this->first < 0)
-						{
-							this->first = this->getComponentID().getIntValue();
-						}
-						focused->setVisible(false);
+					components[i]->setVisible(true);
 
-						auto * sb = this->createSlider();
-						sb->setRange(0.0, 100.0, 0.1);
-						sb->setSliderStyle(Slider::LinearBarVertical);
-						sb->setComponentID(String(focused->getComponentID().getIntValue()));
-						sb->setValue((double)(profile[focused->getComponentID().getIntValue()]), sendNotificationAsync);
-						sb->setColour(Slider::trackColourId, Colours::red);
-						sb->setTextBoxIsEditable(false);
-						sb->setPopupDisplayEnabled(true, true, this);
-						sb->addListener(parent);
-						sb->setBounds(focused->getX() + ((margin * 3) / 8), margin, margin / 2, this->getHeight() - (2 * margin));
-						this->repaint();
-					};
-					tb->setColour(TextButton::textColourOnId, Colours::black);
-					tb->setColour(TextButton::buttonColourId, Colours::white);
-					tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
-					tb->setColour(TextButton::textColourOffId, Colours::black);
-					tb->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
 				}
 			}
+			// hide add buttons
+			else
+			{
+
+				components[i]->setVisible(false);
+			}
 		}
+		// show slider that are being used
 		else
 		{
-			auto * sb = createSlider();
-			sb->setRange(0.0, 100.0, 0.1);
-			sb->setSliderStyle(Slider::LinearBarVertical);
-			sb->setComponentID(String(i));
-			sb->setValue((double)(profile[i]), sendNotificationAsync);
-			sb->setColour(Slider::trackColourId, Colours::red);
-			sb->setTextBoxIsEditable(false);
-			sb->setPopupDisplayEnabled(true, true, this);
-			sb->addListener(parent);
-			sb->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+			sliders[i]->setVisible(true);
 		}
 
 
 	}
-
 }
+//==============================================================================
 
-void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, float* _profile, int _size)
+//==============================================================================
+//  Resize Funciton
+//==============================================================================
+void freqDomainWin::resized()
 {
-	harm = _harm;
-	add = _add;
-	parent = _parent;
-	profile = new float[_size];
-	profile = _profile;
+
 }
+//==============================================================================
+
+//==============================================================================
+//  setBase passes need references to freqDomainWin
+//==============================================================================
+void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk)
+{
+	harm = _harm;                // flag for harmonic correctness is on/off
+	add = _add;                  // flag for add buttons visiblity on/off
+	parent = _parent;            // slider listener 
+	profile = _profile;          // set frequency profile values
+	buttonParent = _bParent;	 // button listener
+	chunk = _chunk;
+
+	setProfileControl(_profile, _size, _chunk);
+
+	// set button and slider listeners to parent
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->addListener(buttonParent);
+		sliders[i]->addListener(parent);
+	}
+
+
+}
+//==============================================================================
+
+//==============================================================================
+//  setProfileControl Funciton sets values of a frequency profile to a list of 
+//  sliders, declares and instaniates a list of sliders and a list of buttons
+//==============================================================================
+void freqDomainWin::setProfileControl(Converter * _profile, int _size, int * _chunk)
+{
+	// sets list to empty
+	emptyList();
+	size = _size;
+	// declares and instaniates a list of sliders and a list of buttons
+	for (int i = 0; i < _size; i++)
+	{
+		auto * tb = addToList(new TextButton(""));
+		tb->setComponentID(String(i));
+		tb->setClickingTogglesState(true);
+		tb->setColour(TextButton::textColourOnId, Colours::black);
+		tb->setColour(TextButton::buttonColourId, Colours::white);
+		tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
+		tb->setColour(TextButton::textColourOffId, Colours::black);
+		tb->setVisible(false);
+		if (buttonParent != NULL)
+		{
+			tb->addListener(buttonParent);
+		}
+
+
+		auto * sb = createSlider();
+		sb->setRange(0.0, 100.0, 0.1);
+		sb->setSliderStyle(Slider::LinearBarVertical);
+		sb->setComponentID(String(i));
+		sb->setValue((double)(profile->getFrequencyValue(*_chunk, i)), sendNotificationAsync);
+		sb->setColour(Slider::trackColourId, Colours::red);
+		sb->setTextBoxIsEditable(false);
+		sb->setPopupDisplayEnabled(true, true, this);
+		sb->setVisible(false);
+		if (parent != NULL)
+		{
+			sb->addListener(parent);
+		}
+	}
+
+}
+//==============================================================================

@@ -3,18 +3,12 @@
 
     bigTime.h
     Created: 24 Dec 2018 12:43:15pm
-    Author:  danre
+    Author:  Daniel Reiter
+	Description: Component uses a view port to display the time domain adn contains buttons to allow the 
+					user to select a magnified view in the small time window.
 
-  ==============================================================================
-/*
-  ==============================================================================
-
-	bigTime.h
-	Created: 20 Dec 2018 1:00:48pm
-	Author:  danre
-
-  ==============================================================================
 */
+//==============================================================================
 
 #pragma once
 
@@ -22,8 +16,6 @@
 #include "timeDomainWin.h"
 
 //==============================================================================
-/*
-*/
 class bigTime : public Component
 {
 public:
@@ -33,26 +25,29 @@ public:
 	void paint(Graphics&) override;
 	void resized() override;
 
-	void setProfile(int * _Xpoint, int * _profile, int * _time);
+	// Function to pass refernces from the parent
+	void setProfile(int * _Xpoint,int * _profile, int * _time, Button::Listener * _parent);
 
 private:
-	timeDomainWin timeBase;
-	Viewport view;
+	timeDomainWin timeBase; // time domain                  
+	Viewport view;			// viewport
 
-	int * xPoint;
-	int * xProfile;
-	int *time;
+	int * xPoint;			// Start of the currently selected time domain
+	int * xProfile;			// Start of the currently selected frequency domain
+	int *time;				// Size of the time domain
+	Button::Listener* parent; // Referense to the parent
+	Slider* playTime;		  // Slide to pick the section of time domian to to play
 
-	OwnedArray<Component> components;
-    Slider* playTime;
-
-	template <typename ComponentType>
-	ComponentType* addToList(ComponentType * newComp)
+	// list of components
+	OwnedArray<TextButton> components;
+	TextButton* addToList(TextButton * newComp)
 	{
 		components.add(newComp);
 		addAndMakeVisible(newComp);
 		return newComp;
 	}
+
+	// Empty list of compnents
 	void emptyList()
 	{
 		components.clear(true);

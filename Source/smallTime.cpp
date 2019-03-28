@@ -3,15 +3,18 @@
 
 	smallTime.cpp
 	Created: 20 Dec 2018 1:00:26pm
-	Author:  danre
+	Author: Daniel Reiter
+	Description: Window has a time domian object that it show in a viewport at one second intervals. The component has five 
+					 buttons used to select the current frequency profile.
 
   ==============================================================================
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "smallTime.h"
-//#include "DemoUtilities.h"
 
+//==============================================================================
+//	Constructor
 //==============================================================================
 smallTime::smallTime()
 {
@@ -25,16 +28,40 @@ smallTime::smallTime()
 	*xStart = 0;
 	*xProfile = -1;
 
+	// Viewport settings
 	view.setViewedComponent(&tdTest, false);
 	view.setScrollBarsShown(false,false);
-	
 	addAndMakeVisible(view);
+
+	//  loop creates buttons 
+	for (int i = 0; i < 5; ++i)
+	{
+
+		auto* tb = addToList(new TextButton("Sec " + String(i + 1) + "/5"));
+		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
+		tb->setClickingTogglesState(false);
+		tb->setComponentID(String(i));
+		tb->setColour(TextButton::textColourOffId, Colours::black);
+		tb->setColour(TextButton::textColourOnId, Colours::black);
+		tb->setColour(TextButton::buttonColourId, Colours::orange);
+		tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		tb->onClick = [this]
+		{
+			auto * focused = Component::getCurrentlyFocusedComponent();
+			*xProfile = focused->getComponentID().getIntValue() + (*xStart * 5);
+			repaint();
+		};
+	}
 }
 
 smallTime::~smallTime()
 {
 }
+//==============================================================================
 
+//==============================================================================
+//	Sets viewport focus and draws background
+//==============================================================================
 void smallTime::paint(Graphics& g)
 {
 	/* This demo code just fills the component's background and
@@ -43,30 +70,28 @@ void smallTime::paint(Graphics& g)
 	   You should replace everything in this method with your own
 	   drawing code..
 	*/
+
 	int btnWidth = (int)(getWidth() / 5);
 	int width = getWidth() - (getWidth() - (5 * btnWidth));
 	Rectangle<float> backGround(0.0f, 0.0f, width, getHeight() * .8f);
 	g.setColour(Colours::white);
-	//g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 	g.fillRect(backGround);
-
 	g.setColour (Colours::black);
 	g.drawRect (backGround, 1);   // draw an outline around the component
-
-	//g.setColour (Colours::white);
 	g.setFont (14.0f);
 	g.drawText ("smallTime", getLocalBounds(),
 	            Justification::centred, true);   // draw some placeholder text
 
+	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 
+	//  Draws background color
 	float pixel = (getWidth() - (getWidth() - (5 * btnWidth))) * .01f;
 	int n = (getWidth() - (getWidth() - (5 * btnWidth))) * 10;
 	float xMark = 0.0f;
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-
 	while (xMark + pixel  <= (n / 10))
 	{
 
@@ -91,7 +116,7 @@ void smallTime::paint(Graphics& g)
 		}
 	}
 
-
+	// Draws red mark over currently selected frequnecy profile section 
 	int profileMark = *xProfile - (*xStart*5);
 	if (profileMark >= 0 && profileMark < 5)
 	{
@@ -99,56 +124,49 @@ void smallTime::paint(Graphics& g)
 		g.setColour(Colours::red);
 		g.fillRect(profileArea);
 	}
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
+		components[i]->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
+			| ((i != -1) ? Button::ConnectedOnRight : 0));
+	}
 }
+//==============================================================================
 
+//==============================================================================
+//	Function on resize sets button and viewport bounds and locations
+//==============================================================================
 void smallTime::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
-	emptyList();
-	int btnWidth = (int)(getWidth() / 5);
-	int width = btnWidth * 5;
-	//view.setBounds(0.0f, 0.0f, width, getHeight() * .8f);
-	tdTest.setSize(width*(*time), getHeight() - (getHeight() * .20f));
 
+	// Sets viewport position and location
+	int width = (int)(getWidth() / 5) * 5;
+	tdTest.setSize(width*(*time), getHeight() - (getHeight() * .20f));
 	view.setBoundsRelative( 0.0f, 0.0f, 1.0f, 1.0f);
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 	view.setBounds(0.0f, 0.0f, width, getHeight() * .8f);
-
-
-	for (int i = 0; i < 5; ++i)
-	{
-
-		auto* tb = addToList(new TextButton("Button " + String(i + 1)));
-		tb->setRadioGroupId(34567);
-		tb->setClickingTogglesState(false);
-		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xProfile = focused->getComponentID().getIntValue() + (*xStart * 5);
-			repaint();
-		};
-		tb->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
-		tb->setConnectedEdges(((i != -1) ? Button::ConnectedOnLeft : 0)
-			| ((i != -1) ? Button::ConnectedOnRight : 0));
-	}
-
-
 }
+//==============================================================================
 
-void smallTime::setTimeDomain(int * _start, int * _profile, int* _time)
+//==============================================================================
+//  Function pass references from parent
+//==============================================================================
+void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent, AudioThumbnail * _tn)
 {
 
 	xStart = _start;
 	xProfile = _profile;
 	time = _time;
+	parent = _parent;
+	tdTest.setTumbnail(_tn);
 
+	for (int i = 0; i < components.size(); i++)
+	{
+		components[i]->addListener(parent);
+	}
 }
-
+//==============================================================================
 
 

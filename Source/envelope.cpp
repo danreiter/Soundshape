@@ -3,7 +3,8 @@
 
     envelope.cpp
     Created: 24 Dec 2018 1:00:17pm
-    Author:  danre
+    Author:  Daniel Reiter
+	Description: Component contains slider for the user to manipulate the envelope settings
 
   ==============================================================================
 */
@@ -11,8 +12,11 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "envelope.h"
 
+
+
 //==============================================================================
-envelope::envelope()
+envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
+    valueTreeState(_valueTreeState)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -22,38 +26,56 @@ envelope::envelope()
 	Release = new Slider();
 
 	addAndMakeVisible(Attack);
-	addAndMakeVisible(Decay);
-	addAndMakeVisible(Sustain);
-	addAndMakeVisible(Release);
+    attackAttachment.reset(new SliderAttachment(valueTreeState, "attack", *Attack));
 
-	Attack->setRange(0, 100, 1.0);
+	addAndMakeVisible(Decay);
+    decayAttachment.reset(new SliderAttachment(valueTreeState, "decay", *Decay));
+
+	addAndMakeVisible(Sustain);
+    sustainAttachment.reset(new SliderAttachment(valueTreeState, "sustain", *Sustain));
+
+	addAndMakeVisible(Release);
+    releaseAttachment.reset(new SliderAttachment(valueTreeState, "release", *Release));
+
+	// Attack slider
+	//Attack->setRange(0, 100, 1.0);
+	Attack->setComponentID((String)ENVELOPE_ATTACK);
 	Attack->setSliderStyle(Slider::LinearVertical);
 	Attack->setColour(Slider::trackColourId, Colours::orange);
 	Attack->setColour(Slider::thumbColourId, Colours::orange);
 	Attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Attack->setTextValueSuffix("Attack");
+    Attack->setTooltip("Controls how fast the sound reaches its max volume");
 
-	Decay->setRange(0, 100, 1.0);
+	// Decay Slider
+	//Decay->setRange(0, 100, 1.0);
+	Decay->setComponentID((String)ENVELOPE_DECAY);
 	Decay->setSliderStyle(Slider::LinearVertical);
 	Decay->setColour(Slider::trackColourId, Colours::orange);
 	Decay->setColour(Slider::thumbColourId, Colours::orange);
 	Decay->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Decay->setTextValueSuffix("Decay");
+    Decay->setTooltip("Controls how fast the sound goes from max volume to sustain volume");
 
-	Sustain->setRange(0, 100, 1.0);
+	// Sustain slider
+	//Sustain->setRange(0, 100, 1.0);
+	Sustain->setComponentID((String)ENVELOPE_SUSTAIN);
 	Sustain->setSliderStyle(Slider::LinearVertical);
 	Sustain->setColour(Slider::trackColourId, Colours::orange);
 	Sustain->setColour(Slider::thumbColourId, Colours::orange);
 	Sustain->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Sustain->setTextValueSuffix("Sustain");
+    Sustain->setTooltip("Controls the volume of the sound while a note is held");
 
-	Release->setRange(0, 100, 1.0);
+	// Release slider
+	//Release->setRange(0, 100, 1.0);
+	Release->setComponentID((String)ENVELOPE_RELEASE);
 	Release->setSliderStyle(Slider::LinearVertical);
 	Release->setColour(Slider::trackColourId, Colours::orange);
 	Release->setColour(Slider::thumbColourId, Colours::orange);
 	Release->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Release->setTextValueSuffix("Release-");
-
+    Release->setTooltip("Controls how fast the sound fades out when a note is released");
 
 
 }
@@ -71,22 +93,19 @@ void envelope::paint (Graphics& g)
        drawing code..
     */
 
-    //g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 	g.fillAll(Colours::darkgrey);
-
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
     g.setColour (Colours::white);
     g.setFont (getHeight() * .15f);
-    g.drawText ("ADSR Envelope", getLocalBounds(),
-                Justification::centredTop, true);   // draw some placeholder text
+    g.drawText ("ADSR Envelope", getLocalBounds(), Justification::centredTop, true);   // draw some placeholder text
 	auto area = getLocalBounds().removeFromLeft(getWidth()/5);
 	float margin = area.getHeight() * .15f;
 	Line<float> l1(area.getWidth() / 2.0f, margin, area.getWidth() / 2.0f, area.getHeight() - margin);
 	Line<float> l2(area.getWidth() * .2f, margin, area.getWidth() * .8f, margin);
 	Line<float> l3(area.getWidth() * .2f, area.getHeight() - margin, area.getWidth() * .8f, area.getHeight() - margin);
 
+	// draws scale 
 	area.reduce(0.0f, area.getHeight() * .08f);
 	g.setFont(getHeight() *.08f);
 	g.drawText("Max", area, Justification::centredTop, true);
@@ -111,6 +130,8 @@ void envelope::paint (Graphics& g)
 
 	float wid = getWidth() / 5.0f;
 	g.setFont(margin*.75f);
+
+	//  sets bounds and location for Attack, Decay, Release and Sustain sliders
 	Rectangle<float> labelArea(wid, getHeight() - margin, getWidth() - wid, margin);
 	Attack->setBounds(wid, (getHeight()*.15f) / 2, getWidth() * .1f, getHeight() - margin);
 	Decay->setBounds(wid * 2, (getHeight()*.15f) / 2, getWidth() * .1f, getHeight() - margin);
@@ -125,30 +146,15 @@ void envelope::paint (Graphics& g)
 void envelope::resized()
 {
     // This method is where you should set the bounds of any child
-    // components that your component contains..
-	//emptyList();
-	auto area = getLocalBounds();
-	area.reduce(0.0f,(getHeight() * .15f)/2);
-	area.removeFromLeft(getWidth() / 5);
-	auto rec1 = area.removeFromLeft(getWidth() / 2.5f);
-	area.removeFromLeft(getWidth() / 2.5f);
-	auto rec2 = area.removeFromLeft(getWidth() / 2.5f);
-	area.removeFromLeft(getWidth() / 2.5f);
-	/*auto * attack = createSlider(new Slider());
-	attack->setRange(0, 100, 1.0);
-	attack->setSliderStyle(Slider::LinearVertical);*/
-	//attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	//attack->setBounds(getWidth() / 5, getHeight() * .15f, area.getWidth() / 5, area.getHeight());
-	//Attack->setBounds(rec1);
-	//area.removeFromLeft(getWidth() / 2.5f);
-	//attack->setTextValueSuffix("Attack");
 
-	//attack = createSlider(new Slider());
-	//attack->setRange(0, 100, 1.0);
-	//attack->setSliderStyle(Slider::LinearVertical);
-	//Decay->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	//Decay->setBounds(getWidth() / 5, getHeight() * .15f, area.getWidth() / 5, area.getHeight());
-	//Decay->setBounds(rec2);
-	//area.removeFromLeft(getWidth() / 2.5f);
-	//attack->setTextValueSuffix("Decay");
+}
+
+
+// adds reference listener 
+void envelope::setListener(Slider::Listener* _listener)
+{
+	Attack->addListener(_listener);
+	Decay->addListener(_listener);
+	Release->addListener(_listener);
+	Sustain->addListener(_listener);
 }

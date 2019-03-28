@@ -12,8 +12,9 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-Soundshape_pluginAudioProcessorEditor::Soundshape_pluginAudioProcessorEditor(Soundshape_pluginAudioProcessor& p)
-    : AudioProcessorEditor(&p), processor(p)
+Soundshape_pluginAudioProcessorEditor::Soundshape_pluginAudioProcessorEditor(Soundshape_pluginAudioProcessor& p,
+    AudioProcessorValueTreeState& _valueTreeState)
+    : AudioProcessorEditor(&p), processor(p), mainComponent(p, _valueTreeState)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -21,7 +22,6 @@ Soundshape_pluginAudioProcessorEditor::Soundshape_pluginAudioProcessorEditor(Sou
     setResizeLimits(300, 300, 1920, 1080);
     setSize(700, 600);
     addAndMakeVisible(&mainComponent);
-
 
 }
 

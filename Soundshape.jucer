@@ -2,11 +2,33 @@
 
 <JUCERPROJECT id="OEfazO" name="Soundshape_plugin" projectType="audioplug"
               jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
-              pluginCharacteristicsValue="pluginIsSynth">
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
+      <GROUP id="{8C251B4E-3C59-D64A-3236-C68731CC14F3}" name="kissfft">
+        <GROUP id="{69F1FDCC-8941-BD9C-FBB3-803151807BC7}" name="LICENSES">
+          <FILE id="n02fw2" name="BSD-3-Clause" compile="0" resource="1" file="Source/kissfft/LICENSES/BSD-3-Clause"/>
+          <FILE id="fCO9HK" name="Unlicense" compile="0" resource="1" file="Source/kissfft/LICENSES/Unlicense"/>
+        </GROUP>
+        <FILE id="iwt5xH" name="_kiss_fft_guts.h" compile="0" resource="0"
+              file="Source/kissfft/_kiss_fft_guts.h"/>
+        <FILE id="MdjpRs" name="CHANGELOG" compile="0" resource="1" file="Source/kissfft/CHANGELOG"/>
+        <FILE id="juV7ZN" name="COPYING" compile="0" resource="1" file="Source/kissfft/COPYING"/>
+        <FILE id="IT4hMX" name="kiss_fft.c" compile="1" resource="0" file="Source/kissfft/kiss_fft.c"/>
+        <FILE id="unmlQs" name="kiss_fft.h" compile="0" resource="0" file="Source/kissfft/kiss_fft.h"/>
+        <FILE id="WcQVyC" name="kissfft.hh" compile="0" resource="0" file="Source/kissfft/kissfft.hh"/>
+        <FILE id="TPeutw" name="kissfft_i32.hh" compile="0" resource="0" file="Source/kissfft/kissfft_i32.hh"/>
+        <FILE id="eZeQun" name="kiss_fftr.c" compile="1" resource="0" file="Source/kissfft/kiss_fftr.c"/>
+        <FILE id="l10tGo" name="kiss_fftr.h" compile="0" resource="0" file="Source/kissfft/kiss_fftr.h"/>
+        <FILE id="EhD9pi" name="Makefile" compile="0" resource="1" file="Source/kissfft/Makefile"/>
+        <FILE id="Q64xwi" name="README" compile="0" resource="1" file="Source/kissfft/README"/>
+        <FILE id="VRxdLQ" name="README.md" compile="0" resource="1" file="Source/kissfft/README.md"/>
+        <FILE id="BKDU6Y" name="README.simd" compile="0" resource="1" file="Source/kissfft/README.simd"/>
+        <FILE id="KSSgsE" name="TIPS" compile="0" resource="1" file="Source/kissfft/TIPS"/>
+      </GROUP>
       <FILE id="FvFwbF" name="EnvelopeParams.cpp" compile="1" resource="0"
             file="Source/EnvelopeParams.cpp"/>
+      <FILE id="XA1c8K" name="catch.h" compile="0" resource="0" file="Source/catch.h"/>
       <FILE id="uZogDa" name="EnvelopeParams.h" compile="0" resource="0"
             file="Source/EnvelopeParams.h"/>
       <FILE id="yrKI0i" name="Converter.h" compile="0" resource="0" file="Source/Converter.h"/>
@@ -17,8 +39,6 @@
       <FILE id="AAai59" name="envelope.h" compile="0" resource="0" file="Source/envelope.h"/>
       <FILE id="ydFNB3" name="FeqWindow.cpp" compile="1" resource="0" file="Source/FeqWindow.cpp"/>
       <FILE id="Am3ZHw" name="FeqWindow.h" compile="0" resource="0" file="Source/FeqWindow.h"/>
-      <FILE id="CgYTmt" name="freqDomain.cpp" compile="1" resource="0" file="Source/freqDomain.cpp"/>
-      <FILE id="J0U2Fr" name="freqDomain.h" compile="0" resource="0" file="Source/freqDomain.h"/>
       <FILE id="X4oxT5" name="freqDomainWin.cpp" compile="1" resource="0"
             file="Source/freqDomainWin.cpp"/>
       <FILE id="djU4Hb" name="freqDomainWin.h" compile="0" resource="0" file="Source/freqDomainWin.h"/>
@@ -27,9 +47,6 @@
       <FILE id="gP2MjR" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="X5iCTU" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-      <FILE id="S7qnjA" name="NewComponent.cpp" compile="1" resource="0"
-            file="Source/NewComponent.cpp"/>
-      <FILE id="zk99vx" name="NewComponent.h" compile="0" resource="0" file="Source/NewComponent.h"/>
       <FILE id="nqxd7E" name="smallTime.cpp" compile="1" resource="0" file="Source/smallTime.cpp"/>
       <FILE id="w7ysoi" name="smallTime.h" compile="0" resource="0" file="Source/smallTime.h"/>
       <FILE id="lCkN5i" name="timeDomainWin.cpp" compile="1" resource="0"
@@ -45,10 +62,9 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="libfftw3-3.lib&#10;">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
-                       defines="SOUNDSHAPE_RUN_TESTS = 1"/>
+        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1" isDebug="1"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
                        defines="SOUNDSHAPE_RUN_TESTS = 0"/>
       </CONFIGURATIONS>
@@ -137,7 +153,7 @@
   </MODULES>
   <LIVE_SETTINGS>
     <WINDOWS/>
+    <LINUX/>
   </LIVE_SETTINGS>
-  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"
-               JUCE_DSP_USE_STATIC_FFTW="1"/>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
 </JUCERPROJECT>
