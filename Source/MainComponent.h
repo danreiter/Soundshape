@@ -25,7 +25,7 @@
 	This component lives inside our window, and this is where you should put all
 	your controls and content.
 */
-class MainComponent : public Component, public Slider::Listener, public Button::Listener
+class MainComponent : public Component, public Slider::Listener, public Button::Listener, public MenuBarModel
 {
 public:
 	//==============================================================================
@@ -38,6 +38,9 @@ public:
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
+	StringArray getMenuBarNames() override;
+	PopupMenu getMenuForIndex(int topLevelMenuIndex, const String &menuName) override;
+	void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
 
 private:
 	//==============================================================================
@@ -45,12 +48,12 @@ private:
 	FeqWindow fWindow;  // Window displays the selected frequency profile element
 	smallTime sTWindow; // Window displays a zoomed in view of the time domain 
 	bigTime bTWindow;	// Window displays the time domain
-	fundFreq fund;		// Component handles seeting for the fundmental frequency for redering the time domain
+	fundFreq fund;		// Component handles setting for the fundmental frequency for redering the time domain
 	GuiFunc volComp;	// Component handles volume settings
 	envelope enve;		// Component handles Envelope settings
     TooltipWindow ttp;  // Component handles tooltip messages
 
-
+	BurgerMenuComponent *bmc; // Component that contains the settings/options
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile
 	TextButton *addButton;				// Toggles buttons to add frequency spikes to frequency profile
 	Slider *zoomSlider;					// Handles magnification settings for frequency profile window

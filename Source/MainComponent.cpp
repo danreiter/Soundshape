@@ -126,12 +126,17 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
 	zoomSlider->setTextValueSuffix(" X");
 	zoomSlider->addListener(this);
 
+	// Burger Menu to hold options/settings
+	bmc = new BurgerMenuComponent(this);
+
 	//------------------------------------------------------------
+
 
 	addAndMakeVisible(writeButton);
 	addAndMakeVisible(harmonicButton);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
+	addAndMakeVisible(bmc);
 
 
 
@@ -145,6 +150,20 @@ MainComponent::~MainComponent()
 
 void MainComponent::setConverter(Converter *_converter) {
 	converterPtr = _converter;
+}
+// stub for a required MenuModel function
+StringArray MainComponent::getMenuBarNames()
+{
+	return StringArray();
+}
+// stub for a required MenuModel function
+PopupMenu MainComponent::getMenuForIndex(int topLevelMenuIndex, const String & menuName)
+{
+	return PopupMenu();
+}
+// stub for a required MenuModel function
+void MainComponent::menuItemSelected(int menuItemID, int topLevelMenuIndex)
+{
 }
 
 
@@ -179,9 +198,13 @@ void MainComponent::paint(Graphics& g)
 	int h1 = (int)(topButtonArea.getHeight() * .15f);
 	topButtonArea.reduce(topButtonArea.getWidth() * .15f, topButtonArea.getHeight() * .15f);
 
+	// sets BurgerMenu location and bounds
+	bmc->setBounds(topButtonArea.getX(), topButtonArea.getY() - 50, topButtonArea.getWidth(), 3 * h1);
+
 	// sets zoom slider location and bounds
 	zoomSlider->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), 2 * h1);
 	topButtonArea.removeFromTop((2 * h1) + (h1*.5));
+
 
 	// sets harmonic button location and bounds
 	harmonicButton->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), h1);
