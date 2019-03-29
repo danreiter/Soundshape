@@ -85,6 +85,36 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
 
 	//------------Setting Button Values---------------------------
 
+    // Button for showin popup menu
+    menuButton = new TextButton("...");
+    menuButton->onClick = [this] {
+        // make a menu for the look and feel, add it to the main popup menu
+        PopupMenu popupMenu;
+
+        PopupMenu lookFeelChooser;
+        lookFeelChooser.addItem(1, "Default");
+        // Greg, you can add some other lookandfeel options to this submenu
+        // ...
+        popupMenu.addSubMenu("Theme", lookFeelChooser); 
+        popupMenu.addItem(500, "About");
+        // handle the selection
+        const int result = popupMenu.show();
+        if (result == 0) {
+            // nothing selected
+        }
+        else if (result == 1) {
+            // handle the first look and feel option
+        }
+        else if (result == 2) {
+            // handle another look and feel option here, etc...
+        }
+        else if (result == 500) {
+            // TODO display the 'About' window
+        }
+    };
+    menuButton->setTooltip("Extra options");
+
+
 	// Harmonic button to toggle harmonic filter for selecting 
 	harmonicButton = new TextButton("Harmonic");
 	harmonicButton->setClickingTogglesState(true);
@@ -126,18 +156,12 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
 	zoomSlider->setTextValueSuffix(" X");
 	zoomSlider->addListener(this);
 
-	// Burger Menu to hold options/settings
-	bmc = new BurgerMenuComponent(this);
 
-	//------------------------------------------------------------
-
-
+    addAndMakeVisible(menuButton);
 	addAndMakeVisible(writeButton);
 	addAndMakeVisible(harmonicButton);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
-	addAndMakeVisible(bmc);
-
 
 
 	setSize(600, 400);
@@ -194,12 +218,12 @@ void MainComponent::paint(Graphics& g)
 	bTWindow.setBounds(sWindow.removeFromTop(h).reduced(margin));
 	
 	// parameters to help layout soundshape's GUI controls (sliders, buttons, and combo boxes, i.e. non-widow components)
-	Rectangle<float> topButtonArea(fWindow.getBounds().getTopRight().getX(), fWindow.getBounds().getTopRight().getY(), bottomRight.getX() - fWindow.getBounds().getTopRight().getX(), fWindow.getHeight());
+	Rectangle<int> topButtonArea(fWindow.getBounds().getTopRight().getX(), fWindow.getBounds().getTopRight().getY(), bottomRight.getX() - fWindow.getBounds().getTopRight().getX(), fWindow.getHeight());
 	int h1 = (int)(topButtonArea.getHeight() * .15f);
 	topButtonArea.reduce(topButtonArea.getWidth() * .15f, topButtonArea.getHeight() * .15f);
 
-	// sets BurgerMenu location and bounds
-	bmc->setBounds(topButtonArea.getX(), topButtonArea.getY() - 50, topButtonArea.getWidth(), 3 * h1);
+    // make space for the options
+    menuButton->setBounds(topButtonArea.removeFromTop(15));
 
 	// sets zoom slider location and bounds
 	zoomSlider->setBounds(topButtonArea.getX(), topButtonArea.getY(), topButtonArea.getWidth(), 2 * h1);

@@ -53,7 +53,8 @@ private:
 	envelope enve;		// Component handles Envelope settings
     TooltipWindow ttp;  // Component handles tooltip messages
 
-	BurgerMenuComponent *bmc; // Component that contains the settings/options
+    TextButton *menuButton;
+
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile
 	TextButton *addButton;				// Toggles buttons to add frequency spikes to frequency profile
 	Slider *zoomSlider;					// Handles magnification settings for frequency profile window
