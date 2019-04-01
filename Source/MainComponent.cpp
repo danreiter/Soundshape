@@ -93,6 +93,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
 
         PopupMenu lookFeelChooser;
         lookFeelChooser.addItem(1, "Default");
+		lookFeelChooser.addItem(2, "Light");
         // Greg, you can add some other lookandfeel options to this submenu
         // ...
         popupMenu.addSubMenu("Theme", lookFeelChooser); 
@@ -107,6 +108,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p):
         }
         else if (result == 2) {
             // handle another look and feel option here, etc...
+			setAllLookAndFeels(new LookAndFeel_V2(), this);
         }
         else if (result == 500) {
             // TODO display the 'About' window
@@ -171,6 +173,12 @@ MainComponent::~MainComponent()
 {
 }
 
+// a method for changing from one lookandfeel to the other
+void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
+{
+	for (auto* child : comp->getChildren())
+		child->setLookAndFeel(laf);
+}
 
 void MainComponent::setConverter(Converter *_converter) {
 	converterPtr = _converter;
