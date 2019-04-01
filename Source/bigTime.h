@@ -26,7 +26,7 @@ public:
 	void resized() override;
 
 	// Function to pass refernces from the parent
-	void setProfile(int * _Xpoint,int * _profile, int * _time, Button::Listener * _parent);
+	void setProfile(int * _Xpoint,int * _profile, int * _time, Button::Listener * _parent, Converter* _cp);
 
 private:
 	timeDomainWin timeBase; // time domain                  

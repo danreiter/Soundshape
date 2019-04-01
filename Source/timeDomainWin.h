@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Converter.h"
 
 //==============================================================================
 /*
@@ -23,11 +24,15 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-	void setTumbnail(AudioThumbnail * _tn);
+	//void setWavePath(AudioThumbnail * _tn);
+	void setConverter(Converter* _conPtr);
+
 
 private:
-	AudioThumbnail *thumbnail;
-    
+	//AudioThumbnail *thumbnail;
+	//Path wavePath;
+	int * chunk_size;
+	Converter * converterPtr;
     
 
     // THIS WAS ADDED HERE FOR TESTING AUDIO DRAWING.

@@ -18,8 +18,9 @@
 //==============================================================================
 timeDomainWin::timeDomainWin()
 {
+	converterPtr = NULL;
     // temporarily load file here for testing. Needs to be moved to code for a Load File button
-	thumbnail = NULL;
+	//thumbnail = NULL;
 	//// Code for loading a sound
  //   formatManager.registerBasicFormats();
  //   FileChooser chooser("Select a Wave file to play...",
@@ -85,14 +86,27 @@ void timeDomainWin::paint (Graphics& g)
 
     // draw thumbnail
     // TODO replace this once the backend is set up properly (the Converter has a thumbnail object)
-	if (thumbnail != NULL)
+	//if (thumbnail != NULL)
+	//{
+		//thumbnail->drawChannels(g, waveRect, 0, 0.01f, 13.0f);
+	//}
+
+
+    //g.setColour(Colours::mediumpurple);
+    //g.setFont(3.0f);
+	if (converterPtr != NULL)
 	{
-		thumbnail->drawChannels(g, waveRect, 0, 0.01f, 13.0f);
+		Path wavePath;
+
+		wavePath.startNewSubPath(0, getHeight() / 2);
+		for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
+			float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
+			float y = (((float)getHeight()) / 2.0f - (0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i)));
+			wavePath.lineTo(x, y);
+		}
+		g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
+		g.strokePath(wavePath, PathStrokeType(2.0f));
 	}
-
-
-    g.setColour(Colours::mediumpurple);
-    g.setFont(3.0f);
     
 }
 //==============================================================================
@@ -111,11 +125,11 @@ void timeDomainWin::resized()
 //==============================================================================
 //  setTumbnail setter ofr Audio thumbnail
 //==============================================================================
-void timeDomainWin::setTumbnail(AudioThumbnail * _tn)
+void timeDomainWin::setConverter(Converter* _conPtr)
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
-	thumbnail = _tn;
+	converterPtr = _conPtr;
 
 }
 //==============================================================================

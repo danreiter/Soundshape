@@ -164,7 +164,7 @@ void bigTime::resized()
 //==============================================================================
 //  Function passes references from the parent to varibles in bigTime
 //==============================================================================
-void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent)
+void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Converter* _cp)
 {
 	xProfile = _profile;
 	xPoint = _Xpoint;
@@ -174,5 +174,7 @@ void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Lis
 	{
 		components[i]->addListener(parent);
 	}
+	timeBase.setConverter(_cp);
+	timeBase.repaint();
 }
 //==============================================================================

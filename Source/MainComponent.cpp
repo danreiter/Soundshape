@@ -25,7 +25,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	timeBlock = 0;
 	selectedProfile = 0;
 	timeSize = 10;
-	thumbnail = converterPtr->getThumbnail();
+	//thumbnail = converterPtr->getThumbnail();
 	
 
 	//------------------------------------------------------------
@@ -33,8 +33,8 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	//------Passing references to child components----------------
 	//fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
 	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, thumbnail);
-	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this);
+	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
+	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
 	enve.setListener(this);
@@ -200,20 +200,20 @@ void MainComponent::paint(Graphics& g)
 
 }
 
-void MainComponent::paintOverChildren(Graphics &g) {
+//void MainComponent::paintOverChildren(Graphics &g) {
     // Instead of using AudioThumbnail, draw the backend's waveform
 // by stroking a path. 
-    Path wavePath;
-
-    wavePath.startNewSubPath(0, getHeight() / 2);
-    for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
-        float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
-        float y =  ((float)getHeight()) / 2.0f - 0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i);
-        wavePath.lineTo(x, y);
-    }
-    g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
-    g.strokePath(wavePath, PathStrokeType(2.0f));
-}
+//    Path wavePath;
+//
+//    wavePath.startNewSubPath(0, getHeight() / 2);
+//    for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
+//        float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
+//        float y =  ((float)getHeight()) / 2.0f - 0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i);
+//        wavePath.lineTo(x, y);
+//    }
+//    g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
+//    g.strokePath(wavePath, PathStrokeType(2.0f));
+//}
 
 void MainComponent::resized()
 {
