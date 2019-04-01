@@ -269,7 +269,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		//Needs set up with back end calls
 	}
-
+	repaint();
 }
 //-------------------------------------------------------------------------------------
 
@@ -280,10 +280,12 @@ void MainComponent::buttonClicked(Button* button)
 	// On frequnecy profile selection updates new frequency profile 
 	if(button->getRadioGroupId() == PROFILE_SELECT_BUTTON)
 	{
-		repaint();
+
 		DBG(button->getComponentID());
         float val = converterPtr->getFrequencyValue(0, 440);
 		DBG(val);
+		fWindow.setProfile();
+		repaint();
 	}
 
 	// On Time domain selection repaint GUI

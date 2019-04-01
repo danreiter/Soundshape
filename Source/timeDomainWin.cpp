@@ -97,12 +97,17 @@ void timeDomainWin::paint (Graphics& g)
 	if (converterPtr != NULL)
 	{
 		Path wavePath;
-
+		float waveHeight = (float)getHeight() * .8f;
 		wavePath.startNewSubPath(0, getHeight() / 2);
-		for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
-			float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
-			float y = (((float)getHeight()) / 2.0f - (0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i)));
-			wavePath.lineTo(x, y);
+		for(int j = 0; j < 50; j++)
+		{
+			for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
+				//float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
+				//float y = (((float)getHeight()) / 2.0f - (0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i)));
+				float x = ((float)(i + (j * tick)) / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * tick;
+				float y = (((float)getHeight()) / 2.0f - (0.5f * waveHeight * 15 * converterPtr->getPreviewSample(j, i)));
+				wavePath.lineTo(x, y);
+			}
 		}
 		g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
 		g.strokePath(wavePath, PathStrokeType(2.0f));

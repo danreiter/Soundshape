@@ -157,22 +157,22 @@ void freqDomainWin::paint (Graphics& g)
 			// If add button is on - set add buttons visilbe to true
 			if (*add > 0)
 			{
-				// harmonic correctness case 
-				if (harm && first > 0 && (i % first == 0))
-				{
+				//// harmonic correctness case 
+				//if (harm && first > 0 && (i % first == 0))
+				//{
 
-				}
-				else if (harm && first > 0)
-				{
+				//}
+				//else if (harm && first > 0)
+				//{
 
-				}
+				//}
 				// no harmonic correctness case
-				else
-				{
+				//else
+				//{
 
 					components[i]->setVisible(true);
 
-				}
+				//}
 			}
 			// hide add buttons
 			else
@@ -212,15 +212,15 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	profile = _profile;          // set frequency profile values
 	buttonParent = _bParent;	 // button listener
 	chunk = _chunk;
+	size = _size;
+	setProfileControl();
 
-	setProfileControl(_profile, _size, _chunk);
-
-	// set button and slider listeners to parent
-	for (int i = 0; i < components.size(); i++)
-	{
-		components[i]->addListener(buttonParent);
-		sliders[i]->addListener(parent);
-	}
+	//// set button and slider listeners to parent
+	//for (int i = 0; i < components.size(); i++)
+	//{
+	//	components[i]->addListener(buttonParent);
+	//	sliders[i]->addListener(parent);
+	//}
 
 
 }
@@ -230,13 +230,13 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 //  setProfileControl Funciton sets values of a frequency profile to a list of 
 //  sliders, declares and instaniates a list of sliders and a list of buttons
 //==============================================================================
-void freqDomainWin::setProfileControl(Converter * _profile, int _size, int * _chunk)
+void freqDomainWin::setProfileControl()
 {
 	// sets list to empty
 	emptyList();
-	size = _size;
+
 	// declares and instaniates a list of sliders and a list of buttons
-	for (int i = 0; i < _size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
@@ -253,10 +253,10 @@ void freqDomainWin::setProfileControl(Converter * _profile, int _size, int * _ch
 
 
 		auto * sb = createSlider();
-		sb->setRange(0.0, 100.0, 0.1);
+		sb->setRange(0.0, 440.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
 		sb->setComponentID(String(i));
-		sb->setValue((double)(profile->getFrequencyValue(*_chunk, i)), sendNotificationAsync);
+		sb->setValue((double)(profile->getFrequencyValue(*chunk, i)), sendNotificationAsync);
 		sb->setColour(Slider::trackColourId, Colours::red);
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);
@@ -266,6 +266,6 @@ void freqDomainWin::setProfileControl(Converter * _profile, int _size, int * _ch
 			sb->addListener(parent);
 		}
 	}
-
+	//this->repaint();
 }
 //==============================================================================

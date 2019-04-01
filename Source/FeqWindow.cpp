@@ -41,6 +41,16 @@ void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener
 }
 //==============================================================================
 
+//==============================================================================
+// Function set zoom to a reference from the parent and passes refences to the frequency domain component
+//==============================================================================
+void FeqWindow::setProfile()
+{
+	base.setProfileControl();
+}
+//==============================================================================
+
+
 void FeqWindow::paint(Graphics& g)
 {
 	/* This demo code just fills the component's background and

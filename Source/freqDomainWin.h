@@ -29,7 +29,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
-	void setProfileControl(Converter * _profile, int _size, int *_chunk);
+	void setProfileControl();
 
 private:
 	int first;                          // Variable to track for first harmonic value 
