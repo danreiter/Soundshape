@@ -30,7 +30,8 @@ public:
     void resized() override;
 	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
 	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
-	void setProfileControl(int _timeBlock,int _selectedProfile);
+	void setProfileControl();
+	void setProfile(int _timeBlock, int _selectedProfile);
 
 private:
 	int first;                          // Variable to track for first harmonic value 

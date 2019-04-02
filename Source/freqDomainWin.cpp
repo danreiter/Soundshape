@@ -215,15 +215,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	buttonParent = _bParent;	 // button listener
 	chunk = _chunk;
 	size = _size;
-	setProfileControl(0, 0);
-
-	//// set button and slider listeners to parent
-	//for (int i = 0; i < components.size(); i++)
-	//{
-	//	components[i]->addListener(buttonParent);
-	//	sliders[i]->addListener(parent);
-	//}
-
+	setProfileControl();
 
 }
 //==============================================================================
@@ -232,14 +224,13 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 //  setProfileControl Funciton sets values of a frequency profile to a list of 
 //  sliders, declares and instaniates a list of sliders and a list of buttons
 //==============================================================================
-void freqDomainWin::setProfileControl(int _timeBlock, int _selectedProfile)
+void freqDomainWin::setProfileControl()
 {
 	// sets list to empty
 	emptyList();
-	int selectedTest = (_timeBlock * 5) + _selectedProfile;
 	for (int i = 0; i < size; i++)
 	{
-		currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
+		currentProfile[i] = (double)(profile->getFrequencyValue(0, i));
 	}
 
 	// declares and instaniates a list of sliders and a list of buttons
@@ -274,5 +265,27 @@ void freqDomainWin::setProfileControl(int _timeBlock, int _selectedProfile)
 		}
 	}
 	int i;
+}
+//==============================================================================
+
+//==============================================================================
+//  setProfileControl Funciton sets values of a frequency profile to a list of 
+//  sliders, declares and instaniates a list of sliders and a list of buttons
+//==============================================================================
+void freqDomainWin::setProfile(int _timeBlock, int _selectedProfile)
+{
+	// sets list to empty
+	int selectedTest = (_timeBlock * 5) + _selectedProfile;
+	for (int i = 0; i < size; i++)
+	{
+		currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
+	}
+
+	// declares and instaniates a list of sliders and a list of buttons
+	for (int i = 0; i < size; i++)
+	{
+		sliders[i]->setValue(currentProfile[i], sendNotificationAsync);
+	}
+
 }
 //==============================================================================

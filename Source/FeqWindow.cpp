@@ -47,7 +47,7 @@ void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener
 //==============================================================================
 void FeqWindow::setProfile(int _timeBlock, int _selectedProfile)
 {
-	base.setProfileControl(_timeBlock, _selectedProfile);
+	base.setProfile(_timeBlock, _selectedProfile);
 }
 //==============================================================================
 
