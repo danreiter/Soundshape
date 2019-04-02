@@ -29,7 +29,8 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
-	void setProfileControl();
+	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
+	void setProfileControl(int _timeBlock,int _selectedProfile);
 
 private:
 	int first;                          // Variable to track for first harmonic value 
@@ -38,6 +39,7 @@ private:
 	int *add;							// flag add button is on/off
 	int *chunk;
 	Converter * profile;				// reference to current frequency profile's values
+	double currentProfile[4000];
 	Slider::Listener* parent;			// reference to parent as a slider listener
 	Button::Listener* buttonParent;     // reference to parent as a button listener
 
@@ -50,7 +52,7 @@ private:
 		newComp->onClick = [this] {
 			auto * focused = Component::getCurrentlyFocusedComponent();
 			float margin = this->getHeight() *.10f;
-			profile->updateFrequencyValue(*this->chunk,focused->getComponentID().getIntValue(), 0.0f);
+			//profile->updateFrequencyValue(*this->chunk,focused->getComponentID().getIntValue(), 0.0f);
 			if (this->first < 0)
 			{
 				this->first = this->getComponentID().getIntValue();

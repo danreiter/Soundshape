@@ -28,7 +28,8 @@ public:
 
 	// Function get referneces from the parent component
 	void setZoom(double* _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, Converter * _profile, int _size, int * _chunk);
-	void setProfile();
+	//void setZoom(double* _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, float * _profile, int _size, int * _chunk);
+	void setProfile(int _timeBlock, int _selectedProfile);
 
 private:
 	freqDomainWin base;	   // Frequency domian for the GUI 

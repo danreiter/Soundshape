@@ -148,11 +148,13 @@ void freqDomainWin::paint (Graphics& g)
 		DrawablePath normal, down, over;
 		btnArea.removeFromLeft(tick);
 
+		components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
+		sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+
 		if (profile->getFrequencyValue(*chunk, i) <= 0)
 		{
 			// set laction and bounds for each slider and button
-			components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
-			sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+
 			
 			// If add button is on - set add buttons visilbe to true
 			if (*add > 0)
@@ -213,7 +215,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	buttonParent = _bParent;	 // button listener
 	chunk = _chunk;
 	size = _size;
-	setProfileControl();
+	setProfileControl(0, 0);
 
 	//// set button and slider listeners to parent
 	//for (int i = 0; i < components.size(); i++)
@@ -230,10 +232,14 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 //  setProfileControl Funciton sets values of a frequency profile to a list of 
 //  sliders, declares and instaniates a list of sliders and a list of buttons
 //==============================================================================
-void freqDomainWin::setProfileControl()
+void freqDomainWin::setProfileControl(int _timeBlock, int _selectedProfile)
 {
 	// sets list to empty
 	emptyList();
+	for (int i = 0; i < size; i++)
+	{
+		currentProfile[i] = (double)(profile->getFrequencyValue(_timeBlock + _selectedProfile, i));
+	}
 
 	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < size; i++)
@@ -256,7 +262,7 @@ void freqDomainWin::setProfileControl()
 		sb->setRange(0.0, 440.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
 		sb->setComponentID(String(i));
-		sb->setValue((double)(profile->getFrequencyValue(*chunk, i)), sendNotificationAsync);
+		sb->setValue(currentProfile[i], sendNotificationAsync);
 		sb->setColour(Slider::trackColourId, Colours::red);
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);
@@ -266,6 +272,6 @@ void freqDomainWin::setProfileControl()
 			sb->addListener(parent);
 		}
 	}
-	//this->repaint();
+	int i;
 }
 //==============================================================================

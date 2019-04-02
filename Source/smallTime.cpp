@@ -26,7 +26,7 @@ smallTime::smallTime()
 	time = new int;
 	*time = 10;
 	*xStart = 0;
-	*xProfile = -1;
+	*xProfile = 0;
 
 	// Viewport settings
 	view.setViewedComponent(&tdTest, false);

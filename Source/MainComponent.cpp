@@ -30,14 +30,15 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//------------------------------------------------------------
 
+	loadSound();
 	//------Passing references to child components----------------
-	//fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
-	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
-	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
-	volComp.setListeners(this, this);
-	fund.setListener(this);
-	enve.setListener(this);
+	////fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
+	//fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
+	//sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
+	//bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
+	//volComp.setListeners(this, this);
+	//fund.setListener(this);
+	//enve.setListener(this);
 
 	//------------------------------------------------------------
 
@@ -284,7 +285,7 @@ void MainComponent::buttonClicked(Button* button)
 		DBG(button->getComponentID());
         float val = converterPtr->getFrequencyValue(0, 440);
 		DBG(val);
-		fWindow.setProfile();
+		fWindow.setProfile(timeBlock, selectedProfile);
 		repaint();
 	}
 
@@ -334,5 +335,25 @@ void MainComponent::buttonClicked(Button* button)
 		// for the notes array
 		// i.e. - notes[button->getParentComonent()->getNote()]
 	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function loadSound
+//-------------------------------------------------------------------------------------
+void MainComponent::loadSound()
+{	
+	//	for (int i = 0; i = 100; i++)
+	//	{
+	//		profile[i] = converterPtr->getFrequencyValue(0, i);
+	//	}
+	//fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)), &selectedProfile);
+
+	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
+	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
+	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
+	volComp.setListeners(this, this);
+	fund.setListener(this);
+	enve.setListener(this);
 }
 //-------------------------------------------------------------------------------------

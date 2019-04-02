@@ -39,6 +39,7 @@ public:
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
+	void loadSound();
 
 private:
 	//==============================================================================

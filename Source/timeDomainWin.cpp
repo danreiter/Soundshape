@@ -104,7 +104,7 @@ void timeDomainWin::paint (Graphics& g)
 			for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
 				//float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
 				//float y = (((float)getHeight()) / 2.0f - (0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i)));
-				float x = ((float)(i + (j * tick)) / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * tick;
+				float x = (((float)(i)/ SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * tick) + (j *tick);
 				float y = (((float)getHeight()) / 2.0f - (0.5f * waveHeight * 15 * converterPtr->getPreviewSample(j, i)));
 				wavePath.lineTo(x, y);
 			}
