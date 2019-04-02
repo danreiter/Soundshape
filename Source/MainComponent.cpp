@@ -25,7 +25,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	timeBlock = 0;
 	selectedProfile = 0;
 	timeSize = 10;
-	currentProfile = 0;
+    currentProfile = 0;
 	//thumbnail = converterPtr->getThumbnail();
 	
 
@@ -231,7 +231,8 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		profile[slider->getComponentID().getIntValue()] = slider->getValue();
         float input = (selectedProfile < 0) ? 0 : selectedProfile;
-		converterPtr->updateFrequencyValue(input, slider->getValue(), slider->getComponentID().getIntValue());
+		converterPtr->updateFrequencyValue(input, slider->getComponentID().getIntValue(), slider->getValue());
+        converterPtr->renderPreview(currentProfile);
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
@@ -286,7 +287,7 @@ void MainComponent::buttonClicked(Button* button)
 		DBG(button->getComponentID());
         float val = converterPtr->getFrequencyValue(0, 440);
 		DBG(val);
-		currentProfile = (timeBlock * 5) + selectedProfile;
+        currentProfile = timeBlock * 5 + selectedProfile;
 		fWindow.setProfile(timeBlock, selectedProfile);
 		repaint();
 	}

@@ -71,7 +71,7 @@ private:
 		Slider * s = new Slider();
 		sliders.add(s);
 		addAndMakeVisible(s);
-		return s;
+	    return s;
 	}
 
 	// clears both slider and button lists

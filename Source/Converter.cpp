@@ -238,7 +238,8 @@ void Converter::setSampleRate(double _sampleRate)
 // the frequency freq
 void Converter::updateFrequencyValue(int chunk, int freq, float value)
 {
-    DBG(freq);
+    DBG(""<<chunk<<" "<<freq<<" "<<value);
+    
     // TODO : We probably need to check for index out-of-bounds here
     setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
 }
