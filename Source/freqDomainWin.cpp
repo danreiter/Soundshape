@@ -23,7 +23,7 @@ freqDomainWin::freqDomainWin()
 	parent = NULL;
 	buttonParent = NULL;
 	size = 0;
-	//profile = new float[4000];
+	//currentProfile = new float[4000];
 	//for (int i = 0; i < 4000; i++)
 	//{
 	//	profile[i] = -1.0f;
@@ -132,8 +132,8 @@ void freqDomainWin::paint (Graphics& g)
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
-		int t1 = (int)profile->getFrequencyValue(*chunk, i);
-		String temp2 = std::to_string(t1);
+		//int t1 = (int)profile->getFrequencyValue(*chunk, i);
+		//String temp2 = std::to_string(t1);
 	}
 
 	margin = getHeight() *.10f;
@@ -151,7 +151,7 @@ void freqDomainWin::paint (Graphics& g)
 		components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
 		sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
 
-		if (profile->getFrequencyValue(*chunk, i) <= 0)
+		if (currentProfile[i] <= 0)
 		{
 			// set laction and bounds for each slider and button
 
@@ -236,9 +236,10 @@ void freqDomainWin::setProfileControl(int _timeBlock, int _selectedProfile)
 {
 	// sets list to empty
 	emptyList();
+	int selectedTest = (_timeBlock * 5) + _selectedProfile;
 	for (int i = 0; i < size; i++)
 	{
-		currentProfile[i] = (double)(profile->getFrequencyValue(_timeBlock + _selectedProfile, i));
+		currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
 	}
 
 	// declares and instaniates a list of sliders and a list of buttons

@@ -61,7 +61,7 @@ private:
 	float amp;							// Currently not used
 	TextButton *writeButton;			// Currently not used
 	int freq, harm, add, timeSize;		// Varibles for tracking software and gui state
-	int timeBlock, selectedProfile;		// Varible for tracking current selected time and frequency
+	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	float profile[4000];				// Varible for testing frequency profile
 	float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
