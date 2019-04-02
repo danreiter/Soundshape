@@ -32,6 +32,7 @@ public:
 	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
 	void setProfileControl();
 	void setProfile(int _timeBlock, int _selectedProfile);
+	//void sliderValueChanged(Slider* slider) override;
 
 private:
 	int first;                          // Variable to track for first harmonic value 
@@ -56,11 +57,11 @@ private:
 			//profile->updateFrequencyValue(*this->chunk,focused->getComponentID().getIntValue(), 0.0f);
 			if (this->first < 0)
 			{
-				this->first = this->getComponentID().getIntValue();
+				this->first = focused->getComponentID().getIntValue();
 			}
 			focused->setVisible(false);
 
-			sliders[this->getComponentID().getIntValue()]->setVisible(true);
+			sliders[focused->getComponentID().getIntValue()]->setVisible(true);
 		};
 		return newComp;
 	}

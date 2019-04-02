@@ -106,7 +106,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
     writeButton->setTooltip("Writes the chosen preset");
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
 	zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	zoomSlider->setRange(1.0f, 20.0f, .5);
+	zoomSlider->setRange(1.0f, 40.0f, .5);
 	zoomSlider->setValue(zoom, sendNotificationAsync);
 	zoomSlider->setTextValueSuffix(" X");
 	zoomSlider->addListener(this);
@@ -229,10 +229,21 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getParentComponent()->getComponentID().getIntValue() == FREQ_DOMAIN)
 	{
-		profile[slider->getComponentID().getIntValue()] = slider->getValue();
-        float input = (selectedProfile < 0) ? 0 : selectedProfile;
-		converterPtr->updateFrequencyValue(input, slider->getComponentID().getIntValue(), slider->getValue());
-        converterPtr->renderPreview(currentProfile);
+		//if (slider->getComponentID().getIntValue() >= 0)
+		//{
+			//profile[slider->getComponentID().getIntValue()] = slider->getValue();
+			//float input = (selectedProfile < 0) ? 0 : selectedProfile;
+			DBG(timeBlock);
+			DBG(selectedProfile);
+			DBG(currentProfile);
+			converterPtr->updateFrequencyValue(currentProfile, slider->getComponentID().getIntValue(), slider->getValue());
+			converterPtr->renderPreview(currentProfile);
+			repaint();
+		//}
+		//else
+		/*{
+			slider->setComponentID(String((slider->getComponentID().getIntValue() * -1)));
+		}*/
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
@@ -284,10 +295,15 @@ void MainComponent::buttonClicked(Button* button)
 	if(button->getRadioGroupId() == PROFILE_SELECT_BUTTON)
 	{
 
-		DBG(button->getComponentID());
-        float val = converterPtr->getFrequencyValue(0, 440);
-		DBG(val);
-        currentProfile = timeBlock * 5 + selectedProfile;
+		//DBG(button->getComponentID());
+        //float val = converterPtr->getFrequencyValue(0, 440);
+		//DBG(val);
+        //currentProfile = (int)(timeBlock * 5) + selectedProfile;
+
+		DBG(timeBlock);
+		DBG((int)(timeBlock * 5));
+		DBG(selectedProfile);
+		DBG(currentProfile);
 		fWindow.setProfile(timeBlock, selectedProfile);
 		repaint();
 	}
@@ -347,8 +363,8 @@ void MainComponent::buttonClicked(Button* button)
 void MainComponent::loadSound()
 {
 	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
-	bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
+	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
+	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, converterPtr);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
 	enve.setListener(this);

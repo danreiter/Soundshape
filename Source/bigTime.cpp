@@ -19,9 +19,9 @@ bigTime::bigTime()
 {
 	
 	xPoint = new int;
-	xProfile = new int;
+	//xProfile = new int;
 	time = new int;
-	*xProfile = -1;
+	//*xProfile = -1;
 	*xPoint = 0;
 	*time = 10;
 	// In your constructor, you should add any child components, and

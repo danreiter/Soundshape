@@ -24,9 +24,11 @@ smallTime::smallTime()
 	xStart = new int;
 	xProfile = new int;
 	time = new int;
+	currentProfile = new int;
 	*time = 10;
 	*xStart = 0;
 	*xProfile = 0;
+	*currentProfile = 0;
 
 	// Viewport settings
 	view.setViewedComponent(&tdTest, false);
@@ -45,10 +47,12 @@ smallTime::smallTime()
 		tb->setColour(TextButton::textColourOnId, Colours::black);
 		tb->setColour(TextButton::buttonColourId, Colours::orange);
 		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
+		tb->setTriggeredOnMouseDown(true);
+		tb->onStateChange = [this]
 		{
 			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xProfile = focused->getComponentID().getIntValue() + (*xStart * 5);
+			*xProfile = focused->getComponentID().getIntValue();// + ((int)(*xStart) * 5);
+			*currentProfile = *xProfile + ((int)(*xStart) * 5);
 			repaint();
 		};
 	}
@@ -117,7 +121,8 @@ void smallTime::paint(Graphics& g)
 	}
 
 	// Draws red mark over currently selected frequnecy profile section 
-	int profileMark = *xProfile - (*xStart*5);
+	//int profileMark = *xProfile;// -(*xStart * 5);
+	int profileMark = *currentProfile - (*xStart * 5);
 	if (profileMark >= 0 && profileMark < 5)
 	{
 		Rectangle<float> profileArea(profileMark * btnWidth, 0.0f, btnWidth, getHeight() * .8f);
@@ -153,12 +158,13 @@ void smallTime::resized()
 //==============================================================================
 //  Function pass references from parent
 //==============================================================================
-void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent, Converter * _cp)
+void smallTime::setTimeDomain(int * _start, int * _profile, int * _currentProfile, int* _time, Button::Listener* _parent, Converter * _cp)
 {
 
 	xStart = _start;
 	xProfile = _profile;
 	time = _time;
+	currentProfile = _currentProfile;
 	parent = _parent;
 	tdTest.setConverter(_cp);
 	tdTest.repaint();

@@ -151,13 +151,13 @@ void freqDomainWin::paint (Graphics& g)
 		components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
 		sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
 
-		if (currentProfile[i] <= 0)
+		if (sliders[i]->getValue() <= 0)
 		{
 			// set laction and bounds for each slider and button
 
 			
 			// If add button is on - set add buttons visilbe to true
-			if (*add > 0)
+			if (*add > 0 && !sliders[i]->isVisible())
 			{
 				//// harmonic correctness case 
 				//if (harm && first > 0 && (i % first == 0))
@@ -184,10 +184,10 @@ void freqDomainWin::paint (Graphics& g)
 			}
 		}
 		// show slider that are being used
-		else
-		{
-			sliders[i]->setVisible(true);
-		}
+		//else
+		//{
+		//	sliders[i]->setVisible(true);
+		//}
 
 
 	}
@@ -213,7 +213,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	parent = _parent;            // slider listener 
 	profile = _profile;          // set frequency profile values
 	buttonParent = _bParent;	 // button listener
-	chunk = _chunk;
+	//chunk = _chunk;
 	size = _size;
 	setProfileControl();
 
@@ -228,10 +228,10 @@ void freqDomainWin::setProfileControl()
 {
 	// sets list to empty
 	emptyList();
-	for (int i = 0; i < size; i++)
-	{
-		currentProfile[i] = (double)(profile->getFrequencyValue(0, i));
-	}
+	//for (int i = 0; i < size; i++)
+	//{
+	//	currentProfile[i] = (double)(profile->getFrequencyValue(0, i));
+	//}
 
 	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < size; i++)
@@ -251,14 +251,24 @@ void freqDomainWin::setProfileControl()
 
 
 		auto * sb = createSlider();
-		sb->setRange(0.0, 440.0, 0.1);
+		sb->setRange(0.0, 600.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
 		sb->setComponentID(String(i));
-		sb->setValue(currentProfile[i], sendNotificationAsync);
+		//sliders[i]->setComponentID(String((sliders[i]->getComponentID().getIntValue() * -1)));
+		//sb->setValue(currentProfile[i], sendNotificationAsync);
+		sb->setValue((double)(profile->getFrequencyValue(0, i)), sendNotificationAsync);
 		sb->setColour(Slider::trackColourId, Colours::red);
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);
-		sb->setVisible(false);
+		if (sb->getValue() > 0)
+		{
+			sb->setVisible(true);
+		}
+		else
+		{
+			sb->setVisible(false);
+
+		}
 		if (parent != NULL)
 		{
 			sb->addListener(parent);
@@ -276,16 +286,39 @@ void freqDomainWin::setProfile(int _timeBlock, int _selectedProfile)
 {
 	// sets list to empty
 	int selectedTest = (_timeBlock * 5) + _selectedProfile;
-	for (int i = 0; i < size; i++)
-	{
-		currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
-	}
+	//for (int i = 0; i < size; i++)
+	//{
+	//	currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
+	//}
 
 	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < size; i++)
 	{
-		sliders[i]->setValue(currentProfile[i], sendNotificationAsync);
+		//sliders[i]->removeListener(parent);
+		//sliders[i]->setComponentID(String((sliders[i]->getComponentID().getIntValue() * -1)));
+		//sliders[i]->setValue(currentProfile[i], sendNotificationAsync);
+		sliders[i]->setValue((double)(profile->getFrequencyValue(selectedTest, i)), sendNotificationAsync);
+		//sliders[i]->addListener(parent);
+		if(sliders[i]->getValue() > 0)
+		{
+			sliders[i]->setVisible(true);
+		}
+		else
+		{
+			sliders[i]->setVisible(false);
+
+		}
 	}
 
 }
+//==============================================================================
+
+//==============================================================================
+// function sliderValueChanged updates current profile window
+//==============================================================================
+//void freqDomainWin::sliderValueChanged(Slider * slider)
+//{
+//	// on change of a frequency spike slider updates conveter with new value
+//	currentProfile[slider->getComponentID().getIntValue()] = slider->getValue();
+//}
 //==============================================================================
