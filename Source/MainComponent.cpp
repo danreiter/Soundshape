@@ -364,6 +364,12 @@ void MainComponent::buttonClicked(Button* button)
 		// for the notes array
 		// i.e. - notes[button->getParentComonent()->getNote()]
 	}
+
+	if (button == harmonicButton)
+	{
+		harm = harm * -1;
+		repaint();
+	}
 }
 //-------------------------------------------------------------------------------------
 
@@ -379,7 +385,7 @@ void MainComponent::loadSound()
 
 	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
-	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, converterPtr);
+	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, this, converterPtr);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
 	enve.setListener(this);

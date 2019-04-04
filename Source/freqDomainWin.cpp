@@ -23,13 +23,6 @@ freqDomainWin::freqDomainWin()
 	parent = NULL;
 	buttonParent = NULL;
 	size = 0;
-	//currentProfile = new float[4000];
-	//for (int i = 0; i < 4000; i++)
-	//{
-	//	profile[i] = -1.0f;
-
-	//}
-	//setProfileControl(&profile[0], 4000);
 
 	first = -1;           
 	int temp = -1;		  
@@ -130,6 +123,8 @@ void freqDomainWin::paint (Graphics& g)
 		}
 
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
+		components[i]->setBounds(smallArea.getX() - (margin / 2), smallArea.getY() - (margin / 4), margin, margin);
+		sliders[i]->setBounds(smallArea.getX() - (margin / 16), margin, margin / 4, getHeight() - (2 * margin));
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
 		//int t1 = (int)profile->getFrequencyValue(*chunk, i);
@@ -144,12 +139,11 @@ void freqDomainWin::paint (Graphics& g)
 	for (int i = 0; i < size; i++)
 	{
 
-		Path btnPath;
 		DrawablePath normal, down, over;
 		btnArea.removeFromLeft(tick);
 
-		components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
-		sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+		//components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
+		//sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 4, getHeight() - (2 * margin));
 
 		if (sliders[i]->getValue() <= 0)
 		{
@@ -159,22 +153,15 @@ void freqDomainWin::paint (Graphics& g)
 			// If add button is on - set add buttons visilbe to true
 			if (*add > 0 && !sliders[i]->isVisible())
 			{
-				//// harmonic correctness case 
-				//if (harm && first > 0 && (i % first == 0))
-				//{
+				if (*harm > 0 && i % 440 != 0)
+				{
 
-				//}
-				//else if (harm && first > 0)
-				//{
-
-				//}
+				}
 				// no harmonic correctness case
-				//else
-				//{
-
+				else
+				{
 					components[i]->setVisible(true);
-
-				//}
+				}
 			}
 			// hide add buttons
 			else
@@ -188,8 +175,6 @@ void freqDomainWin::paint (Graphics& g)
 		//{
 		//	sliders[i]->setVisible(true);
 		//}
-
-
 	}
 }
 //==============================================================================
@@ -228,12 +213,7 @@ void freqDomainWin::setProfileControl()
 {
 	// sets list to empty
 	emptyList();
-	//for (int i = 0; i < size; i++)
-	//{
-	//	currentProfile[i] = (double)(profile->getFrequencyValue(0, i));
-	//}
 
-	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < size; i++)
 	{
 		auto * tb = addToList(new TextButton(""));
@@ -254,15 +234,23 @@ void freqDomainWin::setProfileControl()
 		sb->setRange(0.0, 600.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
 		sb->setComponentID(String(i));
-		//sliders[i]->setComponentID(String((sliders[i]->getComponentID().getIntValue() * -1)));
-		//sb->setValue(currentProfile[i], sendNotificationAsync);
-		
 		double test = (double)(profile->getFrequencyValue(*chunk, i));
 		sb->setValue(test);
-		sb->setColour(Slider::trackColourId, Colours::red);
+		if (i % 440 == 0)
+		{
+			sb->setColour(Slider::trackColourId, Colours::red);
+		}
+		else
+		{
+			sb->setColour(Slider::trackColourId, Colours::blue);
+		}
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);
-		if (sb->getValue() > 0)
+		if (i == 440)
+		{
+			sb->setVisible(true);
+		}
+		else if (sb->getValue() > 0)
 		{
 			sb->setVisible(true);
 		}
@@ -286,23 +274,19 @@ void freqDomainWin::setProfileControl()
 //==============================================================================
 void freqDomainWin::setProfile()
 {
-	// sets list to empty
-	//int selectedTest = (_timeBlock * 5) + _selectedProfile;
-	//for (int i = 0; i < size; i++)
-	//{
-	//	currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
-	//}
 
 	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < size; i++)
 	{
 		sliders[i]->removeListener(parent);
-		//sliders[i]->setComponentID(String((sliders[i]->getComponentID().getIntValue() * -1)));
-		//sliders[i]->setValue(currentProfile[i], sendNotificationAsync);
 		double test = (double)(profile->getFrequencyValue(*chunk, i));
 		sliders[i]->setValue(test);
 		sliders[i]->addListener(parent);
-		if(sliders[i]->getValue() > 0)
+		if (i == 440)
+		{
+			sliders[i]->setVisible(true);
+		}
+		else if(sliders[i]->getValue() > 0)
 		{
 			sliders[i]->setVisible(true);
 		}

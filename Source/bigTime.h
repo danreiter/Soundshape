@@ -29,7 +29,7 @@ public:
 	void resized() override;
 
 	// Function to pass refernces from the parent
-	void setProfile(int * _Xpoint,int * _profile, int * _time, Button::Listener * _parent, Converter* _cp);
+	void setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Slider::Listener * _sliderParent, Converter* _cp);
 
 private:
 	timeDomainWin timeBase; // time domain                  
@@ -39,6 +39,7 @@ private:
 	int * xProfile;			// Start of the currently selected frequency domain
 	int *time;				// Size of the time domain
 	Button::Listener* parent; // Referense to the parent
+	Slider::Listener* sliderParent;
 	Slider* playTime;		  // Slide to pick the section of time domian to to play
 
 	// list of components

@@ -39,9 +39,8 @@ bigTime::bigTime()
     playTime = new Slider();
     addAndMakeVisible(playTime);
 	playTime->setComponentID((String)PLAYTIME_SLIDER);
-    playTime->setRange(0, 600, 12);
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
-	playTime->setRange(0, 50, 5);
+	playTime->setRange(0, 50, 1);
 	playTime->setMinAndMaxValues(0, 50);
     playTime->setColour(Slider::trackColourId, Colours::red);
     playTime->setColour(Slider::thumbColourId, Colours::red);
@@ -170,12 +169,15 @@ void bigTime::resized()
 //==============================================================================
 //  Function passes references from the parent to varibles in bigTime
 //==============================================================================
-void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Converter* _cp)
+void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Slider::Listener* _sliderParent, Converter* _cp)
 {
 	xProfile = _profile;
 	xPoint = _Xpoint;
 	time = _time;
-	parent = _parent;		
+	parent = _parent;	
+	sliderParent = _sliderParent;
+
+	playTime->addListener(sliderParent);
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->addListener(parent);
