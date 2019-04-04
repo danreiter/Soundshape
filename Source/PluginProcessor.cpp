@@ -166,8 +166,6 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
         converter.updateFrequencyValue(i, 4 * 440, 200.0f);
         converter.updateFrequencyValue(i, 6 * 440, 100.0f);
         converter.updateFrequencyValue(i, 8 * 440, 50.0f);
-        converter.updateFrequencyValue(i, 10 * 440, 25.0f);
-        converter.updateFrequencyValue(i, 12 * 440, 12.0f);
 
         converter.renderPreview(i);
     }
