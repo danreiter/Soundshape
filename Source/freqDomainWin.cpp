@@ -156,7 +156,7 @@ void freqDomainWin::paint (Graphics& g)
 			{
 				if ((*harm > 0 && i % 440 != 0) || i == 0)
 				{
-
+					components[i]->setVisible(false);
 				}
 				// no harmonic correctness case
 				else
