@@ -85,6 +85,7 @@ private:
 
     std::vector<float> previewChunks;
     std::vector<float> tempRenderbuffer;
+    std::vector<kiss_fft_cpx> tempRenderProfile; // temporary data for the profile before its rendered for previews in the GUI
 
     // stores velocity information for each note, 0 to 127 (128 possible notes)
     // these are the notes that are currently pressed
@@ -108,6 +109,9 @@ private:
     // object for inverse FFT during synthesis
     //dsp::FFT inverseTransform;
     kiss_fftr_cfg inverseFFT;
+
+    // object for doing the inverse FFT when rendering previews
+    kiss_fftr_cfg previewInverseFFT;
 
     // TODO : This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading)
     int currentIndex = 0;

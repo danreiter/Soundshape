@@ -8,20 +8,24 @@ Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : valueTreeS
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previewChunks(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_PREVIEW_CHUNK_SIZE),
     tempRenderbuffer(2*SOUNDSHAPE_CHUNK_SIZE),
+    tempRenderProfile(2*SOUNDSHAPE_CHUNK_SIZE),
     noteVelocities({{0}}),
     sustainedNoteVelocities({{0}})
 {
 
     thumbnail.reset(1, 44100,44100);
     
-    // set up inverse FFT config object
+    // set up inverse FFT config objects
     // This needs manually freed (use destructor)
     inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
+    previewInverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
+
     envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
 }
 
 Converter::~Converter() {
     kiss_fftr_free(inverseFFT);
+    kiss_fftr_free(previewInverseFFT);
 }
 
 void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState)
@@ -95,12 +99,27 @@ void Converter::addShiftedProfiles(int chunk)
 
 void Converter::renderPreview(int chunk)
 {
-    // do an IFFT 
-    kiss_fftri(inverseFFT, profile.data(), tempRenderbuffer.data());
+    // do an IFFT on the chunk by copying the profile points into
+    // a temporary buffer, do the IFFT into tempRenderBuffer, then copy
+    // that output back into previewChunks
+
+    for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
+        tempRenderProfile[i] = getProfileRawPoint(chunk, i);
+    }
+    kiss_fftri(previewInverseFFT, tempRenderProfile.data(), tempRenderbuffer.data());
     // write some samples to the structure that the GUI can use for drawing
     for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
-        previewChunks[chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE + i] = tempRenderbuffer[i]/SOUNDSHAPE_CHUNK_SIZE;
+        size_t renderIndex = chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE + i;
+        const int crossfadeSize = 10;
+        previewChunks[renderIndex] = tempRenderbuffer[i] / SOUNDSHAPE_CHUNK_SIZE;
+        if (chunk > 0) {
+            float thisRowWeight = ((float)i) / crossfadeSize;
+            thisRowWeight = thisRowWeight < 1.0f ? thisRowWeight : 1.0f;
+            size_t lastRowIndex = chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE - 1;
+            previewChunks[renderIndex] =  (thisRowWeight * previewChunks[renderIndex]) + ((1.0f - thisRowWeight) * previewChunks[lastRowIndex]);
+        }
     }
+    
 }
 
 float Converter::getPreviewSample(int chunk, int index)
