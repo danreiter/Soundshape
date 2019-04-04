@@ -38,8 +38,11 @@ bigTime::bigTime()
 	//  Play time slider 
     playTime = new Slider();
     addAndMakeVisible(playTime);
+	playTime->setComponentID((String)PLAYTIME_SLIDER);
     playTime->setRange(0, 600, 12);
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
+	playTime->setRange(0, 50, 5);
+	playTime->setMinAndMaxValues(0, 50);
     playTime->setColour(Slider::trackColourId, Colours::red);
     playTime->setColour(Slider::thumbColourId, Colours::red);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);

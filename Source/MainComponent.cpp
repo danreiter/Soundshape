@@ -242,6 +242,12 @@ void MainComponent::sliderValueChanged(Slider * slider)
 			slider->setComponentID(String((slider->getComponentID().getIntValue() * -1)));
 		}*/
 	}
+	// on change of a frequency spike slider updates conveter with new value
+	if (slider->getComponentID().getIntValue() == PLAYTIME_SLIDER)
+	{
+		slider->getMaxValue();
+		slider->getMinValue();
+	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
 	{

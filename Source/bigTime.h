@@ -16,6 +16,7 @@
 #include "timeDomainWin.h"
 
 #define TIME_SELECT_BUTTON 5002
+#define PLAYTIME_SLIDER 5003
 
 //==============================================================================
 class bigTime : public Component
