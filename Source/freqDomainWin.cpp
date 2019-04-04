@@ -225,7 +225,6 @@ void freqDomainWin::setProfileControl()
 			tb->addListener(buttonParent);
 		}
 
-
 		auto * sb = createSlider();
 		sb->setRange(0.0, 600.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
