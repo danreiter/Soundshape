@@ -123,8 +123,8 @@ void freqDomainWin::paint (Graphics& g)
 		}
 
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
-		components[i]->setBounds(smallArea.getX() - (margin / 2), smallArea.getY() - (margin / 8), margin/3, margin/3);
-		components[i]->setCentrePosition(smallArea.getX(), smallArea.getCentreY());
+		components[i]->setBounds(smallArea.getX() - (margin / 6), smallArea.getCentreY() - (margin/6), margin/3, margin/3);
+		//components[i]->setCentrePosition(smallArea.getX(), smallArea.getCentreY());
 		sliders[i]->setBounds(smallArea.getX() - (margin / 16), margin, margin / 4, getHeight() - (2 * margin));
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
@@ -154,7 +154,7 @@ void freqDomainWin::paint (Graphics& g)
 			// If add button is on - set add buttons visilbe to true
 			if (*add > 0 && !sliders[i]->isVisible())
 			{
-				if (*harm > 0 && i % 440 != 0)
+				if ((*harm > 0 && i % 440 != 0) || i == 0)
 				{
 
 				}
@@ -220,8 +220,8 @@ void freqDomainWin::setProfileControl()
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
 		tb->setClickingTogglesState(true);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::white);
+		tb->setColour(TextButton::textColourOnId, Colours::lightgreen);
+		tb->setColour(TextButton::buttonColourId, Colours::lightgreen);
 		tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
 		tb->setColour(TextButton::textColourOffId, Colours::black);
 		tb->setVisible(false);
@@ -237,7 +237,7 @@ void freqDomainWin::setProfileControl()
 		sb->setComponentID(String(i));
 		double test = (double)(profile->getFrequencyValue(*chunk, i));
 		sb->setValue(test);
-		if (i % 440 == 0)
+		if (i % 440 == 0 && i != 0)
 		{
 			sb->setColour(Slider::trackColourId, Colours::red);
 		}
