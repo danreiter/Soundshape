@@ -123,9 +123,12 @@ void freqDomainWin::paint (Graphics& g)
 		}
 
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
-		components[i]->setBounds(smallArea.getX() - (margin / 6), smallArea.getCentreY() - (margin/6), margin/3, margin/3);
-		//components[i]->setCentrePosition(smallArea.getX(), smallArea.getCentreY());
-		sliders[i]->setBounds(smallArea.getX() - (margin / 16), margin, margin / 4, getHeight() - (2 * margin));
+		if (i % 2 == 0)
+		{
+			components[(int)(i/2)]->setBounds(smallArea.getX() - (margin / 6), smallArea.getCentreY() - (margin / 6), margin / 3, margin / 3);
+			sliders[(int)(i/2)]->setBounds(smallArea.getX() - (margin / 16), margin, margin / 4, getHeight() - (2 * margin));
+			
+		}
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
 		//int t1 = (int)profile->getFrequencyValue(*chunk, i);
@@ -137,14 +140,11 @@ void freqDomainWin::paint (Graphics& g)
 	float tick = btnArea.getWidth() / 1024;
 
 	// loop sets location, bounds, and visiblity of sliders and buttons
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size/2; i++)
 	{
 
 		DrawablePath normal, down, over;
 		btnArea.removeFromLeft(tick);
-
-		//components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
-		//sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 4, getHeight() - (2 * margin));
 
 		if (sliders[i]->getValue() <= 0)
 		{
@@ -154,7 +154,7 @@ void freqDomainWin::paint (Graphics& g)
 			// If add button is on - set add buttons visilbe to true
 			if (*add > 0 && !sliders[i]->isVisible())
 			{
-				if ((*harm > 0 && i % 440 != 0) || i == 0)
+				if ((*harm > 0 && (2*i) % 440 != 0) || i == 0)
 				{
 					components[i]->setVisible(false);
 				}
@@ -171,11 +171,6 @@ void freqDomainWin::paint (Graphics& g)
 				components[i]->setVisible(false);
 			}
 		}
-		// show slider that are being used
-		//else
-		//{
-		//	sliders[i]->setVisible(true);
-		//}
 	}
 }
 //==============================================================================
@@ -215,11 +210,11 @@ void freqDomainWin::setProfileControl()
 	// sets list to empty
 	emptyList();
 
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; i = i+2)
 	{
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
-		tb->setClickingTogglesState(true);
+		tb->setClickingTogglesState(false);
 		tb->setColour(TextButton::textColourOnId, Colours::lightgreen);
 		tb->setColour(TextButton::buttonColourId, Colours::lightgreen);
 		tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
@@ -265,7 +260,7 @@ void freqDomainWin::setProfileControl()
 			sb->addListener(parent);
 		}
 	}
-	int i;
+
 }
 //==============================================================================
 
@@ -277,10 +272,10 @@ void freqDomainWin::setProfile()
 {
 
 	// declares and instaniates a list of sliders and a list of buttons
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size/2; i++)
 	{
 		sliders[i]->removeListener(parent);
-		double test = (double)(profile->getFrequencyValue(*chunk, i));
+		double test = (double)(profile->getFrequencyValue(*chunk, (2*i)));
 		sliders[i]->setValue(test);
 		sliders[i]->addListener(parent);
 		if (i == 440)
@@ -297,7 +292,7 @@ void freqDomainWin::setProfile()
 
 		}
 	}
-
+	
 }
 //==============================================================================
 

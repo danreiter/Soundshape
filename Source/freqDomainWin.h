@@ -60,7 +60,7 @@ private:
 			}
 			focused->setVisible(false);
 
-			sliders[focused->getComponentID().getIntValue()]->setVisible(true);
+			sliders[(int)(focused->getComponentID().getIntValue()/2)]->setVisible(true);
 		};
 		return newComp;
 	}
