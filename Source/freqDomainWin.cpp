@@ -123,7 +123,8 @@ void freqDomainWin::paint (Graphics& g)
 		}
 
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
-		components[i]->setBounds(smallArea.getX() - (margin / 2), smallArea.getY() - (margin / 4), margin, margin);
+		components[i]->setBounds(smallArea.getX() - (margin / 2), smallArea.getY() - (margin / 8), margin/3, margin/3);
+		components[i]->setCentrePosition(smallArea.getX(), smallArea.getCentreY());
 		sliders[i]->setBounds(smallArea.getX() - (margin / 16), margin, margin / 4, getHeight() - (2 * margin));
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
