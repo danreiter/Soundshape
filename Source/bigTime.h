@@ -15,6 +15,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "timeDomainWin.h"
 
+#define TIME_SELECT_BUTTON 5002
+
 //==============================================================================
 class bigTime : public Component
 {

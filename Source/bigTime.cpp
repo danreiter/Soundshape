@@ -12,6 +12,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "bigTime.h"
 
+
+
 //==============================================================================
 //  Constructor
 //==============================================================================
@@ -46,17 +48,18 @@ bigTime::bigTime()
 	for (int i = 0; i < *time; ++i)
 	{
 		auto* tb = addToList(new TextButton("Sec " + String(i + 1)));
+		tb->setRadioGroupId(TIME_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
 		tb->setColour(TextButton::textColourOffId, Colours::black);
 		tb->setColour(TextButton::textColourOnId, Colours::black);
 		tb->setColour(TextButton::buttonColourId, Colours::orange);
 		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xPoint = focused->getComponentID().getIntValue();
-		};
+		//tb->onStateChange = [this]
+		//{
+		//	auto * focused = Component::getCurrentlyFocusedComponent();
+		//	*xPoint = focused->getComponentID().getIntValue();
+		//};
 	}
 }
 

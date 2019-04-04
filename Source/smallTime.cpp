@@ -48,13 +48,13 @@ smallTime::smallTime()
 		tb->setColour(TextButton::buttonColourId, Colours::orange);
 		tb->setColour(TextButton::buttonOnColourId, Colours::red);
 		tb->setTriggeredOnMouseDown(true);
-		tb->onStateChange = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xProfile = focused->getComponentID().getIntValue();// + ((int)(*xStart) * 5);
-			*currentProfile = *xProfile + ((int)(*xStart) * 5);
-			repaint();
-		};
+		//tb->onStateChange = [this]
+		//{
+			//auto * focused = Component::getCurrentlyFocusedComponent();
+			//*xProfile = focused->getComponentID().getIntValue();// + ((int)(*xStart) * 5);
+			//*currentProfile = *xProfile + ((int)(*xStart) * 5);
+			//repaint();
+		//};
 	}
 }
 

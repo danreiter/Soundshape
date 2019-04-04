@@ -22,10 +22,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	add = -1;
 	harm = -1;
 	zoom = 4.0;
-	timeBlock = 0;
-	selectedProfile = 0;
-	timeSize = 10;
-    currentProfile = 0;
+
 	//thumbnail = converterPtr->getThumbnail();
 	
 
@@ -298,14 +295,21 @@ void MainComponent::buttonClicked(Button* button)
 		//DBG(button->getComponentID());
         //float val = converterPtr->getFrequencyValue(0, 440);
 		//DBG(val);
-        //currentProfile = (int)(timeBlock * 5) + selectedProfile;
+		selectedProfile = (int)button->getComponentID().getIntValue();
+        currentProfile = (int)(timeBlock * 5) + selectedProfile;
 
 		DBG(timeBlock);
 		DBG((int)(timeBlock * 5));
 		DBG(selectedProfile);
 		DBG(currentProfile);
-		fWindow.setProfile(timeBlock, selectedProfile);
+		fWindow.setProfile();
 		repaint();
+	}
+
+	// On frequnecy profile selection updates new frequency profile 
+	if (button->getRadioGroupId() == TIME_SELECT_BUTTON)
+	{
+		timeBlock = (int)button->getComponentID().getIntValue();
 	}
 
 	// On Time domain selection repaint GUI
@@ -362,7 +366,12 @@ void MainComponent::buttonClicked(Button* button)
 //-------------------------------------------------------------------------------------
 void MainComponent::loadSound()
 {
-	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
+	timeBlock = 0;
+	selectedProfile = 0;
+	timeSize = 10;
+	currentProfile = 0;
+
+	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
 	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, converterPtr);
 	volComp.setListeners(this, this);

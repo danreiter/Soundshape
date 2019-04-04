@@ -213,7 +213,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	parent = _parent;            // slider listener 
 	profile = _profile;          // set frequency profile values
 	buttonParent = _bParent;	 // button listener
-	//chunk = _chunk;
+	chunk = _chunk;
 	size = _size;
 	setProfileControl();
 
@@ -256,7 +256,9 @@ void freqDomainWin::setProfileControl()
 		sb->setComponentID(String(i));
 		//sliders[i]->setComponentID(String((sliders[i]->getComponentID().getIntValue() * -1)));
 		//sb->setValue(currentProfile[i], sendNotificationAsync);
-		sb->setValue((double)(profile->getFrequencyValue(0, i)), sendNotificationAsync);
+		
+		double test = (double)(profile->getFrequencyValue(*chunk, i));
+		sb->setValue(test);
 		sb->setColour(Slider::trackColourId, Colours::red);
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);
@@ -282,10 +284,10 @@ void freqDomainWin::setProfileControl()
 //  setProfileControl Funciton sets values of a frequency profile to a list of 
 //  sliders, declares and instaniates a list of sliders and a list of buttons
 //==============================================================================
-void freqDomainWin::setProfile(int _timeBlock, int _selectedProfile)
+void freqDomainWin::setProfile()
 {
 	// sets list to empty
-	int selectedTest = (_timeBlock * 5) + _selectedProfile;
+	//int selectedTest = (_timeBlock * 5) + _selectedProfile;
 	//for (int i = 0; i < size; i++)
 	//{
 	//	currentProfile[i] = (double)(profile->getFrequencyValue(selectedTest, i));
@@ -294,11 +296,12 @@ void freqDomainWin::setProfile(int _timeBlock, int _selectedProfile)
 	// declares and instaniates a list of sliders and a list of buttons
 	for (int i = 0; i < size; i++)
 	{
-		//sliders[i]->removeListener(parent);
+		sliders[i]->removeListener(parent);
 		//sliders[i]->setComponentID(String((sliders[i]->getComponentID().getIntValue() * -1)));
 		//sliders[i]->setValue(currentProfile[i], sendNotificationAsync);
-		sliders[i]->setValue((double)(profile->getFrequencyValue(selectedTest, i)), sendNotificationAsync);
-		//sliders[i]->addListener(parent);
+		double test = (double)(profile->getFrequencyValue(*chunk, i));
+		sliders[i]->setValue(test);
+		sliders[i]->addListener(parent);
 		if(sliders[i]->getValue() > 0)
 		{
 			sliders[i]->setVisible(true);

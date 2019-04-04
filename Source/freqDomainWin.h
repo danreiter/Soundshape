@@ -31,7 +31,7 @@ public:
 	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
 	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
 	void setProfileControl();
-	void setProfile(int _timeBlock, int _selectedProfile);
+	void setProfile();
 	//void sliderValueChanged(Slider* slider) override;
 
 private:
@@ -54,7 +54,6 @@ private:
 		newComp->onClick = [this] {
 			auto * focused = Component::getCurrentlyFocusedComponent();
 			float margin = this->getHeight() *.10f;
-			//profile->updateFrequencyValue(*this->chunk,focused->getComponentID().getIntValue(), 0.0f);
 			if (this->first < 0)
 			{
 				this->first = focused->getComponentID().getIntValue();
