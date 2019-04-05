@@ -33,14 +33,17 @@ void volumeBox::paint(Graphics& g)
 	g.fillAll(Colours::darkgrey);
 	g.setColour(Colours::orange);
 	g.drawRect(getLocalBounds(), 1);
-	Path tri1, tri2, squ;
+	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
-	tri1.addTriangle(h, h, h, getHeight() - h, 3*h, getHeight()/2);
+	//tri1.addTriangle(h, h, h, getHeight() - h, 3*h, getHeight()/2);
+	tri1.addTriangle(h, getHeight() / 2, 3*h, getHeight() - h,  3*h, h );
 	tri2.addTriangle(getWidth() - h, h, getWidth() - h, getHeight() - h, getWidth() - (3 * h), getHeight() / 2);
 	squ.addRectangle(getWidth() - (7 / 2 * h), (getHeight() / 2) - (h / 2), h, h);
+	squ1.addRectangle((3/2 * h), (getHeight() / 2) - (h / 2), h, h);
 	g.fillPath(tri1);
 	g.fillPath(tri2);
 	g.fillPath(squ);
+	g.fillPath(squ1);
 
 	// sets slider bounds
 	volume->setColour(Slider::thumbColourId, Colours::orange);
@@ -68,6 +71,62 @@ void volumeBox::setVolumeListener(Slider::Listener * _listener)
 //==============================================================================
 GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState(_valueTreeState)
 {
+	//emptyList();
+
+	// add panic button
+	panicBtn = new TextButton("Panic");
+	panicBtn->setClickingTogglesState(false);
+	panicBtn->setComponentID((String)PANIC_BUTTON);
+	panicBtn->setColour(TextButton::textColourOffId, Colours::black);
+	panicBtn->setColour(TextButton::textColourOnId, Colours::white);
+	panicBtn->setColour(TextButton::buttonColourId, Colours::red);
+	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+
+	// add export button
+	exportBtn = new TextButton("Export");
+	exportBtn->setComponentID((String)EXPORT_BUTTON);
+	exportBtn->setColour(TextButton::textColourOffId, Colours::white);
+	exportBtn->setColour(TextButton::textColourOnId, Colours::black);
+	exportBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+
+	// add import button
+	importBtn = new TextButton("Import");
+	importBtn->setComponentID((String)EXPORT_BUTTON);
+	importBtn->setColour(TextButton::textColourOffId, Colours::white);
+	importBtn->setColour(TextButton::textColourOnId, Colours::black);
+	importBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	importBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+
+	// add play button
+	playBtn = new TextButton("Play");
+	playBtn->setComponentID((String)PLAY_BUTTON);
+	playBtn->setColour(TextButton::textColourOffId, Colours::black);
+	playBtn->setColour(TextButton::textColourOnId, Colours::black);
+	playBtn->setColour(TextButton::buttonColourId, Colours::orange);
+	//playBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
+	playBtn->setClickingTogglesState(true);
+
+	// add sustained play button
+	sustainPlyBtn = new TextButton("Sustained Play");
+	sustainPlyBtn->setComponentID((String)SUSTAIN_PLAY_BUTTON);
+	sustainPlyBtn->setColour(TextButton::textColourOffId, Colours::black);
+	sustainPlyBtn->setColour(TextButton::textColourOnId, Colours::black);
+	sustainPlyBtn->setColour(TextButton::buttonColourId, Colours::orange);
+	//sustainPlyBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	sustainPlyBtn->setColour(TextButton::buttonOnColourId, Colours::red);
+	sustainPlyBtn->setClickingTogglesState(true);
+
+	// add volume slider component
+	volBox = new volumeBox(valueTreeState);
+
+	addAndMakeVisible(exportBtn);
+	addAndMakeVisible(importBtn);
+	addAndMakeVisible(panicBtn);
+	addAndMakeVisible(playBtn);
+	addAndMakeVisible(sustainPlyBtn);
+	addAndMakeVisible(volBox);
 }
 
 GuiFunc::~GuiFunc()
@@ -76,78 +135,43 @@ GuiFunc::~GuiFunc()
 
 void GuiFunc::paint(Graphics& g)
 {
+	// define areas to put sub components 
+	auto area = getLocalBounds();
+	float yMargin = getHeight() * .1f;
+	auto buttonArea = area.removeFromTop((getHeight() * 2) / 3);
+	auto playArea = buttonArea.removeFromRight(getWidth() / 3);
+	//buttonArea.reduce(2 * yMargin, 0.0f);
+	buttonArea.reduce(yMargin/2, 0.0f);
+	float h = buttonArea.getHeight() / 3;
 
+	// set location of the panic button
+	auto panicArea = buttonArea.removeFromTop(h);
+	panicBtn->setBounds(panicArea.removeFromLeft(panicArea.getWidth()/2));
+
+	// set location of the sustained play button
+	sustainPlyBtn->setBounds(panicArea);
+
+	// set location of the export button
+	buttonArea.removeFromTop(h / 2);
+	auto importArea = buttonArea.removeFromTop(h);
+	float xMargin = (importArea.getWidth() / 2);
+	exportBtn->setBounds(importArea.removeFromRight(xMargin));
+
+	// set location of the export button
+	importBtn->setBounds(importArea);
+
+	// set location of the play button
+	playArea.removeFromBottom(buttonArea.getHeight());
+	playArea.reduce(buttonArea.getHeight() / 2, 0.0f);
+	playBtn->setBounds(playArea);
+
+	// set location of the play button
+	volBox->setBounds(area.removeFromTop(h));
 }
 
 void GuiFunc::resized()
 {
-	// clears list of components
-	emptyList();
 
-	// define areas to put sub components 
-	auto area = getLocalBounds();
-	float yMargin = getHeight() * .1f;
-	auto buttonArea = area.removeFromTop((getHeight()*2)/3);
-	auto playArea = buttonArea.removeFromRight(getWidth()/3);
-	buttonArea.reduce(2*yMargin, 0.0f);
-	float h = buttonArea.getHeight() / 3;
-
-	// add panic button
-	auto * panicBtn = addToList(new TextButton("Panic"));
-	panicBtn->setClickingTogglesState(false);
-	panicBtn->setComponentID((String)PANIC_BUTTON);
-	panicBtn->addListener(bListen);
-	panicBtn->setColour(TextButton::textColourOffId, Colours::black);
-	panicBtn->setColour(TextButton::textColourOnId, Colours::white);
-	panicBtn->setColour(TextButton::buttonColourId, Colours::red);
-	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
-	panicBtn->setBounds(buttonArea.removeFromTop(h));
-	buttonArea.removeFromTop(h/2);
-
-	// add export button
-	auto * exportBtn = addToList(new TextButton("Export"));
-	exportBtn->setComponentID((String)EXPORT_BUTTON);
-	exportBtn->addListener(bListen);
-	exportBtn->setColour(TextButton::textColourOffId, Colours::white);
-	exportBtn->setColour(TextButton::textColourOnId, Colours::black);
-	exportBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
-	exportBtn->setBounds(buttonArea.removeFromTop(h));
-
-	playArea.removeFromBottom(buttonArea.getHeight());
-	playArea.reduce(buttonArea.getHeight() / 2, 0.0f);
-
-	// draw path for play button
-	DrawablePath Normal, Over, Clicked;
-	Path play;
-	play.addEllipse(0.0f, 0.0f, playArea.getWidth(), playArea.getHeight());
-	Normal.setPath(play);
-	Normal.setFill(Colours::orange);
-	Normal.setStrokeFill(Colours::black);
-	Normal.setStrokeThickness(.5f);
-
-	Over.setPath(play);
-	Over.setFill(Colours::darkorange);
-	Over.setStrokeFill(Colours::black);
-	Over.setStrokeThickness(.50f);
-
-	Clicked.setPath(play);
-	Clicked.setFill(Colours::red);
-	Clicked.setStrokeFill(Colours::black);
-	Clicked.setStrokeThickness(.50f);
-
-	// add play button
-	auto * playBtn = addToList(new DrawableButton("Play", DrawableButton::ImageRaw));
-	playBtn->setComponentID((String)PLAY_BUTTON);
-	playBtn->addListener(bListen);
-	playBtn->setImages(&Normal, &Over, &Clicked);
-	playBtn->setBounds(playArea);
-	playBtn->setClickingTogglesState(true);
-
-	// add volume slider component
-	auto * vBox = addToList(new volumeBox(valueTreeState));
-	vBox->setVolumeListener(sListen);
-	vBox->setBounds(area.removeFromTop(h));
 }
 
 // Passes reference for button and slider listeners
@@ -155,6 +179,13 @@ void GuiFunc::setListeners(Slider::Listener* _sliderListener, Button::Listener* 
 {
 	sListen = _sliderListener;
 	bListen = _buttonListener;
+
+	panicBtn->addListener(bListen);
+	exportBtn->addListener(bListen);
+	importBtn->addListener(bListen);
+	playBtn->addListener(bListen);
+	sustainPlyBtn->addListener(bListen);
+	volBox->setVolumeListener(sListen);
 }
 //==============================================================================
 // end GuiFunc funtions
@@ -168,6 +199,43 @@ void GuiFunc::setListeners(Slider::Listener* _sliderListener, Button::Listener* 
 fundFreq::fundFreq()
 {
 	num = 0;       // variable tracks current index for a note
+
+		// text box to display current note in fundamental frequency
+	txtBox = new Label("fundFreq", "A");
+	updateText();
+
+
+	// set bounds and location for up button
+	upBtn = new DrawableButton("up", DrawableButton::ImageRaw);
+	upBtn->setComponentID((String)FUND_FREQ_BUTTON);
+	upBtn->setClickingTogglesState(false);
+	upBtn->onClick = [this] {
+		num = (num++) % 12;
+		updateText();
+	};
+
+
+	// set bounds and location for down button
+	downBtn = new DrawableButton("down", DrawableButton::ImageRaw);
+	downBtn->setComponentID((String)FUND_FREQ_BUTTON);
+	downBtn->setClickingTogglesState(false);
+	downBtn->onClick = [this] {
+		if (num <= 0)
+		{
+			num = 11;
+		}
+		else
+		{
+			num = (num--) % 12;
+		}
+		updateText();
+	};
+
+	addAndMakeVisible(txtBox);
+	addAndMakeVisible(upBtn);
+	addAndMakeVisible(downBtn);
+
+
 }
 
 fundFreq::~fundFreq()
@@ -192,29 +260,19 @@ void fundFreq::paint(Graphics & g)
 	g.drawLine(l, 1.0f);
 	g.drawLine(l1, 1.0f);
 
-}
-
-void fundFreq::resized()
-{
-	// sets component list to empty
-	emptyList();
-
-	// text box to display current note in fundamental frequency
-	txtBox = new Label("fundFreq", "A");
-	auto* tb = addToList(txtBox);
-	updateText();
-	tb->setBounds(0.0f,0.0f,getWidth() * 7/12,getHeight());
-	tb->setJustificationType(Justification::centred);
+	// set text box location
+	txtBox->setBounds(0.0f, 0.0f, getWidth() * 7 / 12, getHeight());
+	txtBox->setJustificationType(Justification::centred);
 
 	// draw paths for up and down buttons for fundemantal frequency
 	DrawablePath upNormal, downNormal, upOver, downOver, upClicked, downClicked;
 	Path upPath, downPath;
-	auto downArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, getHeight()/2.0f, getWidth() * 5/12, getHeight()/2);
-	auto upArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, 0.0f, getWidth() * 5/12, getHeight() / 2);
+	auto downArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, getHeight() / 2.0f, getWidth() * 5 / 12, getHeight() / 2);
+	auto upArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, 0.0f, getWidth() * 5 / 12, getHeight() / 2);
 	float xMargin = upArea.getWidth() * .2f;
 	float yMargin = upArea.getHeight() *.2f;
-	upPath.addTriangle(xMargin, upArea.getHeight() - yMargin, upArea.getWidth()/2, yMargin, upArea.getWidth() - xMargin, upArea.getHeight() - yMargin);
-	downPath.addTriangle(xMargin,yMargin,downArea.getWidth() - xMargin, yMargin, downArea.getWidth()/2, downArea.getHeight() - yMargin);
+	upPath.addTriangle(xMargin, upArea.getHeight() - yMargin, upArea.getWidth() / 2, yMargin, upArea.getWidth() - xMargin, upArea.getHeight() - yMargin);
+	downPath.addTriangle(xMargin, yMargin, downArea.getWidth() - xMargin, yMargin, downArea.getWidth() / 2, downArea.getHeight() - yMargin);
 
 
 	upNormal.setPath(upPath);
@@ -247,39 +305,22 @@ void fundFreq::resized()
 	downClicked.setStrokeFill(Colours::black);
 	downClicked.setStrokeThickness(.50f);
 
-	// set bounds and location for up button
-	DrawableButton* upBtn = new DrawableButton("up", DrawableButton::ImageRaw);
-	auto * ubtn = addToList(upBtn);
-	ubtn->setComponentID((String)FUND_FREQ_BUTTON);
-	ubtn->addListener(bListener);
-	ubtn->setImages(&upNormal, &upOver, &upClicked);
-	ubtn->setBounds(upArea);
-	ubtn->setClickingTogglesState(false);
-	ubtn->onClick = [this] {
-		num = (num++) % 12;
-		updateText();
-	};
 
-	// set bounds and location for down button
-	DrawableButton* downBtn = new DrawableButton("down", DrawableButton::ImageRaw);
-	auto * dbtn = addToList(downBtn);
-	dbtn->setComponentID((String)FUND_FREQ_BUTTON);
-	dbtn->addListener(bListener);
-	dbtn->setImages(&downNormal, &downOver, &downClicked);
-	dbtn->setBounds(downArea);
-	dbtn->setClickingTogglesState(false);
-	dbtn->onClick = [this] {
-		if (num <= 0)
-		{
-			num = 11;
-		}
-		else
-		{
-			num = (num--) % 12;
-		}
-		updateText();
-	};
+	// set up button loaction and shape
+	upBtn->setImages(&upNormal, &upOver, &upClicked);
+	upBtn->setBounds(upArea);
 
+
+
+	// set down button location and shape
+	downBtn->setImages(&downNormal, &downOver, &downClicked);
+	downBtn->setBounds(downArea);
+
+}
+
+void fundFreq::resized()
+{
+	// sets component list to empty
 
 }
 
@@ -338,6 +379,9 @@ int fundFreq::getNote()
 void fundFreq::setListener(Button::Listener *_listener)
 {
 	bListener = _listener;
+
+	upBtn->addListener(bListener);
+	downBtn->addListener(bListener);
 }
 
 

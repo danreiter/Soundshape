@@ -85,8 +85,6 @@ void freqDomainWin::paint (Graphics& g)
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 	g.setColour(Colours::black);
 	g.setFont(14.0f);
-	g.drawText("Base Window", getLocalBounds(),
-		Justification::centred, true);   // draw some placeholder text
 	float margin = getHeight() *.10f;
 	Line<float> vLine(margin, margin, margin, getHeight() - margin);
 	Line<float> hLine(margin, getHeight() - margin, getWidth() - margin, getHeight() - margin);

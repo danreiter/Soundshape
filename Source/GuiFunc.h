@@ -16,8 +16,10 @@
 #define VOLUME_SLIDER 2001
 #define PLAY_BUTTON 2002
 #define EXPORT_BUTTON 2003
-#define PANIC_BUTTON 2004
-#define FUND_FREQ_BUTTON 2005
+#define IMPORT_BUTTON 2004
+#define PANIC_BUTTON 2005
+#define FUND_FREQ_BUTTON 2006
+#define SUSTAIN_PLAY_BUTTON 2007
 
 //==============================================================================
 //   volumeBox is a slider component drawn in a box with volume symbols
@@ -61,22 +63,8 @@ private:
     AudioProcessorValueTreeState& valueTreeState;
 	Slider::Listener * sListen;							// reference to parent for slider listener
 	Button::Listener * bListen;							// refernence to parent for button listener
-	
-	//List of components
-	OwnedArray<Component> components;					
-	template <typename ComponentType>
-	ComponentType* addToList(ComponentType * newComp)
-	{
-		components.add(newComp);
-		addAndMakeVisible(newComp);
-		return newComp;
-	}
-
-	// emptys list
-	void emptyList()
-	{
-		components.clear(true);
-	}
+	Button *panicBtn, *exportBtn, *playBtn, *importBtn, *sustainPlyBtn; // buttons for import, export, and play functions
+	volumeBox *volBox;									// Component to control the volume
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GuiFunc)
 };
@@ -101,22 +89,7 @@ private:
 	Label *txtBox;							// displays fundmental frequency
 	int num;								// tracks the current fundmental frequency
 	Button::Listener * bListener;			// reference to parent as button listener
-
-	// list of components
-	OwnedArray<Component> components;
-	template <typename ComponentType>
-	ComponentType* addToList(ComponentType * newComp)
-	{
-		components.add(newComp);
-		addAndMakeVisible(newComp);
-		return newComp;
-	}
-
-	// clears component list
-	void emptyList()
-	{
-		components.clear(true);
-	}
+	DrawableButton * upBtn, * downBtn;		// Buttons to change the fundmental frequency
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(fundFreq)
 };
