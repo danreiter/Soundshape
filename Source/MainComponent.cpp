@@ -57,6 +57,38 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//------------Setting Button Values---------------------------
 
+  //  // Button for showin popup menu
+  //  menuButton = new TextButton("...");
+  //  menuButton->onClick = [this] {
+  //      // make a menu for the look and feel, add it to the main popup menu
+  //      PopupMenu popupMenu;
+
+  //      PopupMenu lookFeelChooser;
+  //      lookFeelChooser.addItem(1, "Default");
+		//lookFeelChooser.addItem(2, "Light");
+  //      // Greg, you can add some other lookandfeel options to this submenu
+  //      // ...
+  //      popupMenu.addSubMenu("Theme", lookFeelChooser); 
+  //      popupMenu.addItem(500, "About");
+  //      // handle the selection
+  //      const int result = popupMenu.show();
+  //      if (result == 0) {
+  //          // nothing selected
+  //      }
+  //      else if (result == 1) {
+  //          // handle the first look and feel option
+  //      }
+  //      else if (result == 2) {
+  //          // handle another look and feel option here, etc...
+		//	setAllLookAndFeels(new LookAndFeel_V2(), this);
+  //      }
+  //      else if (result == 500) {
+  //          // TODO display the 'About' window
+  //      }
+  //  };
+  //  menuButton->setTooltip("Extra options");
+
+
 	// Harmonic button to toggle harmonic filter for selecting 
 	harmonicButton = new TextButton("Harmonic");
 	harmonicButton->setClickingTogglesState(true);
@@ -114,6 +146,12 @@ MainComponent::~MainComponent()
 {
 }
 
+//// a method for changing from one lookandfeel to the other
+//void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
+//{
+//	for (auto* child : comp->getChildren())
+//		child->setLookAndFeel(laf);
+//}
 
 void MainComponent::setConverter(Converter *_converter) {
 	converterPtr = _converter;
