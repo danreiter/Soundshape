@@ -106,7 +106,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	playBtn->setColour(TextButton::buttonColourId, Colours::orange);
 	//playBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
-	playBtn->setClickingTogglesState(true);
+	playBtn->setClickingTogglesState(false);
 
 	// add sustained play button
 	sustainPlyBtn = new TextButton("Sustained Play");

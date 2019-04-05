@@ -23,20 +23,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	harm = -1;
 	zoom = 4.0;
 
-	//thumbnail = converterPtr->getThumbnail();
-	
-
 	//------------------------------------------------------------
 
-	loadSound();
 	//------Passing references to child components----------------
-	////fWindow.setZoom(&zoom, &harm, &add, this, this, &profile[0], (sizeof(profile) / sizeof(*profile)));
-	//fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &selectedProfile);
-	//sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
-	//bTWindow.setProfile(&timeBlock, &selectedProfile, &timeSize, this, converterPtr);
-	//volComp.setListeners(this, this);
-	//fund.setListener(this);
-	//enve.setListener(this);
+	loadSound();
 
 	//------------------------------------------------------------
 
@@ -133,7 +123,7 @@ void MainComponent::setConverter(Converter *_converter) {
 //==============================================================================
 void MainComponent::paint(Graphics& g)
 {
-	//// (Our component is opaque, so we must completely fill the background with a solid colour)
+	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(Colours::lightgrey);
 
 	// setting the boundary components for the child components
@@ -199,21 +189,6 @@ void MainComponent::paint(Graphics& g)
 
 }
 
-//void MainComponent::paintOverChildren(Graphics &g) {
-    // Instead of using AudioThumbnail, draw the backend's waveform
-// by stroking a path. 
-//    Path wavePath;
-//
-//    wavePath.startNewSubPath(0, getHeight() / 2);
-//    for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
-//        float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
-//        float y =  ((float)getHeight()) / 2.0f - 0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i);
-//        wavePath.lineTo(x, y);
-//    }
-//    g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
-//    g.strokePath(wavePath, PathStrokeType(2.0f));
-//}
-
 void MainComponent::resized()
 {
 
@@ -226,21 +201,13 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getParentComponent()->getComponentID().getIntValue() == FREQ_DOMAIN)
 	{
-		//if (slider->getComponentID().getIntValue() >= 0)
-		//{
-			//profile[slider->getComponentID().getIntValue()] = slider->getValue();
-			//float input = (selectedProfile < 0) ? 0 : selectedProfile;
+
 			DBG(timeBlock);
 			DBG(selectedProfile);
 			DBG(currentProfile);
 			converterPtr->updateFrequencyValue(currentProfile, slider->getComponentID().getIntValue(), slider->getValue());
 			converterPtr->renderPreview(currentProfile);
 			repaint();
-		//}
-		//else
-		/*{
-			slider->setComponentID(String((slider->getComponentID().getIntValue() * -1)));
-		}*/
 	}
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getComponentID().getIntValue() == PLAYTIME_SLIDER)
@@ -260,7 +227,6 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		//Needs hook up to back end
 
-		// use slider->getValue()
 	}
 
 	// on change update attack settings
@@ -334,6 +300,12 @@ void MainComponent::buttonClicked(Button* button)
 	// Play button
 	if (button->getComponentID().getIntValue() == PLAY_BUTTON)
 	{
+
+	}
+
+	// Sustained Play button
+	if (button->getComponentID().getIntValue() == SUSTAIN_PLAY_BUTTON)
+	{
         if (button->getToggleState() == true) {
             float freq = fund.getNote();
             processor.playFreq(16.0f * notes[fund.getNote()]);
@@ -349,6 +321,12 @@ void MainComponent::buttonClicked(Button* button)
 		// need back end call for export
 	}
 
+	// Import button
+	if (button->getComponentID().getIntValue() == IMPORT_BUTTON)
+	{
+		// need back end call for export
+	}
+
 	// Panic button
 	if (button->getComponentID().getIntValue() == PANIC_BUTTON)
 	{
@@ -360,9 +338,7 @@ void MainComponent::buttonClicked(Button* button)
 	if (button->getComponentID().getIntValue() == FUND_FREQ_BUTTON)
 	{
 		// need back end call for fundmental frequency
-		// to button->getParentComonent()->getNote() to get the index 
-		// for the notes array
-		// i.e. - notes[button->getParentComonent()->getNote()]
+
 	}
 
 	if (button == harmonicButton)

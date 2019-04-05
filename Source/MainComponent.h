@@ -34,7 +34,6 @@ public:
 
 	//==============================================================================
 	void paint(Graphics&) override;
-   // void paintOverChildren(Graphics &g) override;
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
@@ -51,7 +50,6 @@ private:
 	GuiFunc volComp;	// Component handles volume settings
 	envelope enve;		// Component handles Envelope settings
     TooltipWindow ttp;  // Component handles tooltip messages
-    //AudioThumbnail * thumbnail; //reference to audio rendered in time domain
 
 
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile
@@ -63,8 +61,8 @@ private:
 	int freq, harm, add, timeSize;		// Varibles for tracking software and gui state
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
-	float profile[4000];				// Varible for testing frequency profile
-	float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
+	//float profile[4000];				// Varible for testing frequency profile
+	//float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
 	// Varible for notes in hz
     static float notes[12];
     float currentNoteFreq = 27.5;
