@@ -247,15 +247,20 @@ void Converter::setSampleRate(double _sampleRate)
         tempProfile[i] = profile[i];
         profile[i] = { 0,0 };
     }
-    for (int sourceBin = 0; sourceBin < tempProfile.size(); sourceBin++) {
-        // recopy frequency spikes from the old profile, putting them in the correct bins (by using the old sample rate)
-        int destinationBin = freqToBin(binToFreq(sourceBin, oldSampleRate), sampleRate);
-        if (destinationBin < tempProfile.size() / 2) {
-            profile[destinationBin] = tempProfile[sourceBin];
-        }
 
-        // cleanup temporary structure for future use
-        tempProfile[sourceBin] = { 0,0 };
+    for (int chunk = 0; chunk < SOUNDSHAPE_PROFILE_ROWS; chunk++) {
+        for (int sourceBin = 0; sourceBin < SOUNDSHAPE_CHUNK_SIZE; sourceBin++) {
+            // recopy frequency spikes from the old profile, putting them in the correct bins (by using the old sample rate)
+            size_t sourceRawIndex = chunk * SOUNDSHAPE_CHUNK_SIZE + sourceBin;
+            int destinationBin = freqToBin(binToFreq(sourceBin, oldSampleRate), sampleRate);
+            size_t destinationRawIndex = chunk * SOUNDSHAPE_CHUNK_SIZE + destinationBin;
+            if (destinationBin < SOUNDSHAPE_CHUNK_SIZE / 2) {
+                profile[destinationRawIndex] = tempProfile[sourceRawIndex];
+            }
+
+            // cleanup temporary structure for future use
+            tempProfile[sourceRawIndex] = { 0,0 };
+        }
     }
 
     // we also need to inform the envelope
