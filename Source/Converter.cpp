@@ -130,9 +130,21 @@ float Converter::getPreviewSample(int chunk, int index)
 
 void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
+
+    // Only enter the noteOn phase of the envelope if there are no notes already playing or being sustained
+    bool isTimeForAttack = true;
+    for (int i = 0; i < 128; i++) {
+        if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) {
+            isTimeForAttack = false;
+        }
+    }
+
     // Possibly change this in the future to only work for user-specified MIDI channels?
     noteVelocities[midiNoteNumber] = velocity;
-    envelope.adsrEnvelope.noteOn();
+
+    if (isTimeForAttack) {
+        envelope.adsrEnvelope.noteOn();
+    }
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
@@ -141,10 +153,10 @@ void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int m
         sustainedNoteVelocities[midiNoteNumber] = noteVelocities[midiNoteNumber];
     }
     noteVelocities[midiNoteNumber] = 0;
-    // if no notes being sustained, go into release phase
+    // if no notes being sustained or currently pressed, go into release phase
     bool isTimeForRelease = true;
     for (int i = 0; i < 128; i++) {
-        if (sustainedNoteVelocities[i] != 0) {
+        if (sustainedNoteVelocities[i] != 0 || noteVelocities[i] != 0) {
             isTimeForRelease = false;
         }
     }
