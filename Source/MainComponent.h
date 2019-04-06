@@ -39,6 +39,7 @@ public:
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
 	void loadSound();
+	void setAllLookAndFeels(LookAndFeel* laf, Component* comp);
 
 private:
 	//==============================================================================

@@ -12,6 +12,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "laf.h"
 
 #define VOLUME_SLIDER 2001
 #define PLAY_BUTTON 2002
@@ -38,6 +39,7 @@ private:
     typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 	Slider * volume;
     std::unique_ptr<SliderAttachment> gainAttachment; // lets the back and front end volume control each other
+	CustomLookAndFeel * claf; // will be moved to MainComponent
     
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(volumeBox)

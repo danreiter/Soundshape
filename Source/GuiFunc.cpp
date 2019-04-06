@@ -24,6 +24,9 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 	volume->setComponentID((String)VOLUME_SLIDER);
 	volume->setSliderStyle(Slider::LinearHorizontal);
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	claf = new CustomLookAndFeel(); // will be moved to MainComponent
+	SoundshapeLAFs::setDefaultColors(*claf); // ditto
+
 }
 volumeBox::~volumeBox(){}
 
@@ -31,7 +34,7 @@ void volumeBox::paint(Graphics& g)
 {
 	// paints the graphics surounding the volume slider
 	g.fillAll(Colours::darkgrey);
-	g.setColour(Colours::orange);
+	g.setColour(claf->findColour(Slider::thumbColourId));// will eventually use the SSColours enum
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
@@ -46,9 +49,10 @@ void volumeBox::paint(Graphics& g)
 	g.fillPath(squ1);
 
 	// sets slider bounds
-	volume->setColour(Slider::thumbColourId, Colours::orange);
-	volume->setColour(Slider::trackColourId, Colours::orange);
+	//volume->setColour(Slider::thumbColourId, Colours::orange);
+	//volume->setColour(Slider::trackColourId, Colours::orange);
 	volume->setBounds(3.5f * h, 0.0f, getWidth() - (h*6), getHeight());
+	volume->setLookAndFeel(claf);
 
 }
 

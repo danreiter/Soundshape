@@ -147,12 +147,12 @@ MainComponent::~MainComponent()
 {
 }
 
-//// a method for changing from one lookandfeel to the other
-//void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
-//{
-//	for (auto* child : comp->getChildren())
-//		child->setLookAndFeel(laf);
-//}
+// a method for changing from one lookandfeel to the other
+void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
+{
+	for (auto* child : comp->getChildren())
+		child->setLookAndFeel(laf);
+}
 
 void MainComponent::setConverter(Converter *_converter) {
 	converterPtr = _converter;
