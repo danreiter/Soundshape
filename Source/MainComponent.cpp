@@ -57,36 +57,37 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//------------Setting Button Values---------------------------
 
-  //  // Button for showin popup menu
-  //  menuButton = new TextButton("...");
-  //  menuButton->onClick = [this] {
-  //      // make a menu for the look and feel, add it to the main popup menu
-  //      PopupMenu popupMenu;
+    // Button for showin popup menu
+ //   menuButton = new TextButton("...");
+ //   menuButton->onClick = [this] {
+ //       // make a menu for the look and feel, add it to the main popup menu
+ //       PopupMenu popupMenu;
 
-  //      PopupMenu lookFeelChooser;
-  //      lookFeelChooser.addItem(1, "Default");
-		//lookFeelChooser.addItem(2, "Light");
-  //      // Greg, you can add some other lookandfeel options to this submenu
-  //      // ...
-  //      popupMenu.addSubMenu("Theme", lookFeelChooser); 
-  //      popupMenu.addItem(500, "About");
-  //      // handle the selection
-  //      const int result = popupMenu.show();
-  //      if (result == 0) {
-  //          // nothing selected
-  //      }
-  //      else if (result == 1) {
-  //          // handle the first look and feel option
-  //      }
-  //      else if (result == 2) {
-  //          // handle another look and feel option here, etc...
-		//	setAllLookAndFeels(new LookAndFeel_V2(), this);
-  //      }
-  //      else if (result == 500) {
-  //          // TODO display the 'About' window
-  //      }
-  //  };
-  //  menuButton->setTooltip("Extra options");
+ //       PopupMenu lookFeelChooser;
+ //       lookFeelChooser.addItem(1, "Default");
+	//	lookFeelChooser.addItem(2, "Light");
+ //       // Greg, you can add some other lookandfeel options to this submenu
+ //       // ...
+ //       popupMenu.addSubMenu("Theme", lookFeelChooser); 
+ //       popupMenu.addItem(500, "About");
+ //       // handle the selection
+ //       const int result = popupMenu.show();
+ //       if (result == 0) {
+ //           // nothing selected
+ //       }
+ //       else if (result == 1) {
+ //           // handle the first look and feel option
+ //       }
+ //       else if (result == 2) {
+ //           // handle another look and feel option here, etc...
+	//		//setAllLookAndFeels(new LookAndFeel_V2(), this);
+ //       }
+ //       else if (result == 500) {
+ //           // TODO display the 'About' window
+ //       }
+ //   };
+	//menuButton->setColour(TextButton::buttonColourId, Colours::aqua);
+ //   menuButton->setTooltip("Extra options");
 
 
 	// Harmonic button to toggle harmonic filter for selecting 
@@ -136,7 +137,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(harmonicButton);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
-
+	//addAndMakeVisible(menuButton);
 
 
 	setSize(600, 400);

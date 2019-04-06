@@ -51,7 +51,7 @@ private:
 	envelope enve;		// Component handles Envelope settings
     TooltipWindow ttp;  // Component handles tooltip messages
 
-
+	TextButton *menuButton;             // Menu bar button for GUI interface fucntions
 	TextButton *harmonicButton;			// Toggles harmonic constraint for frequency profile
 	TextButton *addButton;				// Toggles buttons to add frequency spikes to frequency profile
 	Slider *zoomSlider;					// Handles magnification settings for frequency profile window
@@ -61,8 +61,7 @@ private:
 	int freq, harm, add, timeSize;		// Varibles for tracking software and gui state
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
-	//float profile[4000];				// Varible for testing frequency profile
-	//float soundWaveProfile[50][2048];   // Varible for testing/store the soundWave values
+	
 	// Varible for notes in hz
     static float notes[12];
     float currentNoteFreq = 27.5;
