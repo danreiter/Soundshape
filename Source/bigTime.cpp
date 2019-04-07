@@ -21,9 +21,9 @@ bigTime::bigTime()
 {
 	
 	xPoint = new int;
-	//xProfile = new int;
+
 	time = new int;
-	//*xProfile = -1;
+
 	*xPoint = 0;
 	*time = 10;
 	// In your constructor, you should add any child components, and
@@ -57,11 +57,6 @@ bigTime::bigTime()
 		tb->setColour(TextButton::textColourOnId, Colours::black);
 		tb->setColour(TextButton::buttonColourId, Colours::orange);
 		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		//tb->onStateChange = [this]
-		//{
-		//	auto * focused = Component::getCurrentlyFocusedComponent();
-		//	*xPoint = focused->getComponentID().getIntValue();
-		//};
 	}
 }
 
@@ -94,45 +89,29 @@ void bigTime::paint(Graphics& g)
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-	while(xMark + pixel  <= (n/10))
-	{
-		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-		xMark += pixel;
-		if (flag)
-		{
-				c1 = Colour(255, (170 + colourMod), 0);
-		}
-		else
-		{
-			c1 = Colour(255, (200 - colourMod), 0);
-		}
-		g.setColour(c1);
-		g.fillRect(rec5);
+	Rectangle<float> BackGround(0, 0, 10 * btnWidth, getHeight());
+	g.setColour(Colours::burlywood);
+	g.fillRect(BackGround);
 
-		colourMod = (++colourMod % 31);
-		if (colourMod == 0)
-		{
-			flag = !flag;
-		}
-
-	}
 
 	
 
 
 	// Fills background color of selected time domain
+	// this colour selects the zoom time domain
 	g.setColour(Colours::lightgreen);
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
 
 	// Fills background color of selected frequnecy domain
-	int profileWidth = btnWidth / 5;
-	if (*xProfile >= 0)
-	{
-		Rectangle<float> profileMarkArea(((int)(getWidth() / (*time)) / 5) * (*xProfile), 0.0f, ((int)(getWidth() / (*time)) / 5), getHeight()* .8f);
-		g.setColour(Colours::red);
-		g.fillRect(profileMarkArea);
-	}
+	//int profileWidth = btnWidth / 5;
+	//if (*xProfile >= 0)
+	//{
+	//	Rectangle<float> profileMarkArea(((int)(getWidth() / (*time)) / 5) * (*xProfile), 0.0f, ((int)(getWidth() / (*time)) / 5), getHeight()* .8f);
+	//	// This color select the current profile
+	//	g.setColour(Colours::red);
+	//	g.fillRect(profileMarkArea);
+	//}
 
 	for (int i = 0; i < components.size(); i++)
 	{
@@ -183,6 +162,7 @@ void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Lis
 		components[i]->addListener(parent);
 	}
 	timeBase.setConverter(_cp);
+	timeBase.setCurrentProfile(xProfile);
 	timeBase.repaint();
 }
 //==============================================================================

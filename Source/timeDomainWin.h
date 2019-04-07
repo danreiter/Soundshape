@@ -24,14 +24,13 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-	//void setWavePath(AudioThumbnail * _tn);
 	void setConverter(Converter* _conPtr);
+	void setCurrentProfile(int * _currentProfile);
 
 
 private:
-	//AudioThumbnail *thumbnail;
-	//Path wavePath;
 	int * chunk_size;
+	int* currentProfile;
 	Converter * converterPtr;
     
 

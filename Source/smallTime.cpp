@@ -82,9 +82,6 @@ void smallTime::paint(Graphics& g)
 	g.fillRect(backGround);
 	g.setColour (Colours::black);
 	g.drawRect (backGround, 1);   // draw an outline around the component
-	g.setFont (14.0f);
-	g.drawText ("smallTime", getLocalBounds(),
-	            Justification::centred, true);   // draw some placeholder text
 
 	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
@@ -96,39 +93,11 @@ void smallTime::paint(Graphics& g)
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-	while (xMark + pixel  <= (n / 10))
-	{
+	g.setColour(Colours::blanchedalmond);
+	Rectangle<float> background(0, 0, btnWidth * 5, getHeight());
+	g.fillRect(background);
 
 
-		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-		xMark += pixel;
-		if (flag)
-		{
-			c1 = Colour(255, (170 + colourMod), 0);
-
-		}
-		else
-		{
-			c1 = Colour(255, (200 - colourMod), 0);
-		}
-		g.setColour(c1);
-		g.fillRect(rec5);
-		colourMod = (++colourMod % 31);
-		if (colourMod == 0)
-		{
-			flag = !flag;
-		}
-	}
-
-	// Draws red mark over currently selected frequnecy profile section 
-	//int profileMark = *xProfile;// -(*xStart * 5);
-	int profileMark = *currentProfile - (*xStart * 5);
-	if (profileMark >= 0 && profileMark < 5)
-	{
-		Rectangle<float> profileArea(profileMark * btnWidth, 0.0f, btnWidth, getHeight() * .8f);
-		g.setColour(Colours::red);
-		g.fillRect(profileArea);
-	}
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
@@ -167,11 +136,13 @@ void smallTime::setTimeDomain(int * _start, int * _profile, int * _currentProfil
 	currentProfile = _currentProfile;
 	parent = _parent;
 	tdTest.setConverter(_cp);
+	tdTest.setCurrentProfile(currentProfile);
 	tdTest.repaint();
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->addListener(parent);
 	}
+
 }
 //==============================================================================
 

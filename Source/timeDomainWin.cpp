@@ -19,24 +19,8 @@
 timeDomainWin::timeDomainWin()
 {
 	converterPtr = NULL;
-    // temporarily load file here for testing. Needs to be moved to code for a Load File button
-	//thumbnail = NULL;
-	//// Code for loading a sound
- //   formatManager.registerBasicFormats();
- //   FileChooser chooser("Select a Wave file to play...",
- //       {},
- //       "*");
- //   if (chooser.browseForFileToOpen())
- //   {
- //       File file(chooser.getResult());
- //       auto* reader = formatManager.createReaderFor(file);
- //       if (reader != nullptr)
- //       {
- //           std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader, true));
- //           thumbnail.setSource(new FileInputSource(file));
- //           readerSource.reset(newSource.release());
- //       }
- //   }
+	currentProfile = new int();
+	*currentProfile = -1;
 }
 
 timeDomainWin::~timeDomainWin()
@@ -61,7 +45,7 @@ void timeDomainWin::paint (Graphics& g)
 	Point<float> centerStart(0.0f, getHeight() / 2.0f);
 	Point<float> centerEnd(getWidth(), getHeight()/2.0f);
 	Line<float> centerLine(centerStart, centerEnd);
-	g.drawLine(centerLine, 2.0f);
+	//g.drawLine(centerLine, 2.0f);
 
 	// draw tick marks and numbers across center line
 	float tick = getWidth() / 50.0f;
@@ -78,22 +62,20 @@ void timeDomainWin::paint (Graphics& g)
 			p2.setY(p2.getY() - (getHeight()*.05f));
 		}
 		Line<float> l(p1, p2);
+		if (i == *currentProfile)
+		{
+			g.setColour(Colours::red);
+			Rectangle<float> profile(rec.getTopLeft().getX(), 0, tick, getHeight());
+			g.fillRect(profile);
+			g.setColour(Colours::black);
+		}
 		g.drawLine(l);
 		g.drawText(String(i), rec1, Justification::centredLeft);
 		rec.removeFromLeft(tick);
 		rec1.removeFromLeft(tick);
 	}
+	g.drawLine(centerLine, 2.0f);
 
-    // draw thumbnail
-    // TODO replace this once the backend is set up properly (the Converter has a thumbnail object)
-	//if (thumbnail != NULL)
-	//{
-		//thumbnail->drawChannels(g, waveRect, 0, 0.01f, 13.0f);
-	//}
-
-
-    //g.setColour(Colours::mediumpurple);
-    //g.setFont(3.0f);
 	if (converterPtr != NULL)
 	{
 		Path wavePath;
@@ -136,5 +118,9 @@ void timeDomainWin::setConverter(Converter* _conPtr)
 	// components that your component contains..
 	converterPtr = _conPtr;
 
+}
+void timeDomainWin::setCurrentProfile(int * _currentProfile)
+{
+	currentProfile = _currentProfile;
 }
 //==============================================================================

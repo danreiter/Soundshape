@@ -24,6 +24,7 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 	volume->setComponentID((String)VOLUME_SLIDER);
 	volume->setSliderStyle(Slider::LinearHorizontal);
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	
 }
 volumeBox::~volumeBox(){}
 
@@ -49,6 +50,7 @@ void volumeBox::paint(Graphics& g)
 	volume->setColour(Slider::thumbColourId, Colours::orange);
 	volume->setColour(Slider::trackColourId, Colours::orange);
 	volume->setBounds(3.5f * h, 0.0f, getWidth() - (h*6), getHeight());
+	
 
 }
 
@@ -71,7 +73,6 @@ void volumeBox::setVolumeListener(Slider::Listener * _listener)
 //==============================================================================
 GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState(_valueTreeState)
 {
-	//emptyList();
 
 	// add panic button
 	panicBtn = new TextButton("Panic");

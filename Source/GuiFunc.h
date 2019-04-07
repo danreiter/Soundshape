@@ -27,6 +27,11 @@
 class volumeBox : public Component
 {
 public:
+	enum ColourIds
+	{
+		volColourIds = 80000
+	};
+
 	volumeBox(AudioProcessorValueTreeState& _valueTreeState);
 	~volumeBox();
 
@@ -90,6 +95,8 @@ private:
 	int num;								// tracks the current fundmental frequency
 	Button::Listener * bListener;			// reference to parent as button listener
 	DrawableButton * upBtn, * downBtn;		// Buttons to change the fundmental frequency
+
+	
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(fundFreq)
 };

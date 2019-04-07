@@ -2,28 +2,28 @@
 
 float MainComponent::notes[12] = { 27.5f, 29.50f, 30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
 
-// Id numbers passed to sub components
-
 //==============================================================================
 //  Component declares and instaites other gui components and passes variables from 
 //==============================================================================
 MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorValueTreeState& _valueTreeState) :
-    processor(p),
-    enve(_valueTreeState),
-    valueTreeState(_valueTreeState),
-    volComp(_valueTreeState)
+	processor(p),
+	enve(_valueTreeState),
+	valueTreeState(_valueTreeState),
+	volComp(_valueTreeState),
+	keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
+	//----------Setting reference to the converter----------------------------------
     setConverter(&(processor.getConverter()));
+	//------------------------------------------------------------
 
     //----------Default settings----------------------------------
-    
 	amp = 0.0f;
 	freq = 0;
 	add = -1;
 	harm = -1;
 	zoom = 4.0;
-
 	//------------------------------------------------------------
+
 
 	//------Passing references to child components----------------
 	loadSound();
@@ -55,40 +55,9 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//------------------------------------------------------------
 
+	//------------------------------------------------------------
+
 	//------------Setting Button Values---------------------------
-
-    // Button for showin popup menu
- //   menuButton = new TextButton("...");
- //   menuButton->onClick = [this] {
- //       // make a menu for the look and feel, add it to the main popup menu
- //       PopupMenu popupMenu;
-
- //       PopupMenu lookFeelChooser;
- //       lookFeelChooser.addItem(1, "Default");
-	//	lookFeelChooser.addItem(2, "Light");
- //       // Greg, you can add some other lookandfeel options to this submenu
- //       // ...
- //       popupMenu.addSubMenu("Theme", lookFeelChooser); 
- //       popupMenu.addItem(500, "About");
- //       // handle the selection
- //       const int result = popupMenu.show();
- //       if (result == 0) {
- //           // nothing selected
- //       }
- //       else if (result == 1) {
- //           // handle the first look and feel option
- //       }
- //       else if (result == 2) {
- //           // handle another look and feel option here, etc...
-	//		//setAllLookAndFeels(new LookAndFeel_V2(), this);
- //       }
- //       else if (result == 500) {
- //           // TODO display the 'About' window
- //       }
- //   };
-	//menuButton->setColour(TextButton::buttonColourId, Colours::aqua);
- //   menuButton->setTooltip("Extra options");
-
 
 	// Harmonic button to toggle harmonic filter for selecting 
 	harmonicButton = new TextButton("Harmonic");
@@ -137,8 +106,30 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(harmonicButton);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
-	//addAndMakeVisible(menuButton);
+	addAndMakeVisible(keyboardComponent);
+	keyboardState.addListener(&keyboardComponent);
 
+	//----------Menu settings----------------------------------
+	menuBar.reset(new MenuBarComponent(this));
+	addAndMakeVisible(menuBar.get());
+	setApplicationCommandManagerToWatch(&commandManager);
+	commandManager.registerAllCommandsForTarget(this);
+	addKeyListener(commandManager.getKeyMappings());
+	addChildComponent(menuHeader);
+
+	//addAndMakeVisible(outerCommandTarget);
+	addAndMakeVisible(sidePanel);
+
+	if (menuBarPosition != MenuBarPosition::burger)
+		sidePanel.showOrHide(false);
+
+	menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
+	burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
+	menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
+
+	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
+	menuItemsChanged();
+	//------------------------------------------------------------
 
 	setSize(600, 400);
 }
@@ -146,20 +137,19 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 MainComponent::~MainComponent()
 {
 }
+//==============================================================================
 
-//// a method for changing from one lookandfeel to the other
-//void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
-//{
-//	for (auto* child : comp->getChildren())
-//		child->setLookAndFeel(laf);
-//}
-
+//------------------------------------------------------------------------------------
+// Function sets a reference to a converter on the back end
+//------------------------------------------------------------------------------------
 void MainComponent::setConverter(Converter *_converter) {
 	converterPtr = _converter;
 }
+//------------------------------------------------------------------------------------
 
-
-//==============================================================================
+//------------------------------------------------------------------------------------
+// Function paint
+//------------------------------------------------------------------------------------
 void MainComponent::paint(Graphics& g)
 {
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
@@ -167,6 +157,8 @@ void MainComponent::paint(Graphics& g)
 
 	// setting the boundary components for the child components
 	auto area = getLocalBounds();
+	area.removeFromTop(LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
+
 	Point<int> bottomRight(area.getBottomRight());
 	float margin = area.getWidth() * 0.01f;
 	float h = (area.getHeight() / 5);
@@ -223,18 +215,30 @@ void MainComponent::paint(Graphics& g)
 	sWindow.reduce(sWindow.getWidth() * .05f, sWindow.getHeight() * .05f);
 	enve.setBounds(sWindow);
 
-
-
+	if (menuBarPosition == MenuBarPosition::window)
+	{
+		menuBar->setBounds(getX(), getY(), getWidth(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
+	}
+	else
+	{
+		menuHeader.setBounds(getX(), getY(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
+	}
 
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function resized
+//------------------------------------------------------------------------------------
 void MainComponent::resized()
 {
 
 }
+//------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------
 // Function listens to sliders of child components
+//------------------------------------------------------------------------------------
 void MainComponent::sliderValueChanged(Slider * slider)
 {
 	// on change of a frequency spike slider updates conveter with new value
@@ -297,15 +301,12 @@ void MainComponent::sliderValueChanged(Slider * slider)
 
 //-------------------------------------------------------------------------------------
 // Function listens to buttons of child components
+//-------------------------------------------------------------------------------------
 void MainComponent::buttonClicked(Button* button)
 {
 	// On frequnecy profile selection updates new frequency profile 
 	if(button->getRadioGroupId() == PROFILE_SELECT_BUTTON)
 	{
-
-		//DBG(button->getComponentID());
-        //float val = converterPtr->getFrequencyValue(0, 440);
-		//DBG(val);
 		selectedProfile = (int)button->getComponentID().getIntValue();
         currentProfile = (int)(timeBlock * 5) + selectedProfile;
 
@@ -406,3 +407,290 @@ void MainComponent::loadSound()
 	enve.setListener(this);
 }
 //-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function getMenuBarNames
+//-------------------------------------------------------------------------------------
+StringArray MainComponent::getMenuBarNames()
+{
+	return { "Menu Position", "Themes", "Help", "About" };
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function getMenuForIndex
+//-------------------------------------------------------------------------------------
+PopupMenu MainComponent::getMenuForIndex(int menuIndex, const String &)
+{
+	PopupMenu menu;
+	if (menuIndex == 0)
+	{
+		menu.addCommandItem(&commandManager, CommandIDs::menuPositionInsideWindow);
+		menu.addCommandItem(&commandManager, CommandIDs::menuPositionBurgerMenu);
+	}
+	else if (menuIndex == 1)
+	{
+		menu.addCommandItem(&commandManager, CommandIDs::DefaultTheme);
+		menu.addCommandItem(&commandManager, CommandIDs::TestTheme);
+	}
+	else if (menuIndex == 2)
+	{
+		menu.addCommandItem(&commandManager, CommandIDs::ToolTips);
+		menu.addCommandItem(&commandManager, CommandIDs::Tutorial);
+	}
+	else if (menuIndex == 3)
+	{
+		menu.addCommandItem(&commandManager, CommandIDs::Developers);
+		menu.addCommandItem(&commandManager, CommandIDs::Licence);
+
+	}
+
+	return menu;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function MenuItemSelected
+//-------------------------------------------------------------------------------------
+void MainComponent::menuItemSelected(int, int)
+{
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function getNextCommandTarget
+//-------------------------------------------------------------------------------------
+ApplicationCommandTarget * MainComponent::getNextCommandTarget()
+{
+	//return &outerCommandTarget;
+	return findFirstTargetParentComponent();
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function getCommandInfo
+//-------------------------------------------------------------------------------------
+void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo & _result)
+{
+	switch (_commandID)
+	{
+		case CommandIDs::menuPositionInsideWindow:
+			_result.setInfo("Toolbar Menu", "Places the menu bar inside the application window", "Menu", 0);
+			_result.setTicked(menuBarPosition == MenuBarPosition::window);
+			_result.addDefaultKeypress('w', ModifierKeys::shiftModifier);
+			break;
+		case CommandIDs::menuPositionBurgerMenu:
+			_result.setInfo("Sidebar Menu", "Uses a burger menu", "Menu", 0);
+			_result.setTicked(menuBarPosition == MenuBarPosition::burger);
+			_result.addDefaultKeypress('b', ModifierKeys::shiftModifier);
+			break;
+		case CommandIDs::DefaultTheme:
+			_result.setInfo("Default Theme", "Sets theme to default theme", "Themes", 0);
+			_result.setTicked(currentTheme == CommandIDs::DefaultTheme);
+			_result.addDefaultKeypress('r', ModifierKeys::commandModifier);
+			break;
+		case CommandIDs::TestTheme:
+			_result.setInfo("Test Theme", "Sets theme to test theme", "Themes", 0);
+			_result.setTicked(currentTheme == CommandIDs::TestTheme);
+			_result.addDefaultKeypress('h', ModifierKeys::commandModifier);
+			break;
+		case CommandIDs::ToolTips:
+			_result.setInfo("Tool Tips", "Turns on and off tool tips", "Help", 0);
+			_result.setTicked(tips);
+			_result.addDefaultKeypress('t', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
+			break;
+		case CommandIDs::Tutorial:
+			_result.setInfo("Tutorial", "Tutorial about Soundshape", "Help", 0);
+			_result.setTicked(false);
+			break;
+		case CommandIDs::Developers:
+			_result.setInfo("Developers", "About the Developers", "About", 0);
+			_result.setTicked(false);
+			_result.addDefaultKeypress('d', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
+			break;
+		case CommandIDs::Licence:
+			_result.setInfo("Licence", "About Soundshape's Licence", "About", 0);
+			_result.setTicked(false);
+			break;
+		default:
+			break;
+
+	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function getAllCommands
+//-------------------------------------------------------------------------------------
+void MainComponent::getAllCommands(Array<CommandID>& c)
+{
+	Array<CommandID> commands{ CommandIDs::menuPositionInsideWindow,
+						CommandIDs::menuPositionBurgerMenu,
+						CommandIDs::DefaultTheme,
+						CommandIDs::TestTheme,
+						CommandIDs::ToolTips,
+						CommandIDs::Tutorial,
+						CommandIDs::Developers,
+						CommandIDs::Licence };
+	c.addArray(commands);
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function perform
+//-------------------------------------------------------------------------------------
+bool MainComponent::perform(const InvocationInfo & info)
+{
+	switch (info.commandID)
+	{
+	case CommandIDs::menuPositionInsideWindow:
+		setMenuBarPosition(MenuBarPosition::window);
+		break;
+	case CommandIDs::menuPositionBurgerMenu:
+		setMenuBarPosition(MenuBarPosition::burger);
+		break;
+	case CommandIDs::DefaultTheme:
+		setTheme(CommandIDs::DefaultTheme);
+		break;
+	case CommandIDs::TestTheme:
+		setTheme(CommandIDs::TestTheme);
+		break;
+	case CommandIDs::ToolTips:
+		tips = (!tips);
+		break;
+	case CommandIDs::Tutorial:
+		break;	
+	case CommandIDs::Developers:
+		break;	
+	case CommandIDs::Licence:
+		break;
+	default:
+		return false;
+	}
+
+	return true;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function setMenuBarPosition
+//-------------------------------------------------------------------------------------
+void MainComponent::setMenuBarPosition(MenuBarPosition newPosition)
+{
+	if (menuBarPosition != newPosition)
+	{
+		menuBarPosition = newPosition;
+
+		if (menuBarPosition != MenuBarPosition::burger)
+			sidePanel.showOrHide(false);
+
+		menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
+		burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
+		menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
+
+		sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
+		menuItemsChanged();
+
+		repaint();
+	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function setMenuBarPosition
+//-------------------------------------------------------------------------------------
+void MainComponent::setTheme(CommandID newTheme)
+{
+	if (currentTheme != newTheme)
+	{
+		currentTheme = newTheme;
+		
+		if (menuBarPosition != MenuBarPosition::burger)
+			sidePanel.showOrHide(false);
+
+		menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
+		burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
+		menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
+
+		sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
+		menuItemsChanged();;
+
+		repaint();
+	}
+}
+//-------------------------------------------------------------------------------------
+
+
+//==============================================================================
+/*
+	Functions for burger Menu component
+*/
+//==============================================================================
+BurgerMenuHeader::BurgerMenuHeader(SidePanel& sp)
+	: sidePanel(sp)
+{
+	static const unsigned char burgerMenuPathData[]
+		= { 110,109,0,0,128,64,0,0,32,65,108,0,0,224,65,0,0,32,65,98,254,212,232,65,0,0,32,65,0,0,240,65,252,
+			169,17,65,0,0,240,65,0,0,0,65,98,0,0,240,65,8,172,220,64,254,212,232,65,0,0,192,64,0,0,224,65,0,0,
+			192,64,108,0,0,128,64,0,0,192,64,98,16,88,57,64,0,0,192,64,0,0,0,64,8,172,220,64,0,0,0,64,0,0,0,65,
+			98,0,0,0,64,252,169,17,65,16,88,57,64,0,0,32,65,0,0,128,64,0,0,32,65,99,109,0,0,224,65,0,0,96,65,108,
+			0,0,128,64,0,0,96,65,98,16,88,57,64,0,0,96,65,0,0,0,64,4,86,110,65,0,0,0,64,0,0,128,65,98,0,0,0,64,
+			254,212,136,65,16,88,57,64,0,0,144,65,0,0,128,64,0,0,144,65,108,0,0,224,65,0,0,144,65,98,254,212,232,
+			65,0,0,144,65,0,0,240,65,254,212,136,65,0,0,240,65,0,0,128,65,98,0,0,240,65,4,86,110,65,254,212,232,
+			65,0,0,96,65,0,0,224,65,0,0,96,65,99,109,0,0,224,65,0,0,176,65,108,0,0,128,64,0,0,176,65,98,16,88,57,
+			64,0,0,176,65,0,0,0,64,2,43,183,65,0,0,0,64,0,0,192,65,98,0,0,0,64,254,212,200,65,16,88,57,64,0,0,208,
+			65,0,0,128,64,0,0,208,65,108,0,0,224,65,0,0,208,65,98,254,212,232,65,0,0,208,65,0,0,240,65,254,212,
+			200,65,0,0,240,65,0,0,192,65,98,0,0,240,65,2,43,183,65,254,212,232,65,0,0,176,65,0,0,224,65,0,0,176,
+			65,99,101,0,0 };
+
+	Path p;
+	p.loadPathFromData(burgerMenuPathData, sizeof(burgerMenuPathData));
+	burgerButton.setShape(p, true, true, false);
+
+	burgerButton.onClick = [this] { showOrHide(); };
+	addAndMakeVisible(burgerButton);
+}
+
+BurgerMenuHeader::~BurgerMenuHeader()
+{
+	sidePanel.showOrHide(false);
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function Paint for Burger menu
+//-------------------------------------------------------------------------------------
+void BurgerMenuHeader::paint(Graphics& g)
+{
+	auto titleBarBackgroundColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId)
+		.darker();
+
+	g.setColour(titleBarBackgroundColour);
+	g.fillRect(getLocalBounds());
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function resized for buger menu
+//-------------------------------------------------------------------------------------
+void BurgerMenuHeader::resized()
+{
+	auto r = getLocalBounds();
+
+	burgerButton.setBounds(r.removeFromRight(LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight()).withSizeKeepingCentre(LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight() / 2, LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight() / 2));
+
+	titleLabel.setFont(Font(getHeight() * 0.5f, Font::plain));
+	titleLabel.setBounds(r);
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function showOrHide for buger menu
+//-------------------------------------------------------------------------------------
+void BurgerMenuHeader::showOrHide()
+{
+	sidePanel.showOrHide(!sidePanel.isPanelShowing());
+	repaint();
+}
+//==============================================================================
+
