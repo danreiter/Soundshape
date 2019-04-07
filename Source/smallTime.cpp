@@ -96,7 +96,8 @@ void smallTime::paint(Graphics& g)
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-	while (xMark + pixel  <= (n / 10))
+	g.fillAll(getLookAndFeel().findColour(Slider::thumbColourId)); // this colourID should always be the base1 colour of the current lookandfeel
+	/*while (xMark + pixel  <= (n / 10))
 	{
 
 
@@ -118,7 +119,7 @@ void smallTime::paint(Graphics& g)
 		{
 			flag = !flag;
 		}
-	}
+	}*/
 
 	// Draws red mark over currently selected frequnecy profile section 
 	//int profileMark = *xProfile;// -(*xStart * 5);
@@ -127,6 +128,7 @@ void smallTime::paint(Graphics& g)
 	{
 		Rectangle<float> profileArea(profileMark * btnWidth, 0.0f, btnWidth, getHeight() * .8f);
 		g.setColour(Colours::red);
+		// easily seachable [selects zoomies^^]
 		g.fillRect(profileArea);
 	}
 	for (int i = 0; i < components.size(); i++)

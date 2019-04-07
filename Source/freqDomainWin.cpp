@@ -57,29 +57,30 @@ void freqDomainWin::paint (Graphics& g)
 	Colour c1;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
-	// draw color of background
-	for (int i = 0; i <= n; i++)
-	{
+	g.fillAll(Colours::aqua);
+	//// draw color of background
+	//for (int i = 0; i <= n; i++)
+	//{
 
 
-		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-		xMark += pixel;
-		if (flag)
-		{
-			c1 = Colour(255, (170 + colourMod), 0);
-		}
-		else
-		{
-			c1 = Colour(255, (200 - colourMod), 0);
-		}
-		g.setColour(c1);
-		g.fillRect(rec5);
-		colourMod = (++colourMod % 31);
-		if (colourMod == 0)
-		{
-			flag = !flag;
-		}
-	}
+	//	Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
+	//	xMark += pixel;
+	//	if (flag)
+	//	{
+	//		c1 = Colour(255, (170 + colourMod), 0);
+	//	}
+	//	else
+	//	{
+	//		c1 = Colour(255, (200 - colourMod), 0);
+	//	}
+	//	g.setColour(c1);
+	//	g.fillRect(rec5);
+	//	colourMod = (++colourMod % 31);
+	//	if (colourMod == 0)
+	//	{
+	//		flag = !flag;
+	//	}
+	//}
 
 	g.setColour(Colours::grey);
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component

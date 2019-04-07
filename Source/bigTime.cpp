@@ -94,7 +94,8 @@ void bigTime::paint(Graphics& g)
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-	while(xMark + pixel  <= (n/10))
+	g.fillAll(getLookAndFeel().findColour(Slider::thumbColourId)); // this colourID should always be the base1 colour of the current lookandfeel
+	/*while(xMark + pixel  <= (n/10))
 	{
 		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
 		xMark += pixel;
@@ -115,13 +116,14 @@ void bigTime::paint(Graphics& g)
 			flag = !flag;
 		}
 
-	}
+	}*/
 
 	
 
 
 	// Fills background color of selected time domain
 	g.setColour(Colours::lightgreen);
+	// easily searchable [selects colour of zoomTime]
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
 
@@ -131,6 +133,7 @@ void bigTime::paint(Graphics& g)
 	{
 		Rectangle<float> profileMarkArea(((int)(getWidth() / (*time)) / 5) * (*xProfile), 0.0f, ((int)(getWidth() / (*time)) / 5), getHeight()* .8f);
 		g.setColour(Colours::red);
+		// easily searchable [selects current profile^^]
 		g.fillRect(profileMarkArea);
 	}
 

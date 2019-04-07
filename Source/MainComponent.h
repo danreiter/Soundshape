@@ -20,6 +20,8 @@
 #include "Converter.h"
 #include "PluginProcessor.h"
 
+#define WRITE_BUTTON 2008
+
 //==============================================================================
 /*
 	This component lives inside our window, and this is where you should put all
@@ -70,6 +72,8 @@ private:
     Converter *converterPtr;
     Soundshape_pluginAudioProcessor& processor;
     AudioProcessorValueTreeState& valueTreeState; // back-end parameters
+
+	LookAndFeel * laf;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

@@ -24,8 +24,8 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 	volume->setComponentID((String)VOLUME_SLIDER);
 	volume->setSliderStyle(Slider::LinearHorizontal);
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	claf = new CustomLookAndFeel(); // will be moved to MainComponent
-	SoundshapeLAFs::setDefaultColors(*claf); // ditto
+	//claf = new CustomLookAndFeel(); // will be moved to MainComponent
+	//SoundshapeLAFs::setDefaultColors(*claf); // ditto
 
 }
 volumeBox::~volumeBox(){}
@@ -34,7 +34,7 @@ void volumeBox::paint(Graphics& g)
 {
 	// paints the graphics surounding the volume slider
 	g.fillAll(Colours::darkgrey);
-	g.setColour(claf->findColour(Slider::thumbColourId));// will eventually use the SSColours enum
+	g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));// this may or may not work.
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
@@ -52,7 +52,7 @@ void volumeBox::paint(Graphics& g)
 	//volume->setColour(Slider::thumbColourId, Colours::orange);
 	//volume->setColour(Slider::trackColourId, Colours::orange);
 	volume->setBounds(3.5f * h, 0.0f, getWidth() - (h*6), getHeight());
-	volume->setLookAndFeel(claf);
+	//volume->setLookAndFeel(claf);
 
 }
 
@@ -81,45 +81,45 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	panicBtn = new TextButton("Panic");
 	panicBtn->setClickingTogglesState(false);
 	panicBtn->setComponentID((String)PANIC_BUTTON);
-	panicBtn->setColour(TextButton::textColourOffId, Colours::black);
+	/*panicBtn->setColour(TextButton::textColourOffId, Colours::black);
 	panicBtn->setColour(TextButton::textColourOnId, Colours::white);
 	panicBtn->setColour(TextButton::buttonColourId, Colours::red);
-	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);*/
 
 	// add export button
 	exportBtn = new TextButton("Export");
 	exportBtn->setComponentID((String)EXPORT_BUTTON);
-	exportBtn->setColour(TextButton::textColourOffId, Colours::white);
+	/*exportBtn->setColour(TextButton::textColourOffId, Colours::white);
 	exportBtn->setColour(TextButton::textColourOnId, Colours::black);
 	exportBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);*/
 
 	// add import button
 	importBtn = new TextButton("Import");
 	importBtn->setComponentID((String)EXPORT_BUTTON);
-	importBtn->setColour(TextButton::textColourOffId, Colours::white);
-	importBtn->setColour(TextButton::textColourOnId, Colours::black);
-	importBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	importBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	//importBtn->setColour(TextButton::textColourOffId, Colours::white);
+	//importBtn->setColour(TextButton::textColourOnId, Colours::black);
+	//importBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	//importBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
 
 	// add play button
 	playBtn = new TextButton("Play");
 	playBtn->setComponentID((String)PLAY_BUTTON);
-	playBtn->setColour(TextButton::textColourOffId, Colours::black);
-	playBtn->setColour(TextButton::textColourOnId, Colours::black);
-	playBtn->setColour(TextButton::buttonColourId, Colours::orange);
+	//playBtn->setColour(TextButton::textColourOffId, Colours::black);
+	//playBtn->setColour(TextButton::textColourOnId, Colours::black);
+	//playBtn->setColour(TextButton::buttonColourId, Colours::orange);
 	//playBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
+	//playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
 	playBtn->setClickingTogglesState(false);
 
 	// add sustained play button
 	sustainPlyBtn = new TextButton("Sustained Play");
 	sustainPlyBtn->setComponentID((String)SUSTAIN_PLAY_BUTTON);
-	sustainPlyBtn->setColour(TextButton::textColourOffId, Colours::black);
+	/*sustainPlyBtn->setColour(TextButton::textColourOffId, Colours::black);
 	sustainPlyBtn->setColour(TextButton::textColourOnId, Colours::black);
 	sustainPlyBtn->setColour(TextButton::buttonColourId, Colours::orange);
-	//sustainPlyBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	sustainPlyBtn->setColour(TextButton::buttonOnColourId, Colours::red);
+	sustainPlyBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	sustainPlyBtn->setColour(TextButton::buttonOnColourId, Colours::red);*/
 	sustainPlyBtn->setClickingTogglesState(true);
 
 	// add volume slider component

@@ -19,7 +19,13 @@ public:
 	~SoundshapeLAFs();
 	static void setDefaultColors(LookAndFeel& laf); // there will be one of these for each theme.
 
-	//TODO make custom enum for all Soundshape ColourIDs
+	// custom enum for all the colour IDs Soundshape needs
+	enum SSColours
+	{
+
+		
+
+	};
 
 private:
 	
@@ -29,6 +35,8 @@ private:
 
 struct CustomLookAndFeel : public LookAndFeel_V2
 {
+
+	Colour waveColour = Colours::blue;
 
 	// this didn't prove useful
 	/*void drawLinearSlider(Graphics& g, int x, int y, int width, int height,

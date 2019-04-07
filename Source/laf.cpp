@@ -22,15 +22,28 @@ SoundshapeLAFs::~SoundshapeLAFs() {}
 void SoundshapeLAFs::setDefaultColors(LookAndFeel& laf) // there will be one of these for each theme
 {// need to change the colors based on the yet-unwritten SSColours enum
 
-	laf.setColour(Slider::thumbColourId, Colours::orange);
-	laf.setColour(Slider::trackColourId, Colours::orange);
+	Colour base1 = Colours::orange;
+	Colour base2 = Colours::darkslategrey;
+
+	laf.setColour(ResizableWindow::backgroundColourId, Colours::darkslategrey); // may need to change
+
+	laf.setColour(Slider::thumbColourId, base1);
+	laf.setColour(Slider::trackColourId, base1);
 	laf.setColour(Slider::textBoxOutlineColourId, Colours::transparentBlack);
+	laf.setColour(Slider::textBoxTextColourId, Colours::black);
 
-	laf.setColour(TextButton::buttonColourId, laf.findColour(ResizableWindow::backgroundColourId));
-	laf.setColour(TextButton::textColourOffId, Colours::white);
+	laf.setColour(TextButton::buttonColourId, base1);
+	laf.setColour(TextButton::textColourOffId, Colours::black);
+	laf.setColour(TextButton::buttonOnColourId, base2);
+	laf.setColour(TextButton::textColourOnId, Colours::white);
 
-	laf.setColour(TextButton::buttonOnColourId, laf.findColour(TextButton::textColourOffId));
-	laf.setColour(TextButton::textColourOnId, Colours::black);
+	laf.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
+	laf.setColour(ComboBox::textColourId, Colours::black);
+	laf.setColour(ComboBox::arrowColourId, Colours::black);
+	laf.setColour(ComboBox::buttonColourId, base2);
+	laf.setColour(ComboBox::focusedOutlineColourId, Colours::black);
+	laf.setColour(ComboBox::outlineColourId, base2);
+
 
 }
 // this didn't prove useful
