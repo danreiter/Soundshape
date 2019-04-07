@@ -5,8 +5,6 @@
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
-      <FILE id="nqIqAN" name="MenuBar.cpp" compile="1" resource="0" file="Source/MenuBar.cpp"/>
-      <FILE id="qz5Zvi" name="MenuBar.h" compile="0" resource="0" file="Source/MenuBar.h"/>
       <GROUP id="{8C251B4E-3C59-D64A-3236-C68731CC14F3}" name="kissfft">
         <GROUP id="{69F1FDCC-8941-BD9C-FBB3-803151807BC7}" name="LICENSES">
           <FILE id="n02fw2" name="BSD-3-Clause" compile="0" resource="1" file="Source/kissfft/LICENSES/BSD-3-Clause"/>
