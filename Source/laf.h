@@ -12,7 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class SoundshapeLAFs
+class SoundshapeLAFs : public Component
 {
 public:
 	SoundshapeLAFs();
@@ -22,8 +22,14 @@ public:
 	// custom enum for all the colour IDs Soundshape needs
 	enum SSColours
 	{
-
-		
+		// these are the default values
+		base1ID = 0xffffa500, // orange
+		base1textID = 0xff000000, // black
+		base2ID = 0xff555555, // darkgrey
+		base2textID = 0xffffffff, // white
+		background1ID = 0xffd3d3d3, // lightgrey
+		background2ID = 0xffffdab9, // peachpuff
+		background3ID = 0xffff0000 // red
 
 	};
 
@@ -35,8 +41,6 @@ private:
 
 struct CustomLookAndFeel : public LookAndFeel_V2
 {
-
-	Colour waveColour = Colours::blue;
 
 	// this didn't prove useful
 	/*void drawLinearSlider(Graphics& g, int x, int y, int width, int height,

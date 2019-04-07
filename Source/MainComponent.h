@@ -43,6 +43,8 @@ public:
 	void loadSound();
 	void setAllLookAndFeels(LookAndFeel* laf, Component* comp);
 
+	
+
 private:
 	//==============================================================================
 	// Your private member variables go here...

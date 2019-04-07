@@ -33,8 +33,8 @@ volumeBox::~volumeBox(){}
 void volumeBox::paint(Graphics& g)
 {
 	// paints the graphics surounding the volume slider
-	g.fillAll(Colours::darkgrey);
-	g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));// this may or may not work.
+	g.fillAll(Colour(SoundshapeLAFs::base2ID));
+	g.setColour(Colour(SoundshapeLAFs::base1ID));// this may or may not work.
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
@@ -206,6 +206,7 @@ fundFreq::fundFreq()
 
 		// text box to display current note in fundamental frequency
 	txtBox = new Label("fundFreq", "A");
+	txtBox->setColour(Label::textColourId, Colour(SoundshapeLAFs::base2textID));
 	updateText();
 
 
@@ -249,11 +250,11 @@ fundFreq::~fundFreq()
 void fundFreq::paint(Graphics & g)
 {
 	//  sets background color
-	Colour bgColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
+	Colour bgColour = Colour(SoundshapeLAFs::base2ID);
 	g.fillAll(bgColour);   // clear the background
 	
 	// draws outline of the component
-	g.setColour(Colours::orange);
+	g.setColour(Colour(SoundshapeLAFs::base1ID));
 	g.drawRect(getLocalBounds(), 1);
 	Point<float> p1(getWidth()*7.0f/12.0f, 0.0f);
 	Point<float> p2(getWidth()*7.0f/12.0f,getBottom());
@@ -280,33 +281,33 @@ void fundFreq::paint(Graphics & g)
 
 
 	upNormal.setPath(upPath);
-	upNormal.setFill(Colours::orange);
-	upNormal.setStrokeFill(Colours::black);
+	upNormal.setFill(Colour(SoundshapeLAFs::base1ID));
+	upNormal.setStrokeFill(Colour(SoundshapeLAFs::base1textID));
 	upNormal.setStrokeThickness(.5f);
 
 	upOver.setPath(upPath);
-	upOver.setFill(Colours::darkorange);
-	upOver.setStrokeFill(Colours::black);
+	upOver.setFill(Colour(SoundshapeLAFs::background2ID));
+	upOver.setStrokeFill(Colour(SoundshapeLAFs::base1textID));
 	upOver.setStrokeThickness(.50f);
 
 	upClicked.setPath(upPath);
-	upClicked.setFill(Colours::red);
-	upClicked.setStrokeFill(Colours::black);
+	upClicked.setFill(Colour(SoundshapeLAFs::base1ID));
+	upClicked.setStrokeFill(Colour(SoundshapeLAFs::base1textID));
 	upClicked.setStrokeThickness(.50f);
 
 	downNormal.setPath(downPath);
-	downNormal.setFill(Colours::orange);
-	downNormal.setStrokeFill(Colours::black);
+	downNormal.setFill(Colour(SoundshapeLAFs::base1ID));
+	downNormal.setStrokeFill(Colour(SoundshapeLAFs::base1textID));
 	downNormal.setStrokeThickness(.50f);
 
 	downOver.setPath(downPath);
-	downOver.setFill(Colours::red);
-	downOver.setStrokeFill(Colours::black);
+	downOver.setFill(Colour(SoundshapeLAFs::background2ID));
+	downOver.setStrokeFill(Colour(SoundshapeLAFs::base1textID));
 	downOver.setStrokeThickness(.50f);
 
 	downClicked.setPath(downPath);
-	downClicked.setFill(Colours::darkorange);
-	downClicked.setStrokeFill(Colours::black);
+	downClicked.setFill(Colour(SoundshapeLAFs::base1ID));
+	downClicked.setStrokeFill(Colour(SoundshapeLAFs::base1textID));
 	downClicked.setStrokeThickness(.50f);
 
 

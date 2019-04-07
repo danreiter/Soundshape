@@ -43,11 +43,11 @@ smallTime::smallTime()
 		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->setTriggeredOnMouseDown(true);
+		//tb->setColour(TextButton::textColourOffId, Colours::black);
+		//tb->setColour(TextButton::textColourOnId, Colours::black);
+		//tb->setColour(TextButton::buttonColourId, Colours::orange);
+		//tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		//tb->setTriggeredOnMouseDown(true);
 		//tb->onStateChange = [this]
 		//{
 			//auto * focused = Component::getCurrentlyFocusedComponent();
@@ -78,9 +78,9 @@ void smallTime::paint(Graphics& g)
 	int btnWidth = (int)(getWidth() / 5);
 	int width = getWidth() - (getWidth() - (5 * btnWidth));
 	Rectangle<float> backGround(0.0f, 0.0f, width, getHeight() * .8f);
-	g.setColour(Colours::white);
+	g.setColour(Colour(SoundshapeLAFs::base2textID));
 	g.fillRect(backGround);
-	g.setColour (Colours::black);
+	g.setColour (Colour(SoundshapeLAFs::base1textID));
 	g.drawRect (backGround, 1);   // draw an outline around the component
 	g.setFont (14.0f);
 	g.drawText ("smallTime", getLocalBounds(),
@@ -96,7 +96,7 @@ void smallTime::paint(Graphics& g)
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-	g.fillAll(getLookAndFeel().findColour(Slider::thumbColourId)); // this colourID should always be the base1 colour of the current lookandfeel
+	g.fillAll(Colour(SoundshapeLAFs::base1ID));
 	/*while (xMark + pixel  <= (n / 10))
 	{
 
@@ -127,7 +127,7 @@ void smallTime::paint(Graphics& g)
 	if (profileMark >= 0 && profileMark < 5)
 	{
 		Rectangle<float> profileArea(profileMark * btnWidth, 0.0f, btnWidth, getHeight() * .8f);
-		g.setColour(Colours::red);
+		g.setColour(Colour(SoundshapeLAFs::background3ID));
 		// easily seachable [selects zoomies^^]
 		g.fillRect(profileArea);
 	}

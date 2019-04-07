@@ -57,7 +57,7 @@ void freqDomainWin::paint (Graphics& g)
 	Colour c1;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
-	g.fillAll(Colours::aqua);
+	g.fillAll(Colour(SoundshapeLAFs::background2ID));
 	//// draw color of background
 	//for (int i = 0; i <= n; i++)
 	//{
@@ -82,9 +82,9 @@ void freqDomainWin::paint (Graphics& g)
 	//	}
 	//}
 
-	g.setColour(Colours::grey);
+	g.setColour(Colour(SoundshapeLAFs::background2ID));
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-	g.setColour(Colours::black);
+	g.setColour(Colour(SoundshapeLAFs::base1textID)); // freq-domain scale/axes
 	g.setFont(14.0f);
 	float margin = getHeight() *.10f;
 	Line<float> vLine(margin, margin, margin, getHeight() - margin);
@@ -214,10 +214,10 @@ void freqDomainWin::setProfileControl()
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
 		tb->setClickingTogglesState(false);
-		tb->setColour(TextButton::textColourOnId, Colours::lightgreen);
-		tb->setColour(TextButton::buttonColourId, Colours::lightgreen);
-		tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
-		tb->setColour(TextButton::textColourOffId, Colours::black);
+		//tb->setColour(TextButton::textColourOnId, Colours::lightgreen);
+		//tb->setColour(TextButton::buttonColourId, Colours::lightgreen);
+		//tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
+		//tb->setColour(TextButton::textColourOffId, Colours::black);
 		tb->setVisible(false);
 		if (buttonParent != NULL)
 		{

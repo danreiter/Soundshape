@@ -171,16 +171,33 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 				}
 				else if (subChild->getComponentID().getIntValue() == IMPORT_BUTTON)
 				{
-					subChild->setColour(TextButton::buttonColourId, laf->findColour(TextButton::buttonOnColourId));
-					subChild->setColour(TextButton::textColourOffId, laf->findColour(TextButton::textColourOnId));
+					subChild->setColour(TextButton::buttonColourId, Colour(SoundshapeLAFs::base2ID));
+					subChild->setColour(TextButton::textColourOffId, Colour(SoundshapeLAFs::base2textID));
 
 				}
 				else if (subChild->getComponentID().getIntValue() == EXPORT_BUTTON)
 				{
-					subChild->setColour(TextButton::buttonColourId, laf->findColour(TextButton::buttonOnColourId));
-					subChild->setColour(TextButton::textColourOffId, laf->findColour(TextButton::textColourOnId));
+					subChild->setColour(TextButton::buttonColourId, Colour(SoundshapeLAFs::base2ID));
+					subChild->setColour(TextButton::textColourOffId, Colour(SoundshapeLAFs::base2textID));
 				}
 			}
+		}
+		else if (child == &bTWindow)
+		{
+
+			for (auto * subChild : child->getChildren())
+			{
+
+				if (subChild->getComponentID().getIntValue() == PLAYTIME_SLIDER)
+				{
+
+					subChild->setColour(Slider::thumbColourId, Colour(SoundshapeLAFs::background3ID));
+					subChild->setColour(Slider::trackColourId, Colour(SoundshapeLAFs::background3ID));
+
+				}
+
+			}
+
 		}
 		else if (child->getComponentID().getIntValue() == WRITE_BUTTON)
 		{
@@ -202,7 +219,7 @@ void MainComponent::setConverter(Converter *_converter) {
 void MainComponent::paint(Graphics& g)
 {
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
-	g.fillAll(Colours::lightgrey); // change this
+	g.fillAll(Colour(SoundshapeLAFs::background1ID));
 
 	// setting the boundary components for the child components
 	auto area = getLocalBounds();

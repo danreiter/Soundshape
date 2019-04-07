@@ -20,29 +20,36 @@ SoundshapeLAFs::SoundshapeLAFs()
 SoundshapeLAFs::~SoundshapeLAFs() {}
 
 void SoundshapeLAFs::setDefaultColors(LookAndFeel& laf) // there will be one of these for each theme
-{// need to change the colors based on the yet-unwritten SSColours enum
+{// need to create an array parameter to hold the base and background colours
 
-	Colour base1 = Colours::orange;
-	Colour base2 = Colours::darkslategrey;
+	Colour base1 = Colour(base1ID);
+	Colour base1text = Colour(base1textID);
+	Colour base2 = Colour(base2ID);
+	Colour base2text = Colour(base2textID);
 
-	laf.setColour(ResizableWindow::backgroundColourId, Colours::darkslategrey); // may need to change
+	laf.setColour(ResizableWindow::backgroundColourId, base2); // may need to change
 
 	laf.setColour(Slider::thumbColourId, base1);
 	laf.setColour(Slider::trackColourId, base1);
-	laf.setColour(Slider::textBoxOutlineColourId, Colours::transparentBlack);
-	laf.setColour(Slider::textBoxTextColourId, Colours::black);
+	laf.setColour(Slider::textBoxOutlineColourId, base1);
+	laf.setColour(Slider::textBoxBackgroundColourId, base2);
+	laf.setColour(Slider::textBoxTextColourId, base2text);
 
 	laf.setColour(TextButton::buttonColourId, base1);
-	laf.setColour(TextButton::textColourOffId, Colours::black);
+	laf.setColour(TextButton::textColourOffId, base1text);
 	laf.setColour(TextButton::buttonOnColourId, base2);
-	laf.setColour(TextButton::textColourOnId, Colours::white);
+	laf.setColour(TextButton::textColourOnId, base2text);
 
 	laf.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
-	laf.setColour(ComboBox::textColourId, Colours::black);
-	laf.setColour(ComboBox::arrowColourId, Colours::black);
+	laf.setColour(ComboBox::textColourId, base1text);
+	laf.setColour(ComboBox::arrowColourId, base1text);
 	laf.setColour(ComboBox::buttonColourId, base2);
-	laf.setColour(ComboBox::focusedOutlineColourId, Colours::black);
+	laf.setColour(ComboBox::focusedOutlineColourId, base1text);
 	laf.setColour(ComboBox::outlineColourId, base2);
+
+	laf.setColour(ScrollBar::thumbColourId, base1);
+	laf.setColour(ScrollBar::trackColourId, base2);
+	laf.setColour(ScrollBar::backgroundColourId, base2);
 
 
 }

@@ -93,11 +93,11 @@ void envelope::paint (Graphics& g)
        drawing code..
     */
 
-	g.fillAll(Colours::darkgrey);
-    g.setColour (Colours::black);
+	g.fillAll(Colour(SoundshapeLAFs::base2ID)); // background
+    g.setColour (Colour(SoundshapeLAFs::base1textID)); // outline
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-    g.setColour (Colours::white);
-    g.setFont (getHeight() * .15f);
+    g.setColour (Colour(SoundshapeLAFs::base2textID)); // axes and lettering
+    g.setFont (getHeight() * .12f);
     g.drawText ("ADSR Envelope", getLocalBounds(), Justification::centredTop, true);   // draw some placeholder text
 	auto area = getLocalBounds().removeFromLeft(getWidth()/5);
 	float margin = area.getHeight() * .15f;
@@ -106,7 +106,7 @@ void envelope::paint (Graphics& g)
 	Line<float> l3(area.getWidth() * .2f, area.getHeight() - margin, area.getWidth() * .8f, area.getHeight() - margin);
 
 	// draws scale 
-	area.reduce(0.0f, area.getHeight() * .08f);
+	area.reduce(0.0f, area.getHeight() * .05f);
 	g.setFont(getHeight() *.08f);
 	g.drawText("Max", area, Justification::centredTop, true);
 	g.drawText("Min", area, Justification::centredBottom, true);

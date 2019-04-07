@@ -14,6 +14,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "timeDomainWin.h"
+#include "laf.h"
 
 #define TIME_SELECT_BUTTON 5002
 #define PLAYTIME_SLIDER 5003

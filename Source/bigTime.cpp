@@ -42,8 +42,8 @@ bigTime::bigTime()
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
 	playTime->setRange(0, 50, 1);
 	playTime->setMinAndMaxValues(0, 50);
-    playTime->setColour(Slider::trackColourId, Colours::red);
-    playTime->setColour(Slider::thumbColourId, Colours::red);
+    //playTime->setColour(Slider::trackColourId, Colours::red);
+    //playTime->setColour(Slider::thumbColourId, Colours::red);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 
 	// Create buttons
@@ -53,10 +53,10 @@ bigTime::bigTime()
 		tb->setRadioGroupId(TIME_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		//tb->setColour(TextButton::textColourOffId, Colours::black);
+		//tb->setColour(TextButton::textColourOnId, Colours::black);
+		//tb->setColour(TextButton::buttonColourId, Colours::orange);
+		//tb->setColour(TextButton::buttonOnColourId, Colours::red);
 		//tb->onStateChange = [this]
 		//{
 		//	auto * focused = Component::getCurrentlyFocusedComponent();
@@ -78,9 +78,9 @@ void bigTime::paint(Graphics& g)
 	//g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 	int btnWidth = (int)(getWidth() / (*time));
 	Rectangle<float> backGround(0.0f, 0.0f, getWidth() - (getWidth() - ((*time) * btnWidth)), getHeight());
-	g.setColour(Colours::white);
+	g.setColour(Colour(SoundshapeLAFs::background1ID));
 	g.fillRect(backGround);
-	g.setColour (Colours::black);
+	g.setColour (Colour(SoundshapeLAFs::base1textID));
 	g.drawRect (backGround, 1);   // draw an outline around the component
 	g.setFont (14.0f);
 	g.drawText("bigTime", getLocalBounds(),
@@ -94,7 +94,7 @@ void bigTime::paint(Graphics& g)
 	int colourMod = 0;
 	bool flag = true;
 	Colour c1;
-	g.fillAll(getLookAndFeel().findColour(Slider::thumbColourId)); // this colourID should always be the base1 colour of the current lookandfeel
+	g.fillAll(Colour(SoundshapeLAFs::base1ID));
 	/*while(xMark + pixel  <= (n/10))
 	{
 		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
@@ -122,8 +122,7 @@ void bigTime::paint(Graphics& g)
 
 
 	// Fills background color of selected time domain
-	g.setColour(Colours::lightgreen);
-	// easily searchable [selects colour of zoomTime]
+	g.setColour(Colour(SoundshapeLAFs::background2ID));
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
 
@@ -132,7 +131,7 @@ void bigTime::paint(Graphics& g)
 	if (*xProfile >= 0)
 	{
 		Rectangle<float> profileMarkArea(((int)(getWidth() / (*time)) / 5) * (*xProfile), 0.0f, ((int)(getWidth() / (*time)) / 5), getHeight()* .8f);
-		g.setColour(Colours::red);
+		g.setColour(Colour(SoundshapeLAFs::background3ID));
 		// easily searchable [selects current profile^^]
 		g.fillRect(profileMarkArea);
 	}
@@ -145,7 +144,7 @@ void bigTime::paint(Graphics& g)
 	}
 
 	// Set bounds and location for the play time slider
-    g.setColour(Colours::black);
+    g.setColour(Colour(SoundshapeLAFs::background1ID));
     playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
 
 }
