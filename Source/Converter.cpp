@@ -1,6 +1,7 @@
 #include "Converter.h"
 
-Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState(_valueTreeState), envelope(), thumbnailCache(2), thumbnail(2, formatManager, thumbnailCache),
+Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : 
+    valueTreeState(_valueTreeState), envelope(),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
@@ -12,9 +13,6 @@ Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : valueTreeS
     noteVelocities({{0}}),
     sustainedNoteVelocities({{0}})
 {
-
-    thumbnail.reset(1, 44100,44100);
-    
     // set up inverse FFT config objects
     // This needs manually freed (use destructor)
     inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
@@ -37,10 +35,6 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     // copy the appropriate chunk from the converter object's profile matrix
     // Then, duplicate it according to each downed MIDI note.
 
-    // clear the current shifted profile data, then shift profile to match pressed keys (writes to shiftedProfile)
-    //for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
-    //    shiftedProfile[i].r = 0.0f;
-    //}
     kiss_fft_cpx zeroCpx = { 0,0 };
     std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx);
     addShiftedProfiles(profileChunk);
@@ -63,16 +57,20 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     envelope.adsrEnvelope.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
     // apply gain
     buffer.applyGain(gain);
-    buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
-    
+    if (buffer.getNumChannels() == 2) {
+        // stereo, just copy to the other channel
+        buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
+    }   
 }
 
-// *******************
-// TODO : instead of building the shifted profile while synthesizing each chunk, should it be gradually built as
-// each MIDI messaage is received?
-// *******************
+
 void Converter::addShiftedProfiles(int chunk)
 {
+    // *******************
+    // TODO : instead of building the shifted profile while synthesizing each chunk, should it be gradually built as
+    // each MIDI messaage is received?
+    // *******************
+
     // cycles through active notes (noteVelocities), adding a shifted profile to a temporary "profile structure" for each.
     for (int i = 0; i < noteVelocities.size(); i++) {
         if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) { // expensive operation, so should only be done when absolutely necessary
@@ -145,6 +143,7 @@ void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int mi
     if (isTimeForAttack) {
         envelope.adsrEnvelope.noteOn();
     }
+
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
@@ -184,21 +183,17 @@ void Converter::setSustain(bool sustainState)
     }
 }
 
-void Converter::midiPanic() {
-    for (int i = 0; i < 128; i++) {
-        noteVelocities[i] = 0.0f;
-    }
-}
 
-
-void Converter::UpdateThumbnail()
+void Converter::setChunkRange(int beginning, int end)
 {
-    // TODO
+    beginningChunk = beginning;
+    endingChunk = end;
 }
-
 
 int Converter::freqToBin(int freq, double rate) {
-    return (int)std::round(SOUNDSHAPE_CHUNK_SIZE * freq / rate);
+    double ratio = (double)(SOUNDSHAPE_CHUNK_SIZE * freq) / rate;
+    int result = (int)std::round(ratio);
+    return result;
 }
 
 float Converter::binToFreq(int bin, double rate) {
@@ -208,7 +203,8 @@ float Converter::binToFreq(int bin, double rate) {
 
 
 kiss_fft_cpx Converter::getProfileRawPoint(int chunk, int i) {
-    return profile[chunk * SOUNDSHAPE_CHUNK_SIZE + i];
+    size_t index = chunk * SOUNDSHAPE_CHUNK_SIZE + i;
+    return profile[index];
 }
 
 
@@ -268,29 +264,27 @@ void Converter::setSampleRate(double _sampleRate)
 
 }
 
+double Converter::getSampleRate()
+{
+    return sampleRate;
+}
+
 
 // Internally, the 2d array is just a 1D vector, so we do the proper
 // conversion to find the right spot in the array that represents 
 // the frequency freq
 void Converter::updateFrequencyValue(int chunk, int freq, float value)
 {
-    DBG(""<<chunk<<" "<<freq<<" "<<value);
-    
-    // TODO : We probably need to check for index out-of-bounds here
+    //DBG(""<<chunk<<" "<<freq<<" "<<value);
+
+    if (freq > sampleRate / 2 - 1) {
+        return; // do nothing
+    }
     setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
 }
 
 
 
 float Converter::getFrequencyValue(int chunk, int freq) {
-
     return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
 }
-
-
-
-AudioThumbnail * Converter::getThumbnail()
-{
-    return &thumbnail;
-}
-

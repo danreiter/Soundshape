@@ -257,6 +257,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		slider->getMaxValue();
 		slider->getMinValue();
+        converterPtr->setChunkRange((int)slider->getMinValue(), (int)slider->getMaxValue());
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)

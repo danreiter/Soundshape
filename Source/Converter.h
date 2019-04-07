@@ -27,10 +27,9 @@ public:
 
     // getters/setters for managin the profile
     void setSampleRate(double _sampleRate);
+    double getSampleRate();
     void updateFrequencyValue(int chunk, int freq, float value);
     float getFrequencyValue(int chunk, int bin);
-
-    AudioThumbnail * getThumbnail();
 
     // Fill the buffer with the processed inverse discrete fourier transform of
     // the data in row currentChunk of the profile, according to which keys are pressed in the
@@ -42,6 +41,13 @@ public:
     void renderPreview(int chunk);
     float getPreviewSample(int chunk, int index);
 
+    /**
+    Tells the converter the indices of chunks to consider the beginning and ending of a sound.
+    
+    This sets up the backend to know which of the chunks to play. After this is called,
+    synthesis will begin at beginning (this chunk is inclusive) and end at end (exclusive).
+    */
+    void setChunkRange(int beginning, int end);
 
 private:
 
@@ -51,7 +57,6 @@ private:
     void setProfileRawPoint(int chunk, int i, float value);
     void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity);
     void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity);
-    void midiPanic(); // turn off all notes
 
     // Prepares that buffer for an inverse FFT representing currently pressed keys
     void addShiftedProfiles(int chunk);
@@ -92,17 +97,13 @@ private:
     std::array<float, 128> noteVelocities;
     // and these are the ones that arent pressed but are being sustained by the pedal
     std::array<float, 128> sustainedNoteVelocities;
-    
-    AudioThumbnail thumbnail;
-    AudioThumbnailCache thumbnailCache;
 
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
     double sampleRate;
+    int samplesPlayed = 0; // keeps track of how many samples we've written to the buffer. Wraps around whene xceeds size of a profile chunk
 
     // manages the adsr envelope and lsitens for when they get changed
     EnvelopeParams envelope;
-
-    void UpdateThumbnail();
 
     AudioFormatManager formatManager;
 
@@ -115,6 +116,10 @@ private:
 
     // TODO : This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading)
     int currentIndex = 0;
+
+    // keep track of where to start and end a sound's playback
+    int beginningChunk = 0;
+    int endingChunk = 1;
 
     bool sustainPressed = false;
 

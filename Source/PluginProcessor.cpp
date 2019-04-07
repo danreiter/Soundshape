@@ -1,6 +1,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "IOHandler.h"
 
 #define CATCH_CONFIG_RUNNER
 #include "catch.h"
@@ -46,7 +47,13 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     "Release",
                                     0.00f,
                                     2.50f,
-                                    0.25f)
+                                    0.25f),
+                                std::make_unique<AudioParameterInt>(
+                                    "beginningChunk",
+                                    "Beginning Section",
+                                    0,
+                                    50,
+                                    0)
                                 }
     ),
     converter(valueTreeState)
@@ -134,6 +141,22 @@ void Soundshape_pluginAudioProcessor::panic()
     for (int i = 0; i < 16; i++) {
         keyState.allNotesOff(i);
     }
+
+    // TEMPORARY testing xml
+    // *********************
+    auto state = valueTreeState.copyState();
+    std::unique_ptr<XmlElement> xml(state.createXml());
+    XmlElement *profileXML = IOHandler::createProfileXML(converter);
+    xml->addChildElement(profileXML);
+    String docString = xml->createDocument("");
+    File f(File::getCurrentWorkingDirectory().getChildFile("test.xml"));
+    FileOutputStream ostream(f);
+    if (ostream.openedOk()) {
+        ostream.setPosition(0);
+        ostream.truncate();
+        ostream.writeText(docString,false,false,nullptr);
+    }
+    // ****************************
 }
 
 void Soundshape_pluginAudioProcessor::playFreq(float freq)
@@ -153,11 +176,7 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
 {
     // The Converter needs to know about the sample rate in order to convert
     // between frequency values and indexes for its internal structure
-    
-    // BUG HERE : When the converter's sample rate gets reset, the converter needs
-    // to reorganize its internal data structure!
     converter.setSampleRate(sampleRate);
-    DBG(sampleRate);
 
     // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
     for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
@@ -166,7 +185,6 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
         converter.updateFrequencyValue(i, 4 * 440, 200.0f);
         converter.updateFrequencyValue(i, 6 * 440, 100.0f);
         converter.updateFrequencyValue(i, 8 * 440, 50.0f);
-
         converter.renderPreview(i);
     }
 }
@@ -239,8 +257,6 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     // We should also skip all DSP if there are no notes down or the number of samples to process
     // happens to be 0.
     converter.synthesize(currentChunk, buffer, keyState);
-    
-
 }
 
 
@@ -259,8 +275,7 @@ void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData
 
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+
 }
 
 //==============================================================================
