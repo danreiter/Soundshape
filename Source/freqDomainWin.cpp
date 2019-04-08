@@ -51,36 +51,9 @@ void freqDomainWin::paint (Graphics& g)
 
 	float pixel = getWidth() * .01f;
 	int n = getWidth() * 10;
-	float xMark = 0.0f;
-	int colourMod = 0;
-	bool flag = true;
-	Colour c1;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
 	g.fillAll(Colours::aqua);
-	//// draw color of background
-	//for (int i = 0; i <= n; i++)
-	//{
-
-
-	//	Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-	//	xMark += pixel;
-	//	if (flag)
-	//	{
-	//		c1 = Colour(255, (170 + colourMod), 0);
-	//	}
-	//	else
-	//	{
-	//		c1 = Colour(255, (200 - colourMod), 0);
-	//	}
-	//	g.setColour(c1);
-	//	g.fillRect(rec5);
-	//	colourMod = (++colourMod % 31);
-	//	if (colourMod == 0)
-	//	{
-	//		flag = !flag;
-	//	}
-	//}
 
 	g.setColour(Colours::grey);
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
@@ -131,8 +104,6 @@ void freqDomainWin::paint (Graphics& g)
 		}
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
-		//int t1 = (int)profile->getFrequencyValue(*chunk, i);
-		//String temp2 = std::to_string(t1);
 	}
 
 	margin = getHeight() *.10f;

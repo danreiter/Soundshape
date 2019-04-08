@@ -18,7 +18,7 @@
 #define EXPORT_BUTTON 2003
 #define IMPORT_BUTTON 2004
 #define PANIC_BUTTON 2005
-#define FUND_FREQ_BUTTON 2006
+#define FUND_FREQ_SLIDER 2006
 #define SUSTAIN_PLAY_BUTTON 2007
 
 //==============================================================================
@@ -88,14 +88,14 @@ public:
 	void resized() override;
 	int getNote();
 	void updateText();
-	void setListener(Button::Listener* _listener);
+	void setListener(Slider::Listener* _listener);
 
 private:
 	Label *txtBox;							// displays fundmental frequency
 	int num;								// tracks the current fundmental frequency
-	Button::Listener * bListener;			// reference to parent as button listener
+	Slider::Listener * sListener;			// reference to parent as button listener
 	DrawableButton * upBtn, * downBtn;		// Buttons to change the fundmental frequency
-
+	Slider * fundFreqSlider;
 	
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(fundFreq)

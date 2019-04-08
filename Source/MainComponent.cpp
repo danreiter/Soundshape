@@ -308,6 +308,12 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		//Needs set up with back end calls
 	}
+	// Funmental fruquency setting buttons
+	if (slider->getComponentID().getIntValue() == FUND_FREQ_SLIDER)
+	{
+		// need back end call for fundmental frequency
+
+	}
 	repaint();
 }
 //-------------------------------------------------------------------------------------
@@ -400,12 +406,12 @@ void MainComponent::buttonClicked(Button* button)
         processor.panic();
 	}
 
-	// Funmental fruquency setting buttons
-	if (button->getComponentID().getIntValue() == FUND_FREQ_BUTTON)
-	{
-		// need back end call for fundmental frequency
+	//// Funmental fruquency setting buttons
+	//if (button->getComponentID().getIntValue() == FUND_FREQ_BUTTON)
+	//{
+	//	// need back end call for fundmental frequency
 
-	}
+	//}
 
 	if (button == harmonicButton)
 	{
@@ -721,7 +727,7 @@ void MainComponent::setTheme(CommandID newTheme)
 //-------------------------------------------------------------------------------------
 void MainComponent::setPresetPath()
 {
-	FileChooser chooser("New Preset Path", presetPath, "", false);
+	FileChooser chooser("New Preset Path", presetPath, "", true);
 
 	if (chooser.browseForDirectory())
 	{
