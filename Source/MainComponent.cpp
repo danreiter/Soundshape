@@ -3,7 +3,7 @@
 float MainComponent::notes[12] = { 27.5f, 29.50f, 30.87f, 16.35f, 17.32f, 18.35f, 19.45f, 20.60f, 21.83f, 23.12f, 24.5f, 25.96 };
 
 //==============================================================================
-//  Component declares and instaites other gui components and passes variables from 
+//  Component declares and instantiates other gui components and passes variables from 
 //==============================================================================
 MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorValueTreeState& _valueTreeState) :
 	processor(p),
@@ -25,15 +25,19 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	zoom = 4.0;
 	presetPath = File().getCurrentWorkingDirectory();
 	selectedFile = newFile;
+	laf = new CustomLookAndFeel();
+	SoundshapeLAFs::setDefaultColors(*laf);
+	
+
 	//------------------------------------------------------------
 
 
 	//------Passing references to child components----------------
-	loadSound();
+	//loadSound(); moved to bottom
 
 	//------------------------------------------------------------
 
-	addAndMakeVisible(fWindow);
+	//addAndMakeVisible(fWindow); // moved to bottom
 	addAndMakeVisible(sTWindow);
 	addAndMakeVisible(bTWindow);
 	addAndMakeVisible(fund);
@@ -53,9 +57,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	cb.addItem("The sound of not silence", 8);*/
 	loadPresetPath();
 	cb.setSelectedItemIndex(0);
-	cb.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
-	cb.setColour(ComboBox::arrowColourId, Colours::black);
-	cb.setColour(ComboBox::textColourId, Colours::black);
     cb.setTooltip("Contains all the current presets");
 	cb.addListener(this);
 
@@ -67,10 +68,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	// Harmonic button to toggle harmonic filter for selecting 
 	harmonicButton = new TextButton("Harmonic");
 	harmonicButton->setClickingTogglesState(true);
-	harmonicButton->setColour(TextButton::textColourOffId, Colours::white);
-	harmonicButton->setColour(TextButton::textColourOnId, Colours::white);
-	harmonicButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	harmonicButton->setColour(TextButton::buttonOnColourId, Colours::orange);
+	//harmonicButton->setColour(TextButton::textColourOffId, Colours::white);
+	//harmonicButton->setColour(TextButton::textColourOnId, Colours::white);
+	//harmonicButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	//harmonicButton->setColour(TextButton::buttonOnColourId, Colours::orange);
     harmonicButton->setTooltip("When enabled, the harmonic setting will only allow the creation of new frequency spikes at harmonically correct frequencies");
 	harmonicButton->onClick = [this]
 	{
@@ -82,10 +83,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	// Button to add friquency spike to a frequency profile
 	addButton = new TextButton("Add");
 	addButton->setClickingTogglesState(true);
-	addButton->setColour(TextButton::textColourOffId, Colours::white);
+	/*addButton->setColour(TextButton::textColourOffId, Colours::white);
 	addButton->setColour(TextButton::textColourOnId, Colours::white);
 	addButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);
+	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);*/
 	addButton->addListener(this);
     addButton->setTooltip("Allows the creation of a frequency spike at any available frequency");
 	addButton->onClick = [this]
@@ -98,15 +99,17 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	// Write button to save sound profiles to the preset folder
 	writeButton = new TextButton("Write");
 	writeButton->addListener(this);
+	writeButton->setComponentID((String)WRITE_BUTTON);
     writeButton->setTooltip("Writes the chosen preset");
 
 	// Zoom slider to zoom in and out of frequncy window
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
-	zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	//zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	zoomSlider->setRange(1.0f, 40.0f, .5);
 	zoomSlider->setValue(zoom, sendNotificationAsync);
 	zoomSlider->setTextValueSuffix(" X");
 	zoomSlider->addListener(this);
+	zoomSlider->setTooltip("Zoom the spectrum window in and out");
 
 	//------------------------------------------------------------
 
@@ -139,6 +142,12 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	menuItemsChanged();
 	//------------------------------------------------------------
 
+	setAllLookAndFeels(laf, this);
+
+	loadSound();
+
+	addAndMakeVisible(fWindow);
+
 	setSize(600, 400);
 }
 
@@ -146,6 +155,63 @@ MainComponent::~MainComponent()
 {
 }
 //==============================================================================
+
+// a method for changing from one lookandfeel to the other
+void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
+{
+	for (auto* child : comp->getChildren())
+	{
+		child->setLookAndFeel(laf); // this will change everything in Soundshape to the default colors of laf
+		String temp = child->getComponentID();
+		DBG("id is " << temp);
+		//if (child->getComponentID().getIntValue() == PANIC_BUTTON)
+		if(child == &volComp) // to change specific buttons from non-this components, we need to specifically loop through those components
+		{
+			for (auto * subChild : child->getChildren()) {
+				if (subChild->getComponentID().getIntValue() == PANIC_BUTTON) {
+					subChild->setColour(TextButton::buttonColourId, Colours::red);
+					subChild->setColour(TextButton::textColourOffId, Colours::black);
+				}
+				else if (subChild->getComponentID().getIntValue() == IMPORT_BUTTON)
+				{
+					subChild->setColour(TextButton::buttonColourId, Colour(SoundshapeLAFs::base2ID));
+					subChild->setColour(TextButton::textColourOffId, Colour(SoundshapeLAFs::base2textID));
+
+				}
+				else if (subChild->getComponentID().getIntValue() == EXPORT_BUTTON)
+				{
+					subChild->setColour(TextButton::buttonColourId, Colour(SoundshapeLAFs::base2ID));
+					subChild->setColour(TextButton::textColourOffId, Colour(SoundshapeLAFs::base2textID));
+				}
+			}
+		}
+		else if (child == &bTWindow)
+		{
+
+			for (auto * subChild : child->getChildren())
+			{
+
+				if (subChild->getComponentID().getIntValue() == PLAYTIME_SLIDER)
+				{
+
+					subChild->setColour(Slider::thumbColourId, Colour(SoundshapeLAFs::background3ID));
+					subChild->setColour(Slider::trackColourId, Colour(SoundshapeLAFs::background3ID));
+
+				}
+
+			}
+
+		}
+		else if (child->getComponentID().getIntValue() == WRITE_BUTTON)
+		{
+			child->setColour(TextButton::buttonColourId, laf->findColour(TextButton::buttonOnColourId));
+			child->setColour(TextButton::textColourOffId, laf->findColour(TextButton::textColourOnId));
+		}
+		// put one for the play slider (5003) later
+		
+
+	}
+}
 
 //------------------------------------------------------------------------------------
 // Function sets a reference to a converter on the back end
@@ -161,7 +227,7 @@ void MainComponent::setConverter(Converter *_converter) {
 void MainComponent::paint(Graphics& g)
 {
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
-	g.fillAll(Colours::lightgrey);
+	g.fillAll(Colour(SoundshapeLAFs::background1ID));
 
 	// setting the boundary components for the child components
 	auto area = getLocalBounds();

@@ -20,6 +20,8 @@
 #include "Converter.h"
 #include "PluginProcessor.h"
 
+#define WRITE_BUTTON 2008
+
 //==============================================================================
 /*
 	Struct for burger Menu component
@@ -93,6 +95,7 @@ public:
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
 	void loadSound();
+	void setAllLookAndFeels(LookAndFeel* laf, Component* comp);
 	StringArray getMenuBarNames() override;
 	PopupMenu getMenuForIndex(int menuIndex, const String& /*menuName*/) override;
 	void menuItemSelected(int /*menuItemID*/, int /*topLevelMenuIndex*/) override;
@@ -109,6 +112,8 @@ public:
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
 	bool save();
 	bool saveAs();
+
+	
 
 private:
 	//==============================================================================
@@ -141,6 +146,8 @@ private:
     Converter *converterPtr;
     Soundshape_pluginAudioProcessor& processor;
     AudioProcessorValueTreeState& valueTreeState; // back-end parameters
+
+	LookAndFeel * laf;
 
 	ApplicationCommandManager commandManager;
 	std::unique_ptr<MenuBarComponent> menuBar;

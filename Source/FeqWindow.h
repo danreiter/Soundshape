@@ -13,6 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "freqDomainWin.h"
+#include "laf.h"
 
 //==============================================================================
 /*

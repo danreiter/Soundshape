@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Converter.h"
+#include "laf.h"
 
 //==============================================================================
 /*

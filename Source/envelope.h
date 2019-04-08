@@ -12,6 +12,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "laf.h"
 
 #define ENVELOPE_ATTACK 7002
 #define ENVELOPE_DECAY 7003

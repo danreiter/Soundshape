@@ -43,11 +43,11 @@ smallTime::smallTime()
 		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->setTriggeredOnMouseDown(true);
+		//tb->setColour(TextButton::textColourOffId, Colours::black);
+		//tb->setColour(TextButton::textColourOnId, Colours::black);
+		//tb->setColour(TextButton::buttonColourId, Colours::orange);
+		//tb->setColour(TextButton::buttonOnColourId, Colours::red);
+		//tb->setTriggeredOnMouseDown(true);
 		//tb->onStateChange = [this]
 		//{
 			//auto * focused = Component::getCurrentlyFocusedComponent();
@@ -76,14 +76,16 @@ void smallTime::paint(Graphics& g)
 	*/
 
 	int btnWidth = (int)(getWidth() / 5);
+	g.setColour(Colour(SoundshapeLAFs::base2textID));
+	g.setColour (Colour(SoundshapeLAFs::base1textID));
 
 	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 
 	//  Draws background color
-	g.setColour(Colours::blanchedalmond);
 	Rectangle<float> background(0, 0, btnWidth * 5, getHeight());
 	g.fillRect(background);
+	g.fillAll(Colour(SoundshapeLAFs::base1ID));
 
 
 	for (int i = 0; i < components.size(); i++)

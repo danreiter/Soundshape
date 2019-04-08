@@ -24,15 +24,15 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 	volume->setComponentID((String)VOLUME_SLIDER);
 	volume->setSliderStyle(Slider::LinearHorizontal);
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	
+	volume->setTooltip("Controls the volume of the whole sound");
 }
 volumeBox::~volumeBox(){}
 
 void volumeBox::paint(Graphics& g)
 {
 	// paints the graphics surounding the volume slider
-	g.fillAll(Colours::darkgrey);
-	g.setColour(Colours::orange);
+	g.fillAll(Colour(SoundshapeLAFs::base2ID));
+	g.setColour(Colour(SoundshapeLAFs::base1ID));// this may or may not work.
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
@@ -47,8 +47,8 @@ void volumeBox::paint(Graphics& g)
 	g.fillPath(squ1);
 
 	// sets slider bounds
-	volume->setColour(Slider::thumbColourId, Colours::orange);
-	volume->setColour(Slider::trackColourId, Colours::orange);
+	//volume->setColour(Slider::thumbColourId, Colours::orange);
+	//volume->setColour(Slider::trackColourId, Colours::orange);
 	volume->setBounds(3.5f * h, 0.0f, getWidth() - (h*6), getHeight());
 	
 
@@ -78,46 +78,51 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	panicBtn = new TextButton("Panic");
 	panicBtn->setClickingTogglesState(false);
 	panicBtn->setComponentID((String)PANIC_BUTTON);
-	panicBtn->setColour(TextButton::textColourOffId, Colours::black);
+	/*panicBtn->setColour(TextButton::textColourOffId, Colours::black);
 	panicBtn->setColour(TextButton::textColourOnId, Colours::white);
 	panicBtn->setColour(TextButton::buttonColourId, Colours::red);
-	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);*/
+	panicBtn->setTooltip("Halts all audio");
 
 	// add export button
 	exportBtn = new TextButton("Export");
 	exportBtn->setComponentID((String)EXPORT_BUTTON);
-	exportBtn->setColour(TextButton::textColourOffId, Colours::white);
+	/*exportBtn->setColour(TextButton::textColourOffId, Colours::white);
 	exportBtn->setColour(TextButton::textColourOnId, Colours::black);
 	exportBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);*/
+	exportBtn->setTooltip("Saves the sound to a specified file location");
 
 	// add import button
 	importBtn = new TextButton("Import");
 	importBtn->setComponentID((String)EXPORT_BUTTON);
-	importBtn->setColour(TextButton::textColourOffId, Colours::white);
-	importBtn->setColour(TextButton::textColourOnId, Colours::black);
-	importBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	importBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	//importBtn->setColour(TextButton::textColourOffId, Colours::white);
+	//importBtn->setColour(TextButton::textColourOnId, Colours::black);
+	//importBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	//importBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	importBtn->setTooltip("Loads a sound from a specified file location");
 
 	// add play button
 	playBtn = new TextButton("Play");
 	playBtn->setComponentID((String)PLAY_BUTTON);
-	playBtn->setColour(TextButton::textColourOffId, Colours::black);
-	playBtn->setColour(TextButton::textColourOnId, Colours::black);
-	playBtn->setColour(TextButton::buttonColourId, Colours::orange);
+	//playBtn->setColour(TextButton::textColourOffId, Colours::black);
+	//playBtn->setColour(TextButton::textColourOnId, Colours::black);
+	//playBtn->setColour(TextButton::buttonColourId, Colours::orange);
 	//playBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
+	//playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
 	playBtn->setClickingTogglesState(false);
+	playBtn->setTooltip("Plays the sound once"); // is this right?
 
 	// add sustained play button
 	sustainPlyBtn = new TextButton("Sustained Play");
 	sustainPlyBtn->setComponentID((String)SUSTAIN_PLAY_BUTTON);
-	sustainPlyBtn->setColour(TextButton::textColourOffId, Colours::black);
+	/*sustainPlyBtn->setColour(TextButton::textColourOffId, Colours::black);
 	sustainPlyBtn->setColour(TextButton::textColourOnId, Colours::black);
 	sustainPlyBtn->setColour(TextButton::buttonColourId, Colours::orange);
-	//sustainPlyBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	sustainPlyBtn->setColour(TextButton::buttonOnColourId, Colours::red);
+	sustainPlyBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	sustainPlyBtn->setColour(TextButton::buttonOnColourId, Colours::red);*/
 	sustainPlyBtn->setClickingTogglesState(true);
+	sustainPlyBtn->setTooltip("Plays the sound on a loop"); // is this right?
 
 	// add volume slider component
 	volBox = new volumeBox(valueTreeState);
@@ -203,6 +208,7 @@ fundFreq::fundFreq()
 
 		// text box to display current note in fundamental frequency
 	txtBox = new Label("fundFreq", "A");
+	txtBox->setColour(Label::textColourId, Colour(SoundshapeLAFs::base2textID));
 	updateText();
 
 	fundFreqSlider = new Slider(Slider::IncDecButtons, Slider::NoTextBox);
@@ -215,6 +221,7 @@ fundFreq::fundFreq()
 		num = fundFreqSlider->getValue();
 		num = num % 12;
 		fundFreqSlider->setValue(num, sendNotificationAsync);
+	upBtn->setTooltip("Cycles up the list of keys");
 		updateText();
 	};
 
@@ -230,11 +237,11 @@ fundFreq::~fundFreq()
 void fundFreq::paint(Graphics & g)
 {
 	//  sets background color
-	Colour bgColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
+	Colour bgColour = Colour(SoundshapeLAFs::base2ID);
 	g.fillAll(bgColour);   // clear the background
 	
 	// draws outline of the component
-	g.setColour(Colours::orange);
+	g.setColour(Colour(SoundshapeLAFs::base1ID));
 	g.drawRect(getLocalBounds(), 1);
 
 	// set text box location
