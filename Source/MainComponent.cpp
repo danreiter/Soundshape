@@ -55,8 +55,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//------------------------------------------------------------
 
-	//------------------------------------------------------------
-
 	//------------Setting Button Values---------------------------
 
 	// Harmonic button to toggle harmonic filter for selecting 

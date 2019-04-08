@@ -72,20 +72,10 @@ void bigTime::paint(Graphics& g)
 {
 
 	int btnWidth = (int)(getWidth() / (*time));
-	// paints background
-	float pixel = (getWidth() - (getWidth() - ((int)(getWidth() / (*time))*(*time)))) * .01f;
-	int n = (getWidth() - (getWidth()-((int)(getWidth()/(*time))*(*time)))) * 10;
-	float xMark = 0.0f;
-	int colourMod = 0;
-	bool flag = true;
-	Colour c1;
+
 	Rectangle<float> BackGround(0, 0, 10 * btnWidth, getHeight());
 	g.setColour(Colours::burlywood);
 	g.fillRect(BackGround);
-
-
-	
-
 
 	// Fills background color of selected time domain
 	// this colour selects the zoom time domain
