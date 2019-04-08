@@ -213,38 +213,12 @@ fundFreq::fundFreq()
 	fundFreqSlider->onValueChange = [this] 
 	{
 		num = fundFreqSlider->getValue();
-		updateText();
-	};
-
-	// set bounds and location for up button
-	upBtn = new DrawableButton("up", DrawableButton::ImageRaw);
-	//upBtn->setComponentID((String)FUND_FREQ_BUTTON);
-	upBtn->setClickingTogglesState(false);
-	upBtn->onClick = [this] {
-		num = (num++) % 12;
-		updateText();
-	};
-
-
-	// set bounds and location for down button
-	downBtn = new DrawableButton("down", DrawableButton::ImageRaw);
-	//downBtn->setComponentID((String)FUND_FREQ_BUTTON);
-	downBtn->setClickingTogglesState(false);
-	downBtn->onClick = [this] {
-		if (num <= 0)
-		{
-			num = 11;
-		}
-		else
-		{
-			num = (num--) % 12;
-		}
+		num = num % 12;
+		fundFreqSlider->setValue(num, sendNotificationAsync);
 		updateText();
 	};
 
 	addAndMakeVisible(txtBox);
-	//addAndMakeVisible(upBtn);
-	//addAndMakeVisible(downBtn);
 	addAndMakeVisible(fundFreqSlider);
 
 }
@@ -262,76 +236,19 @@ void fundFreq::paint(Graphics & g)
 	// draws outline of the component
 	g.setColour(Colours::orange);
 	g.drawRect(getLocalBounds(), 1);
-	//Point<float> p1(getWidth()*7.0f/12.0f, 0.0f);
-	//Point<float> p2(getWidth()*7.0f/12.0f,getBottom());
-	//Line<float> l(p1, p2);
-	//Point<float> ph1(getWidth()*7.0f / 12.0f, getHeight() / 2.0f);
-	//Point<float> ph2(getWidth(), getHeight() / 2.0f);
-	//Line<float> l1(ph1, ph2);
-	//g.drawLine(l, 1.0f);
-	//g.drawLine(l1, 1.0f);
 
 	// set text box location
 	txtBox->setBounds(0.0f, 0.0f, getWidth() * 7 / 12, getHeight());
 	txtBox->setJustificationType(Justification::centred);
 
-	// draw paths for up and down buttons for fundemantal frequency
-	//Path upPath, downPath;
-	//auto downArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, getHeight() / 2.0f, getWidth() * 5 / 12, getHeight() / 2);
-	//auto upArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, 0.0f, getWidth() * 5 / 12, getHeight() / 2);
-	//float xMargin = upArea.getWidth() * .2f;
-	//float yMargin = upArea.getHeight() *.2f;
-	//upPath.addTriangle(xMargin, upArea.getHeight() - yMargin, upArea.getWidth() / 2, yMargin, upArea.getWidth() - xMargin, upArea.getHeight() - yMargin);
-	//downPath.addTriangle(xMargin, yMargin, downArea.getWidth() - xMargin, yMargin, downArea.getWidth() / 2, downArea.getHeight() - yMargin);
 	auto sliderArea = Rectangle<int>(getWidth() * 7.0f / 12.0f, 0.0f, getWidth() * 5 / 12, getHeight());
 	fundFreqSlider->setBounds(sliderArea);
-
-	//upNormal.setPath(upPath);
-	//upNormal.setFill(Colours::orange);
-	//upNormal.setStrokeFill(Colours::black);
-	//upNormal.setStrokeThickness(.5f);
-
-	//upOver.setPath(upPath);
-	//upOver.setFill(Colours::darkorange);
-	//upOver.setStrokeFill(Colours::black);
-	//upOver.setStrokeThickness(.50f);
-
-	//upClicked.setPath(upPath);
-	//upClicked.setFill(Colours::red);
-	//upClicked.setStrokeFill(Colours::black);
-	//upClicked.setStrokeThickness(.50f);
-
-	//downNormal.setPath(downPath);
-	//downNormal.setFill(Colours::orange);
-	//downNormal.setStrokeFill(Colours::black);
-	//downNormal.setStrokeThickness(.50f);
-
-	//downOver.setPath(downPath);
-	//downOver.setFill(Colours::red);
-	//downOver.setStrokeFill(Colours::black);
-	//downOver.setStrokeThickness(.50f);
-
-	//downClicked.setPath(downPath);
-	//downClicked.setFill(Colours::darkorange);
-	//downClicked.setStrokeFill(Colours::black);
-	//downClicked.setStrokeThickness(.50f);
-
-
-	//// set up button loaction and shape
-	//upBtn->setImages(&upNormal, &upOver, &upClicked);
-	//upBtn->setBounds(upArea);
-
-
-
-	//// set down button location and shape
-	//downBtn->setImages(&downNormal, &downOver, &downClicked);
-	//downBtn->setBounds(downArea);
 
 }
 
 void fundFreq::resized()
 {
-	// sets component list to empty
+
 
 }
 
@@ -391,8 +308,6 @@ void fundFreq::setListener(Slider::Listener *_listener)
 {
 	sListener = _listener;
 	fundFreqSlider->addListener(sListener);
-	//upBtn->addListener(sListener);
-	//downBtn->addListener(bListener);
 }
 
 

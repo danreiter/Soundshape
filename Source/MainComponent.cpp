@@ -406,13 +406,6 @@ void MainComponent::buttonClicked(Button* button)
         processor.panic();
 	}
 
-	//// Funmental fruquency setting buttons
-	//if (button->getComponentID().getIntValue() == FUND_FREQ_BUTTON)
-	//{
-	//	// need back end call for fundmental frequency
-
-	//}
-
 	if (button == harmonicButton)
 	{
 		harm = harm * -1;
