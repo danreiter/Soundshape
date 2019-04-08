@@ -10,6 +10,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	enve(_valueTreeState),
 	valueTreeState(_valueTreeState),
 	volComp(_valueTreeState),
+    bTWindow(_valueTreeState),
 	keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
 	//----------Setting reference to the converter----------------------------------
@@ -251,20 +252,24 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getParentComponent()->getComponentID().getIntValue() == FREQ_DOMAIN)
 	{
-
-			DBG(timeBlock);
-			DBG(selectedProfile);
-			DBG(currentProfile);
-			converterPtr->updateFrequencyValue(currentProfile, slider->getComponentID().getIntValue(), slider->getValue());
-			converterPtr->renderPreview(currentProfile);
-			repaint();
+		converterPtr->updateFrequencyValue(currentProfile, slider->getComponentID().getIntValue(), slider->getValue());
+		converterPtr->renderPreview(currentProfile);
+		repaint();
 	}
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getComponentID().getIntValue() == PLAYTIME_SLIDER)
 	{
-		slider->getMaxValue();
-		slider->getMinValue();
-        converterPtr->setChunkRange((int)slider->getMinValue(), (int)slider->getMaxValue());
+        // NOTE: setValueNotifyingHost doesn't notifiy other listeners, so we have to do that separately
+        RangedAudioParameter* beginningParam = valueTreeState.getParameter("beginningChunk");
+        RangedAudioParameter* endingParam = valueTreeState.getParameter("endingChunk");
+        float maxParamValue = beginningParam->getNormalisableRange().end;
+        int bottomValue = (int)slider->getMinValue();
+        int upperValue = (int)slider->getMaxValue();
+        beginningParam->setValueNotifyingHost(bottomValue/maxParamValue);
+        beginningParam->sendValueChangedMessageToListeners(bottomValue/maxParamValue);
+        endingParam->setValueNotifyingHost(upperValue/maxParamValue);
+        endingParam->sendValueChangedMessageToListeners(upperValue/maxParamValue);
+
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
@@ -708,6 +713,7 @@ void MainComponent::setTheme(CommandID newTheme)
 		repaint();
 	}
 }
+
 //-------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------
@@ -892,4 +898,3 @@ void BurgerMenuHeader::showOrHide()
 	repaint();
 }
 //==============================================================================
-

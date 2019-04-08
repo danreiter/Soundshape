@@ -17,7 +17,7 @@
 //==============================================================================
 //  Constructor
 //==============================================================================
-bigTime::bigTime()
+bigTime::bigTime(AudioProcessorValueTreeState& _valueStateTree)
 {
 	
 	xPoint = new int;
@@ -58,6 +58,11 @@ bigTime::bigTime()
 		tb->setColour(TextButton::buttonColourId, Colours::orange);
 		tb->setColour(TextButton::buttonOnColourId, Colours::red);
 	}
+
+    // hook up as a listener for changes to the play slider
+    _valueStateTree.addParameterListener("beginningChunk", this);
+    _valueStateTree.addParameterListener("endingChunk", this);
+
 }
 
 bigTime::~bigTime()
@@ -137,3 +142,17 @@ void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Lis
 	timeBase.repaint();
 }
 //==============================================================================
+
+
+
+void bigTime::parameterChanged(const String & parameterID, float newValue)
+{
+    // needs to repsond if the backend changes the position of the double-sided play range selector
+    // (this can happen if the range is changed by the DAW or when a preset is loaded)
+    if (parameterID == "beginningChunk") {
+        playTime->setMinValue((int)newValue);
+    }
+    if (parameterID == "endingChunk") {
+        playTime->setMaxValue((int)newValue);
+    }
+}

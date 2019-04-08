@@ -41,13 +41,6 @@ public:
     void renderPreview(int chunk);
     float getPreviewSample(int chunk, int index);
 
-    /**
-    Tells the converter the indices of chunks to consider the beginning and ending of a sound.
-    
-    This sets up the backend to know which of the chunks to play. After this is called,
-    synthesis will begin at beginning (this chunk is inclusive) and end at end (exclusive).
-    */
-    void setChunkRange(int beginning, int end);
 
 private:
 

@@ -19,10 +19,11 @@
 #define PLAYTIME_SLIDER 5003
 
 //==============================================================================
-class bigTime : public Component
+class bigTime : public Component,
+                public AudioProcessorValueTreeState::Listener
 {
 public:
-	bigTime();
+	bigTime(AudioProcessorValueTreeState& _valueStateTree);
 	~bigTime();
 
 	void paint(Graphics&) override;
@@ -30,6 +31,12 @@ public:
 
 	// Function to pass refernces from the parent
 	void setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Slider::Listener * _sliderParent, Converter* _cp);
+
+    /**
+    Whenever the backend converter changes the beginning and ending of the the play range,
+    it should call this callback so the GUI can update itself.
+    */
+    void parameterChanged(const String &parameterID, float newValue) override;
 
 private:
 	timeDomainWin timeBase; // time domain                  
