@@ -55,8 +55,8 @@ private:
     float binToFreq(int bin, double rate);
     kiss_fft_cpx getProfileRawPoint(int chunk, int i);
     void setProfileRawPoint(int chunk, int i, float value);
-    void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity);
-    void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity);
+    void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
+    void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
 
     // Prepares that buffer for an inverse FFT representing currently pressed keys
     void addShiftedProfiles(int chunk);
