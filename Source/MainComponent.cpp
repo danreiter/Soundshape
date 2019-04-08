@@ -22,6 +22,8 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	add = -1;
 	harm = -1;
 	zoom = 4.0;
+	presetPath = File().getCurrentWorkingDirectory();
+	selectedFile = newFile;
 	//------------------------------------------------------------
 
 
@@ -40,18 +42,22 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//-----Setting testing values for the combo box-------------
 
-	cb.addItem("Gregory's game tune", 1);
-	cb.addItem("Daniel's groovy sound", 2);
-	cb.addItem("Mardigon's math sound", 3);
-	cb.addItem("My rad sound", 4);
-	cb.addItem("The sound of angry paper", 5);
-	cb.addItem("Love sound", 6);
-	cb.addItem("The sound of not silence", 7);
-	cb.setSelectedItemIndex(3);
+	/*cb.addItem("New Sound", 1);
+	cb.addItem("Gregory's game tune", 2);
+	cb.addItem("Daniel's groovy sound", 3);
+	cb.addItem("Mardigon's math sound", 4);
+	cb.addItem("My rad sound", 5);
+	cb.addItem("The sound of angry paper", 6);
+	cb.addItem("Love sound", 7);
+	cb.addItem("The sound of not silence", 8);*/
+	loadPresetPath();
+	cb.setSelectedItemIndex(0);
 	cb.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
 	cb.setColour(ComboBox::arrowColourId, Colours::black);
 	cb.setColour(ComboBox::textColourId, Colours::black);
     cb.setTooltip("Contains all the current presets");
+	cb.addListener(this);
+
 
 	//------------------------------------------------------------
 
@@ -90,7 +96,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	// Write button to save sound profiles to the preset folder
 	writeButton = new TextButton("Write");
+	writeButton->addListener(this);
     writeButton->setTooltip("Writes the chosen preset");
+
+	// Zoom slider to zoom in and out of frequncy window
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
 	zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	zoomSlider->setRange(1.0f, 40.0f, .5);
@@ -330,9 +339,22 @@ void MainComponent::buttonClicked(Button* button)
 	}
 
 	// add Button hides and shows buttons to add frequency spikes 
-	if (button->getParentComponent()->getComponentID() == addButton)
+	if (button->getComponentID() == addButton->getComponentID())
 	{
-		//add = -1 * (add);
+		repaint();
+	}
+
+	// add Button hides and shows buttons to add frequency spikes 
+	if (button->getComponentID() == writeButton->getComponentID())
+	{
+		if (selectedFile == newFile)
+		{
+			saveAs();
+		}
+		else
+		{
+			promptSaveOptions();
+		}
 		repaint();
 	}
 
@@ -389,6 +411,52 @@ void MainComponent::buttonClicked(Button* button)
 //-------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------
+// Function listens for ComboBox component changes
+//-------------------------------------------------------------------------------------
+void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
+{
+	if(comboBoxThatHasChanged->getComponentID() == cb.getComponentID())
+	{
+		if (comboBoxThatHasChanged->getSelectedItemIndex() == 0)
+		{
+			selectedFile = newFile;
+		}
+		else
+		{
+			saveFilePrompt();
+			String fileName = comboBoxThatHasChanged->getText();
+			fileName.append(String(".txt"), 4);
+			selectedFile = File(presetPath.getChildFile(fileName));
+			int i = 1;
+		}
+	};
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function saveIs for saving exist sounds
+//-------------------------------------------------------------------------------------
+bool MainComponent::save()
+{
+	// selectedFile is the full path to the current sound
+	return false;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function saveAs is for saving new sounds
+//-------------------------------------------------------------------------------------
+bool MainComponent::saveAs()
+{
+	// get user input for file name
+	// write xml file to presetPath
+	// new file to comboBox 'cb'
+	// set index of comboBox to new file name
+	return false;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
 // Function loadSound
 //-------------------------------------------------------------------------------------
 void MainComponent::loadSound()
@@ -412,7 +480,7 @@ void MainComponent::loadSound()
 //-------------------------------------------------------------------------------------
 StringArray MainComponent::getMenuBarNames()
 {
-	return { "Menu Position", "Themes", "Help", "About" };
+	return { "Menu Position", "Settings", "Themes", "Help", "About" };
 }
 //-------------------------------------------------------------------------------------
 
@@ -429,15 +497,20 @@ PopupMenu MainComponent::getMenuForIndex(int menuIndex, const String &)
 	}
 	else if (menuIndex == 1)
 	{
+		menu.addCommandItem(&commandManager, CommandIDs::Keyboard);
+		menu.addCommandItem(&commandManager, CommandIDs::PresetPath);
+	}
+	else if (menuIndex == 2)
+	{
 		menu.addCommandItem(&commandManager, CommandIDs::DefaultTheme);
 		menu.addCommandItem(&commandManager, CommandIDs::TestTheme);
 	}
-	else if (menuIndex == 2)
+	else if (menuIndex == 3)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::ToolTips);
 		menu.addCommandItem(&commandManager, CommandIDs::Tutorial);
 	}
-	else if (menuIndex == 3)
+	else if (menuIndex == 4)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::Developers);
 		menu.addCommandItem(&commandManager, CommandIDs::Licence);
@@ -483,6 +556,16 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 			_result.setTicked(menuBarPosition == MenuBarPosition::burger);
 			_result.addDefaultKeypress('b', ModifierKeys::shiftModifier);
 			break;
+		case CommandIDs::Keyboard:
+			_result.setInfo("MIDI Keyboard", "Turns on/off MIDI Keyboard for standalone mode", "Settings", 0);
+			_result.setTicked(showKeyboard);
+			_result.addDefaultKeypress('k', ModifierKeys::commandModifier);
+			break;
+		case CommandIDs::PresetPath:
+			_result.setInfo("Preset file path", "Set preset file reading and writing path", "Settings", 0);
+			_result.setTicked(false);
+			_result.addDefaultKeypress('p', ModifierKeys::shiftModifier);
+			break;
 		case CommandIDs::DefaultTheme:
 			_result.setInfo("Default Theme", "Sets theme to default theme", "Themes", 0);
 			_result.setTicked(currentTheme == CommandIDs::DefaultTheme);
@@ -525,6 +608,8 @@ void MainComponent::getAllCommands(Array<CommandID>& c)
 {
 	Array<CommandID> commands{ CommandIDs::menuPositionInsideWindow,
 						CommandIDs::menuPositionBurgerMenu,
+						CommandIDs::Keyboard,
+						CommandIDs::PresetPath,
 						CommandIDs::DefaultTheme,
 						CommandIDs::TestTheme,
 						CommandIDs::ToolTips,
@@ -547,6 +632,12 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::menuPositionBurgerMenu:
 		setMenuBarPosition(MenuBarPosition::burger);
+		break;
+	case CommandIDs::Keyboard:
+		showKeyboard = !showKeyboard;
+		break;
+	case CommandIDs::PresetPath:
+		setPresetPath();
 		break;
 	case CommandIDs::DefaultTheme:
 		setTheme(CommandIDs::DefaultTheme);
@@ -615,6 +706,115 @@ void MainComponent::setTheme(CommandID newTheme)
 		menuItemsChanged();;
 
 		repaint();
+	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function setPresetPath
+//-------------------------------------------------------------------------------------
+void MainComponent::setPresetPath()
+{
+	FileChooser chooser("New Preset Path", presetPath, "", false);
+
+	if (chooser.browseForDirectory())
+	{
+		File tempDir = chooser.getResult();
+		if (presetPath != tempDir)
+		{
+			saveFilePrompt();
+			presetPath = tempDir;
+			loadPresetPath();
+		}
+		repaint();
+	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function loadPresetPath
+//-------------------------------------------------------------------------------------
+void MainComponent::loadPresetPath()
+{
+	cb.clear();
+	cb.addItem("New Sound", 1);
+
+	DirectoryIterator iter(presetPath, false, "*.txt");
+	int i = 2;
+	while(iter.next())
+	{
+		File nextSound(iter.getFile());
+
+		cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
+		i++;
+	}
+	selectedFile = newFile;
+	cb.setSelectedItemIndex(0);
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function saveFilePrompt
+//-------------------------------------------------------------------------------------
+void MainComponent::saveFilePrompt()
+{
+	PopupMenu savePrompt;
+	savePrompt.addSectionHeader("Would you like to save your current sound?");
+	savePrompt.addItem(1, "save");
+	savePrompt.addItem(2, "Cancel");
+	const int result = savePrompt.show();
+	if (result == 0)
+	{
+		// user dismissed the menu without picking anything
+	}
+	else if (result == 1)
+	{
+		if (selectedFile == newFile)
+		{
+			saveAs();
+		}
+		else
+		{
+			promptSaveOptions();
+		}
+		// user picked item 1
+	}
+	else if (result == 2)
+	{
+		// user picked item 2
+	}
+
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function promptSaveOptions
+//-------------------------------------------------------------------------------------
+void MainComponent::promptSaveOptions()
+{
+	PopupMenu saveAsPrompt;
+	saveAsPrompt.addSectionHeader("Would you like to save as a new sound?");
+	saveAsPrompt.addItem(1, "Save");
+	saveAsPrompt.addItem(1, "Save as a new sound");
+	saveAsPrompt.addItem(3, "Cancel");
+	const int result = saveAsPrompt.show();
+	if (result == 0)
+	{
+		// user dismissed the menu without picking anything
+	}
+	else if (result == 1)
+	{
+		save();
+		// user picked item 1
+	}
+	else if (result == 2)
+	{
+		saveAs();
+		// user picked item 2
+	}
+	else if (result == 3)
+	{
+		// user picked item 2
 	}
 }
 //-------------------------------------------------------------------------------------

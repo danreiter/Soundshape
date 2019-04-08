@@ -55,7 +55,8 @@ class MainComponent : public Component,
 					  public Slider::Listener, 
 					  public Button::Listener, 
 					  public ApplicationCommandTarget, 
-					  public MenuBarModel
+					  public MenuBarModel,
+					  public ComboBox::Listener
 {
 public:
 	//==============================================================================
@@ -71,6 +72,8 @@ public:
 		menuPositionBurgerMenu,
 		DefaultTheme,
 		TestTheme,
+		Keyboard,
+		PresetPath,
 		ToolTips,
 		Tutorial,
 		Developers,
@@ -99,6 +102,13 @@ public:
 	bool perform(const InvocationInfo& info) override;
 	void setMenuBarPosition(MenuBarPosition newPosition);
 	void setTheme(CommandID newTheme);
+	void setPresetPath();
+	void loadPresetPath();
+	void saveFilePrompt();
+	void promptSaveOptions();
+	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
+	bool save();
+	bool saveAs();
 
 private:
 	//==============================================================================
@@ -142,6 +152,12 @@ private:
 	BurgerMenuHeader menuHeader{ sidePanel };
 	CommandID currentTheme = CommandIDs::DefaultTheme;
 	bool tips = true;
+	bool showKeyboard = false;
+
+	//-----------File handling-----------------------------------------------
+	File presetPath;
+	File selectedFile;
+	const File newFile = File();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };
