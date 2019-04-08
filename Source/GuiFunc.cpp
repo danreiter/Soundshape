@@ -24,6 +24,7 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 	volume->setComponentID((String)VOLUME_SLIDER);
 	volume->setSliderStyle(Slider::LinearHorizontal);
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	volume->setTooltip("Controls the volume of the whole sound");
 	//claf = new CustomLookAndFeel(); // will be moved to MainComponent
 	//SoundshapeLAFs::setDefaultColors(*claf); // ditto
 
@@ -85,6 +86,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	panicBtn->setColour(TextButton::textColourOnId, Colours::white);
 	panicBtn->setColour(TextButton::buttonColourId, Colours::red);
 	panicBtn->setColour(TextButton::buttonOnColourId, Colours::orange);*/
+	panicBtn->setTooltip("Halts all audio");
 
 	// add export button
 	exportBtn = new TextButton("Export");
@@ -93,6 +95,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	exportBtn->setColour(TextButton::textColourOnId, Colours::black);
 	exportBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	exportBtn->setColour(TextButton::buttonOnColourId, Colours::orange);*/
+	exportBtn->setTooltip("Saves the sound to a specified file location");
 
 	// add import button
 	importBtn = new TextButton("Import");
@@ -101,6 +104,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	//importBtn->setColour(TextButton::textColourOnId, Colours::black);
 	//importBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	//importBtn->setColour(TextButton::buttonOnColourId, Colours::orange);
+	importBtn->setTooltip("Loads a sound from a specified file location");
 
 	// add play button
 	playBtn = new TextButton("Play");
@@ -111,6 +115,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	//playBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	//playBtn->setColour(TextButton::buttonOnColourId, Colours::red);
 	playBtn->setClickingTogglesState(false);
+	playBtn->setTooltip("Plays the sound once"); // is this right?
 
 	// add sustained play button
 	sustainPlyBtn = new TextButton("Sustained Play");
@@ -121,6 +126,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	sustainPlyBtn->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	sustainPlyBtn->setColour(TextButton::buttonOnColourId, Colours::red);*/
 	sustainPlyBtn->setClickingTogglesState(true);
+	sustainPlyBtn->setTooltip("Plays the sound on a loop"); // is this right?
 
 	// add volume slider component
 	volBox = new volumeBox(valueTreeState);
@@ -214,6 +220,7 @@ fundFreq::fundFreq()
 	upBtn = new DrawableButton("up", DrawableButton::ImageRaw);
 	upBtn->setComponentID((String)FUND_FREQ_BUTTON);
 	upBtn->setClickingTogglesState(false);
+	upBtn->setTooltip("Cycles up the list of keys");
 	upBtn->onClick = [this] {
 		num = (num++) % 12;
 		updateText();
@@ -224,6 +231,7 @@ fundFreq::fundFreq()
 	downBtn = new DrawableButton("down", DrawableButton::ImageRaw);
 	downBtn->setComponentID((String)FUND_FREQ_BUTTON);
 	downBtn->setClickingTogglesState(false);
+	downBtn->setTooltip("Cycles down the list of keys");
 	downBtn->onClick = [this] {
 		if (num <= 0)
 		{

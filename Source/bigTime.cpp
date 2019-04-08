@@ -45,6 +45,7 @@ bigTime::bigTime()
     //playTime->setColour(Slider::trackColourId, Colours::red);
     //playTime->setColour(Slider::thumbColourId, Colours::red);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	playTime->setTooltip("Controls how much of the sound is played when the Play Button is pressed");
 
 	// Create buttons
 	for (int i = 0; i < *time; ++i)

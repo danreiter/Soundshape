@@ -134,6 +134,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	zoomSlider->setValue(zoom, sendNotificationAsync);
 	zoomSlider->setTextValueSuffix(" X");
 	zoomSlider->addListener(this);
+	zoomSlider->setTooltip("Zoom the spectrum window in and out");
 
 	//------------------------------------------------------------
 
