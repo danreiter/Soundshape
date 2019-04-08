@@ -29,11 +29,11 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	//------------------------------------------------------------
 
 	//------Passing references to child components----------------
-	loadSound();
+	//loadSound(); moved to bottom
 
 	//------------------------------------------------------------
 
-	addAndMakeVisible(fWindow);
+	//addAndMakeVisible(fWindow); // moved to bottom
 	addAndMakeVisible(sTWindow);
 	addAndMakeVisible(bTWindow);
 	addAndMakeVisible(fund);
@@ -146,6 +146,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 
 	setAllLookAndFeels(laf, this);
+
+	loadSound();
+
+	addAndMakeVisible(fWindow);
 
 	setSize(600, 400);
 }

@@ -25,7 +25,7 @@ public:
 		// these are the default values
 		base1ID = 0xffffa500, // orange
 		base1textID = 0xff000000, // black
-		base2ID = 0xff555555, // darkgrey
+		base2ID = 0xff00008b, // darkblue
 		base2textID = 0xffffffff, // white
 		background1ID = 0xffd3d3d3, // lightgrey
 		background2ID = 0xffffdab9, // peachpuff
