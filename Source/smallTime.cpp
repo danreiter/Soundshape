@@ -76,23 +76,11 @@ void smallTime::paint(Graphics& g)
 	*/
 
 	int btnWidth = (int)(getWidth() / 5);
-	int width = getWidth() - (getWidth() - (5 * btnWidth));
-	Rectangle<float> backGround(0.0f, 0.0f, width, getHeight() * .8f);
-	g.setColour(Colours::white);
-	g.fillRect(backGround);
-	g.setColour (Colours::black);
-	g.drawRect (backGround, 1);   // draw an outline around the component
 
 	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 
 	//  Draws background color
-	float pixel = (getWidth() - (getWidth() - (5 * btnWidth))) * .01f;
-	int n = (getWidth() - (getWidth() - (5 * btnWidth))) * 10;
-	float xMark = 0.0f;
-	int colourMod = 0;
-	bool flag = true;
-	Colour c1;
 	g.setColour(Colours::blanchedalmond);
 	Rectangle<float> background(0, 0, btnWidth * 5, getHeight());
 	g.fillRect(background);

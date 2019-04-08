@@ -70,18 +70,8 @@ bigTime::~bigTime()
 //==============================================================================
 void bigTime::paint(Graphics& g)
 {
-	//g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+
 	int btnWidth = (int)(getWidth() / (*time));
-	Rectangle<float> backGround(0.0f, 0.0f, getWidth() - (getWidth() - ((*time) * btnWidth)), getHeight());
-	g.setColour(Colours::white);
-	g.fillRect(backGround);
-	g.setColour (Colours::black);
-	g.drawRect (backGround, 1);   // draw an outline around the component
-	g.setFont (14.0f);
-	g.drawText("bigTime", getLocalBounds(),
-	            Justification::centred, true);   // draw some placeholder text
-
-
 	// paints background
 	float pixel = (getWidth() - (getWidth() - ((int)(getWidth() / (*time))*(*time)))) * .01f;
 	int n = (getWidth() - (getWidth()-((int)(getWidth()/(*time))*(*time)))) * 10;
@@ -102,16 +92,7 @@ void bigTime::paint(Graphics& g)
 	g.setColour(Colours::lightgreen);
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
-
-	// Fills background color of selected frequnecy domain
-	//int profileWidth = btnWidth / 5;
-	//if (*xProfile >= 0)
-	//{
-	//	Rectangle<float> profileMarkArea(((int)(getWidth() / (*time)) / 5) * (*xProfile), 0.0f, ((int)(getWidth() / (*time)) / 5), getHeight()* .8f);
-	//	// This color select the current profile
-	//	g.setColour(Colours::red);
-	//	g.fillRect(profileMarkArea);
-	//}
+	
 
 	for (int i = 0; i < components.size(); i++)
 	{
