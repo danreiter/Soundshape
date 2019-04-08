@@ -53,20 +53,30 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     "Beginning Section",
                                     0,
                                     50,
-                                    0)
+                                    0),
+                                std::make_unique<AudioParameterInt>(
+                                    "endingChunk",
+                                    "Ending Section",
+                                    0,
+                                    50,
+                                    50)
                                 }
     ),
     converter(valueTreeState)
 #endif
 {
 
-    // TODO register the rest of the parameters here, like this.
-
+    // different parameters can have different objects handle the logic of them changing if necessary
     valueTreeState.addParameterListener("attack", &converter.getEnvelope());
     valueTreeState.addParameterListener("decay", &converter.getEnvelope());
     valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
     valueTreeState.addParameterListener("release", &converter.getEnvelope());
     valueTreeState.addParameterListener("gain", &converter);
+
+    // the beginningChunk and endingChunk parameters need 2 listeners : the converter and also the GUI.
+    // Here, we set the converter as a listener to these. The GUI will set itself up to listen
+    valueTreeState.addParameterListener("beginningChunk", &converter);
+    valueTreeState.addParameterListener("endingChunk", &converter);
 
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);
@@ -262,15 +272,14 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
 AudioProcessorEditor* Soundshape_pluginAudioProcessor::createEditor()
 {
-    return new Soundshape_pluginAudioProcessorEditor (*this, valueTreeState);
+    Soundshape_pluginAudioProcessorEditor* editor = new Soundshape_pluginAudioProcessorEditor(*this, valueTreeState);
+    return editor;
 }
 
 //==============================================================================
 void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    
 }
 
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)

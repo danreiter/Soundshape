@@ -183,13 +183,6 @@ void Converter::setSustain(bool sustainState)
     }
 }
 
-
-void Converter::setChunkRange(int beginning, int end)
-{
-    beginningChunk = beginning;
-    endingChunk = end;
-}
-
 int Converter::freqToBin(int freq, double rate) {
     double ratio = (double)(SOUNDSHAPE_CHUNK_SIZE * freq) / rate;
     int result = (int)std::round(ratio);
@@ -224,6 +217,12 @@ void Converter::parameterChanged(const String & parameterID, float newValue)
 {
     if (parameterID == "gain") {
         gain = newValue;
+    }
+    if (parameterID == "beginningChunk") {
+        beginningChunk = (int)newValue;
+    }
+    if (parameterID == "endingChunk") {
+        endingChunk = (int)newValue;
     }
 }
 
