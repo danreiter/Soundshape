@@ -166,6 +166,7 @@ private:
 	File presetPath;
 	File selectedFile;
 	const File newFile = File();
+	bool pushedWriteBtn = true, newSave = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

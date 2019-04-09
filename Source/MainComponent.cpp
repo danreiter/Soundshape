@@ -417,10 +417,22 @@ void MainComponent::buttonClicked(Button* button)
 		if (selectedFile == newFile)
 		{
 			saveAs();
+			cb.setSelectedItemIndex(cb.getNumItems()-1);
+			String fileName = cb.getText();
+			fileName.append((String)"xml", 4);
+			selectedFile = File(presetPath.getChildFile(fileName));
 		}
 		else
 		{
 			promptSaveOptions();
+			if (newSave)
+			{
+				cb.setSelectedItemIndex(cb.getNumItems() - 1);
+				String fileName = cb.getText(); 
+				fileName.append((String)"xml", 4);
+				selectedFile = File(presetPath.getChildFile(fileName));
+				newSave = false;
+			}
 		}
 		repaint();
 	}
@@ -477,7 +489,19 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 {
 	if(comboBoxThatHasChanged->getComponentID() == cb.getComponentID())
 	{
+		if (pushedWriteBtn)
+		{
+			pushedWriteBtn = false;
+		}
+		else
+		{
 			saveFilePrompt();
+			String fileName = cb.getText();
+			fileName.append((String)"xml", 4);
+			selectedFile = File(presetPath.getChildFile(fileName));
+			// loadFile();
+		}
+
 	};
 }
 //-------------------------------------------------------------------------------------
@@ -500,9 +524,14 @@ bool MainComponent::saveAs()
 	FileChooser chooser("Save As File Name", presetPath, ".xml");
 	if (chooser.browseForFileToSave(true))
 	{
+		File tempFile = chooser.getResult();
+		String testString = tempFile.getFileName();
+		if (testString.endsWith((String) ".xml"))
+		{
+			//save file
+			cb.addItem(testString.dropLastCharacters(4), cb.getNumItems() + 1);
+		}
 
-		// write xml file to presetPath
-		// new file to comboBox 'cb'
 	}
 	// set index of comboBox to new file name
 	return false;
@@ -790,7 +819,7 @@ void MainComponent::setTheme(CommandID newTheme)
 		menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 
 		sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
-		menuItemsChanged();;
+		menuItemsChanged();
 
 		repaint();
 	}
@@ -826,7 +855,7 @@ void MainComponent::loadPresetPath()
 {
 	cb.clear();
 	cb.addItem("New Sound", 1);
-
+	pushedWriteBtn = true;
 	DirectoryIterator iter(presetPath, false, "*.txt");
 	int i = 2;
 	while(iter.next())
@@ -854,6 +883,7 @@ void MainComponent::saveFilePrompt()
 	if (result == 0)
 	{
 		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
 	}
 	else if (result == 1)
 	{
@@ -864,12 +894,14 @@ void MainComponent::saveFilePrompt()
 		else
 		{
 			promptSaveOptions();
+
 		}
 		// user picked item 1
 	}
 	else if (result == 2)
 	{
 		// user picked item 2
+		pushedWriteBtn = false;
 	}
 
 }
@@ -889,20 +921,31 @@ void MainComponent::promptSaveOptions()
 	if (result == 0)
 	{
 		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
+		newSave = false;
 	}
 	else if (result == 1)
 	{
 		save();
+		pushedWriteBtn = false;
+		newSave = false;
 		// user picked item 1
 	}
 	else if (result == 2)
 	{
 		saveAs();
+		if (pushedWriteBtn)
+		{
+			pushedWriteBtn = false;
+			newSave = true;
+		}
 		// user picked item 2
 	}
 	else if (result == 3)
 	{
 		// user picked item 2
+		pushedWriteBtn = false;
+		newSave = false;
 	}
 }
 //-------------------------------------------------------------------------------------
