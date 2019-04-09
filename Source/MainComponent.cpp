@@ -417,10 +417,22 @@ void MainComponent::buttonClicked(Button* button)
 		if (selectedFile == newFile)
 		{
 			saveAs();
+			cb.setSelectedItemIndex(cb.getNumItems()-1);
+			String fileName = cb.getText();
+			fileName.append((String)"xml", 4);
+			selectedFile = File(presetPath.getChildFile(fileName));
 		}
 		else
 		{
 			promptSaveOptions();
+			if (newSave)
+			{
+				cb.setSelectedItemIndex(cb.getNumItems() - 1);
+				String fileName = cb.getText(); 
+				fileName.append((String)"xml", 4);
+				selectedFile = File(presetPath.getChildFile(fileName));
+				newSave = false;
+			}
 		}
 		repaint();
 	}
@@ -477,18 +489,19 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 {
 	if(comboBoxThatHasChanged->getComponentID() == cb.getComponentID())
 	{
-		if (comboBoxThatHasChanged->getSelectedItemIndex() == 0)
+		if (pushedWriteBtn)
 		{
-			selectedFile = newFile;
+			pushedWriteBtn = false;
 		}
 		else
 		{
 			saveFilePrompt();
-			String fileName = comboBoxThatHasChanged->getText();
-			fileName.append(String(".txt"), 4);
+			String fileName = cb.getText();
+			fileName.append((String)"xml", 4);
 			selectedFile = File(presetPath.getChildFile(fileName));
-			int i = 1;
+			// loadFile();
 		}
+
 	};
 }
 //-------------------------------------------------------------------------------------
@@ -508,11 +521,54 @@ bool MainComponent::save()
 //-------------------------------------------------------------------------------------
 bool MainComponent::saveAs()
 {
-	// get user input for file name
-	// write xml file to presetPath
-	// new file to comboBox 'cb'
+	FileChooser chooser("Save As File Name", presetPath, ".xml");
+	if (chooser.browseForFileToSave(true))
+	{
+		File tempFile = chooser.getResult();
+		String testString = tempFile.getFileName();
+		if (testString.endsWith((String) ".xml"))
+		{
+			//save file
+			cb.addItem(testString.dropLastCharacters(4), cb.getNumItems() + 1);
+		}
+
+	}
 	// set index of comboBox to new file name
 	return false;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function saveAs is for saving new sounds
+//-------------------------------------------------------------------------------------
+void MainComponent::loadFile()
+{
+
+	
+	timeBlock = 0;
+	selectedProfile = 0;
+	timeSize = 10;
+	currentProfile = 0;
+	add = -1;
+	harm = -1;
+	zoom = 1.0;
+
+	// load file from selectedFile
+	// call load sound or other function to up
+	/*
+		file handling here
+		if(selectedFile == newFile)
+		{
+			load 0 profile
+		}
+		else
+		{
+			load selectedFile
+		}
+	*/
+	//do After file load
+	fWindow.setProfile();
+	repaint();
 }
 //-------------------------------------------------------------------------------------
 
@@ -747,7 +803,7 @@ void MainComponent::setMenuBarPosition(MenuBarPosition newPosition)
 //-------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------
-// Function setMenuBarPosition
+// Function setTheme
 //-------------------------------------------------------------------------------------
 void MainComponent::setTheme(CommandID newTheme)
 {
@@ -763,7 +819,7 @@ void MainComponent::setTheme(CommandID newTheme)
 		menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 
 		sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
-		menuItemsChanged();;
+		menuItemsChanged();
 
 		repaint();
 	}
@@ -799,8 +855,8 @@ void MainComponent::loadPresetPath()
 {
 	cb.clear();
 	cb.addItem("New Sound", 1);
-
-	DirectoryIterator iter(presetPath, false, "*.txt");
+	pushedWriteBtn = true;
+	DirectoryIterator iter(presetPath, false, "*.xml");
 	int i = 2;
 	while(iter.next())
 	{
@@ -827,6 +883,7 @@ void MainComponent::saveFilePrompt()
 	if (result == 0)
 	{
 		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
 	}
 	else if (result == 1)
 	{
@@ -837,12 +894,14 @@ void MainComponent::saveFilePrompt()
 		else
 		{
 			promptSaveOptions();
+
 		}
 		// user picked item 1
 	}
 	else if (result == 2)
 	{
 		// user picked item 2
+		pushedWriteBtn = false;
 	}
 
 }
@@ -862,20 +921,31 @@ void MainComponent::promptSaveOptions()
 	if (result == 0)
 	{
 		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
+		newSave = false;
 	}
 	else if (result == 1)
 	{
 		save();
+		pushedWriteBtn = false;
+		newSave = false;
 		// user picked item 1
 	}
 	else if (result == 2)
 	{
 		saveAs();
+		if (pushedWriteBtn)
+		{
+			pushedWriteBtn = false;
+			newSave = true;
+		}
 		// user picked item 2
 	}
 	else if (result == 3)
 	{
 		// user picked item 2
+		pushedWriteBtn = false;
+		newSave = false;
 	}
 }
 //-------------------------------------------------------------------------------------
