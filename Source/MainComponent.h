@@ -24,6 +24,40 @@
 
 //==============================================================================
 /*
+	Struct for Keyboard exparament
+*/
+//==============================================================================
+class keyboardWindow : public Component 
+{
+	public:
+		keyboardWindow(Converter * _converter) : keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard) {
+			keyboardState.addListener(_converter);
+			addAndMakeVisible(keyboardComponent);
+			setSize(1000, 400);
+		}
+		~keyboardWindow() {}
+		void paint(Graphics &g) override
+		{
+			g.fillAll(Colours::black);
+
+			keyboardComponent.setBounds(0,getHeight()/2,getWidth(), getHeight()/2);
+			
+		}
+		void setConverter(Converter* _converter) {
+			
+		}
+
+
+	private:
+		MidiKeyboardState keyboardState;
+		MidiKeyboardComponent keyboardComponent;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(keyboardWindow)
+};
+
+//==============================================================================
+//==============================================================================
+/*
 	Struct for burger Menu component
 */
 //==============================================================================
@@ -113,6 +147,7 @@ public:
 	bool save();
 	bool saveAs();
 	void loadFile();
+	void showKey(bool vis);
 
 	
 
@@ -137,8 +172,10 @@ private:
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	
-	MidiKeyboardState keyboardState;           
-	MidiKeyboardComponent keyboardComponent;
+	//MidiKeyboardState keyboardState;           
+	//MidiKeyboardComponent keyboardComponent;
+	//keyboardWindow *midiKeyboard;
+	Component::SafePointer<Component> midiKeyboard;
 
 	// Varible for notes in hz
     static float notes[12];
