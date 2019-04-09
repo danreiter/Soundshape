@@ -10,8 +10,8 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	enve(_valueTreeState),
 	valueTreeState(_valueTreeState),
 	volComp(_valueTreeState),
-    bTWindow(_valueTreeState),
-	keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    bTWindow(_valueTreeState)//,
+	//keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
 	//----------Setting reference to the converter----------------------------------
     setConverter(&(processor.getConverter()));
@@ -107,10 +107,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(harmonicButton);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
-	addAndMakeVisible(keyboardComponent);
-	keyboardState.addListener(&keyboardComponent);
-
-
 
 	if (menuBarPosition != MenuBarPosition::burger)
 		sidePanel.showOrHide(false);
@@ -137,8 +133,33 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
 	menuItemsChanged();
 	//------------------------------------------------------------
-
 	setSize(600, 400);
+}
+
+void MainComponent::showKey(bool vis)
+{
+	if (vis)
+	{
+		keyboardWindow *keyboard = new keyboardWindow(converterPtr);
+		keyboard->addToDesktop(ComponentPeer::windowIsTemporary);
+		midiKeyboard = keyboard;
+		Rectangle<int> area(0, 0, 600, 100);
+
+		RectanglePlacement placement(RectanglePlacement::xLeft
+			| RectanglePlacement::yBottom
+			| RectanglePlacement::doNotResize);
+
+		auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
+			.getMainDisplay().userArea.reduced(20));
+		keyboard->setBounds(result);
+
+		keyboard->setVisible(vis);
+	}
+	else
+	{
+		midiKeyboard->setVisible(vis);
+		midiKeyboard.deleteAndZero();
+	}
 }
 
 MainComponent::~MainComponent()
@@ -214,8 +235,10 @@ void MainComponent::setConverter(Converter *_converter) {
 //------------------------------------------------------------------------------------
 // Function paint
 //------------------------------------------------------------------------------------
-void MainComponent::paint(Graphics& g)
+void MainComponent::paint(Graphics& g) 
 {
+
+
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(Colour(SoundshapeLAFs::background1ID));
 
@@ -751,6 +774,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::Keyboard:
 		showKeyboard = !showKeyboard;
+		showKey(showKeyboard);
 		break;
 	case CommandIDs::PresetPath:
 		setPresetPath();
