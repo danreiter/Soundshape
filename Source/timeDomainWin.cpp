@@ -41,11 +41,10 @@ void timeDomainWin::paint (Graphics& g)
     */
 
 	// draw center line across window 
-	g.setColour(Colours::black);
+	g.setColour(Colour(SoundshapeLAFs::base1textID));
 	Point<float> centerStart(0.0f, getHeight() / 2.0f);
 	Point<float> centerEnd(getWidth(), getHeight()/2.0f);
 	Line<float> centerLine(centerStart, centerEnd);
-	//g.drawLine(centerLine, 2.0f);
 
 	// draw tick marks and numbers across center line
 	float tick = getWidth() / 50.0f;
@@ -64,10 +63,10 @@ void timeDomainWin::paint (Graphics& g)
 		Line<float> l(p1, p2);
 		if (i == *currentProfile)
 		{
-			g.setColour(Colours::red);
+			g.setColour(Colour(SoundshapeLAFs::background3ID));
 			Rectangle<float> profile(rec.getTopLeft().getX(), 0, tick, getHeight());
 			g.fillRect(profile);
-			g.setColour(Colours::black);
+			g.setColour(Colour(SoundshapeLAFs::base1textID));
 		}
 		g.drawLine(l);
 		g.drawText(String(i), rec1, Justification::centredLeft);
@@ -84,14 +83,12 @@ void timeDomainWin::paint (Graphics& g)
 		for(int j = 0; j < 50; j++)
 		{
 			for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
-				//float x = ((float)i / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * getWidth();
-				//float y = (((float)getHeight()) / 2.0f - (0.5f * getHeight() * 15 * converterPtr->getPreviewSample(0, i)));
                 float x = (((float)(i) / SOUNDSHAPE_PREVIEW_CHUNK_SIZE) * tick) + (j *tick);
 				float y = (((float)getHeight()) / 2.0f - (0.5f * waveHeight * 15 * converterPtr->getPreviewSample(j, i)));
 				wavePath.lineTo(x, y);
 			}
 		}
-		g.setColour(getLookAndFeel().findColour(ComboBox::buttonColourId)); // this colourID should always be the base2 color of the current lookandfeel
+		g.setColour(Colour(SoundshapeLAFs::base2ID)); // this colourID should always be the base2 color of the current lookandfeel
 		g.strokePath(wavePath, PathStrokeType(2.0f));
 	}
     

@@ -29,11 +29,11 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
+	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk, LookAndFeel * _laf);
 	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
 	void setProfileControl();
 	void setProfile();
-	//void sliderValueChanged(Slider* slider) override;
+
 
 private:
 	int first;                          // Variable to track for first harmonic value 
@@ -45,6 +45,7 @@ private:
 	double currentProfile[4000];
 	Slider::Listener* parent;			// reference to parent as a slider listener
 	Button::Listener* buttonParent;     // reference to parent as a button listener
+	LookAndFeel * laf;
 
 	// list of buttons to add frquency spikes
 	OwnedArray<TextButton> components;		

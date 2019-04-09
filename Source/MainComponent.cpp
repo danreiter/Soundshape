@@ -37,7 +37,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	//------------------------------------------------------------
 
-	//addAndMakeVisible(fWindow); // moved to bottom
 	addAndMakeVisible(sTWindow);
 	addAndMakeVisible(bTWindow);
 	addAndMakeVisible(fund);
@@ -68,10 +67,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	// Harmonic button to toggle harmonic filter for selecting 
 	harmonicButton = new TextButton("Harmonic");
 	harmonicButton->setClickingTogglesState(true);
-	//harmonicButton->setColour(TextButton::textColourOffId, Colours::white);
-	//harmonicButton->setColour(TextButton::textColourOnId, Colours::white);
-	//harmonicButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	//harmonicButton->setColour(TextButton::buttonOnColourId, Colours::orange);
     harmonicButton->setTooltip("When enabled, the harmonic setting will only allow the creation of new frequency spikes at harmonically correct frequencies");
 	harmonicButton->onClick = [this]
 	{
@@ -83,10 +78,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	// Button to add friquency spike to a frequency profile
 	addButton = new TextButton("Add");
 	addButton->setClickingTogglesState(true);
-	/*addButton->setColour(TextButton::textColourOffId, Colours::white);
-	addButton->setColour(TextButton::textColourOnId, Colours::white);
-	addButton->setColour(TextButton::buttonColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	addButton->setColour(TextButton::buttonOnColourId, Colours::orange);*/
 	addButton->addListener(this);
     addButton->setTooltip("Allows the creation of a frequency spike at any available frequency");
 	addButton->onClick = [this]
@@ -104,7 +95,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 	// Zoom slider to zoom in and out of frequncy window
 	zoomSlider = new Slider(Slider::IncDecButtons, Slider::TextBoxAbove);
-	//zoomSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	zoomSlider->setRange(1.0f, 40.0f, .5);
 	zoomSlider->setValue(zoom, sendNotificationAsync);
 	zoomSlider->setTextValueSuffix(" X");
@@ -120,6 +110,17 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(keyboardComponent);
 	keyboardState.addListener(&keyboardComponent);
 
+
+
+	if (menuBarPosition != MenuBarPosition::burger)
+		sidePanel.showOrHide(false);
+
+	setAllLookAndFeels(laf, this);
+
+	loadSound();
+	addAndMakeVisible(fWindow);
+
+
 	//----------Menu settings----------------------------------
 	menuBar.reset(new MenuBarComponent(this));
 	addAndMakeVisible(menuBar.get());
@@ -127,26 +128,15 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	commandManager.registerAllCommandsForTarget(this);
 	addKeyListener(commandManager.getKeyMappings());
 	addChildComponent(menuHeader);
-
-	//addAndMakeVisible(outerCommandTarget);
+	sidePanel.setLookAndFeel(laf);
 	addAndMakeVisible(sidePanel);
-
-	if (menuBarPosition != MenuBarPosition::burger)
-		sidePanel.showOrHide(false);
-
 	menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
 	burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
 	menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
-
+	burgerMenu.setLookAndFeel(laf);
 	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
 	menuItemsChanged();
 	//------------------------------------------------------------
-
-	setAllLookAndFeels(laf, this);
-
-	loadSound();
-
-	addAndMakeVisible(fWindow);
 
 	setSize(600, 400);
 }
@@ -536,7 +526,7 @@ void MainComponent::loadSound()
 	timeSize = 10;
 	currentProfile = 0;
 
-	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile);
+	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile, laf);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
 	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, this, converterPtr);
 	volComp.setListeners(this, this);
@@ -617,12 +607,12 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 	switch (_commandID)
 	{
 		case CommandIDs::menuPositionInsideWindow:
-			_result.setInfo("Toolbar Menu", "Places the menu bar inside the application window", "Menu", 0);
+			_result.setInfo("Drop down Menu", "Places the menu bar inside the application window", "Menu", 0);
 			_result.setTicked(menuBarPosition == MenuBarPosition::window);
 			_result.addDefaultKeypress('w', ModifierKeys::shiftModifier);
 			break;
 		case CommandIDs::menuPositionBurgerMenu:
-			_result.setInfo("Sidebar Menu", "Uses a burger menu", "Menu", 0);
+			_result.setInfo("Sidebar Menu", "Uses a side bar menu", "Menu", 0);
 			_result.setTicked(menuBarPosition == MenuBarPosition::burger);
 			_result.addDefaultKeypress('b', ModifierKeys::shiftModifier);
 			break;

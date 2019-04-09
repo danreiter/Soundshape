@@ -23,12 +23,12 @@ freqDomainWin::freqDomainWin()
 	parent = NULL;
 	buttonParent = NULL;
 	size = 0;
-
 	first = -1;           
 	int temp = -1;		  
 	add = &temp;
 	harm = &temp;
-
+	laf = new CustomLookAndFeel();
+	SoundshapeLAFs::setDefaultColors(*laf);
 }
 
 
@@ -157,7 +157,7 @@ void freqDomainWin::resized()
 //==============================================================================
 //  setBase passes need references to freqDomainWin
 //==============================================================================
-void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk)
+void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk, LookAndFeel * _laf)
 {
 	harm = _harm;                // flag for harmonic correctness is on/off
 	add = _add;                  // flag for add buttons visiblity on/off
@@ -167,7 +167,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	chunk = _chunk;
 	size = _size;
 	setProfileControl();
-
+	laf = _laf;
 }
 //==============================================================================
 
@@ -185,11 +185,8 @@ void freqDomainWin::setProfileControl()
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
 		tb->setClickingTogglesState(false);
-		//tb->setColour(TextButton::textColourOnId, Colours::lightgreen);
-		//tb->setColour(TextButton::buttonColourId, Colours::lightgreen);
-		//tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
-		//tb->setColour(TextButton::textColourOffId, Colours::black);
 		tb->setVisible(false);
+		tb->setLookAndFeel(laf);
 		if (buttonParent != NULL)
 		{
 			tb->addListener(buttonParent);
@@ -263,14 +260,4 @@ void freqDomainWin::setProfile()
 	}
 	
 }
-//==============================================================================
-
-//==============================================================================
-// function sliderValueChanged updates current profile window
-//==============================================================================
-//void freqDomainWin::sliderValueChanged(Slider * slider)
-//{
-//	// on change of a frequency spike slider updates conveter with new value
-//	currentProfile[slider->getComponentID().getIntValue()] = slider->getValue();
-//}
 //==============================================================================
