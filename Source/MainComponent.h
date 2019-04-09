@@ -32,15 +32,37 @@ class keyboardWindow : public Component
 {
 	public:
 		keyboardWindow(Converter * _converter) : keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard) {
+			
 			keyboardState.addListener(_converter);
 			addAndMakeVisible(keyboardComponent);
+
 			setSize(1000, 400);
 		}
 		~keyboardWindow() {}
+
+		void mouseDown(const MouseEvent& e) override
+		{
+			dragger.startDraggingComponent(this, e);
+		}
+
+		void mouseDrag(const MouseEvent& e) override
+		{
+			// as there's no titlebar we have to manage the dragging ourselves
+			dragger.dragComponent(this, e, nullptr);
+		}
+
 		void paint(Graphics &g) override
 		{
 			g.fillAll(Colours::black);
-
+			Rectangle<float> titleArea(0, 0, getWidth(), getHeight() / 2);
+			g.setColour(Colours::white);
+			
+			//title.setText((String)"Soundshape", dontSendNotification);
+			//g.setJustificationType(Justification::centred);
+			g.setFont(Font::bold);
+			g.setFont(Font::italic);
+			g.setFont((getHeight() / 2) * .8);
+			g.drawText("Soundshape", titleArea, Justification::centred, true);
 			keyboardComponent.setBounds(0,getHeight()/2,getWidth(), getHeight()/2);
 			
 		}
@@ -52,7 +74,7 @@ class keyboardWindow : public Component
 	private:
 		MidiKeyboardState keyboardState;
 		MidiKeyboardComponent keyboardComponent;
-
+		ComponentDragger dragger;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(keyboardWindow)
 };
 
@@ -192,7 +214,7 @@ private:
 	std::unique_ptr<MenuBarComponent> menuBar;
 	MenuBarPosition menuBarPosition = MenuBarPosition::burger;
 
-	SidePanel sidePanel{ "Menu", 150, true };
+	SidePanel sidePanel{ "Menu", 300, true };
 
 	BurgerMenuComponent burgerMenu;
 	BurgerMenuHeader menuHeader{ sidePanel };

@@ -131,7 +131,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 	burgerMenu.setLookAndFeel(laf);
 	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
-	menuItemsChanged();
+	
 	//------------------------------------------------------------
 	setSize(600, 400);
 }
@@ -237,7 +237,7 @@ void MainComponent::setConverter(Converter *_converter) {
 //------------------------------------------------------------------------------------
 void MainComponent::paint(Graphics& g) 
 {
-
+	menuItemsChanged();
 
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(Colour(SoundshapeLAFs::background1ID));
@@ -722,7 +722,6 @@ void MainComponent::menuItemSelected(int, int)
 //-------------------------------------------------------------------------------------
 ApplicationCommandTarget * MainComponent::getNextCommandTarget()
 {
-	//return &outerCommandTarget;
 	return findFirstTargetParentComponent();
 }
 //-------------------------------------------------------------------------------------
@@ -884,8 +883,8 @@ void MainComponent::setTheme(CommandID newTheme)
 	{
 		currentTheme = newTheme;
 		
-		if (menuBarPosition != MenuBarPosition::burger)
-			sidePanel.showOrHide(false);
+		
+		sidePanel.showOrHide(false);
 
 		menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
 		burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
@@ -895,6 +894,8 @@ void MainComponent::setTheme(CommandID newTheme)
 		menuItemsChanged();
 
 		repaint();
+		if (menuBarPosition == MenuBarPosition::burger)
+			sidePanel.showOrHide(true);
 	}
 }
 
