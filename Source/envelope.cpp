@@ -41,8 +41,8 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 	//Attack->setRange(0, 100, 1.0);
 	Attack->setComponentID((String)ENVELOPE_ATTACK);
 	Attack->setSliderStyle(Slider::LinearVertical);
-	Attack->setColour(Slider::trackColourId, Colours::orange);
-	Attack->setColour(Slider::thumbColourId, Colours::orange);
+	//Attack->setColour(Slider::trackColourId, Colours::orange);
+	//Attack->setColour(Slider::thumbColourId, Colours::orange);
 	Attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Attack->setTextValueSuffix("Attack");
     Attack->setTooltip("Controls how fast the sound reaches its max volume");
@@ -51,8 +51,8 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 	//Decay->setRange(0, 100, 1.0);
 	Decay->setComponentID((String)ENVELOPE_DECAY);
 	Decay->setSliderStyle(Slider::LinearVertical);
-	Decay->setColour(Slider::trackColourId, Colours::orange);
-	Decay->setColour(Slider::thumbColourId, Colours::orange);
+	//Decay->setColour(Slider::trackColourId, Colours::orange);
+	//Decay->setColour(Slider::thumbColourId, Colours::orange);
 	Decay->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Decay->setTextValueSuffix("Decay");
     Decay->setTooltip("Controls how fast the sound goes from max volume to sustain volume");
@@ -61,8 +61,8 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 	//Sustain->setRange(0, 100, 1.0);
 	Sustain->setComponentID((String)ENVELOPE_SUSTAIN);
 	Sustain->setSliderStyle(Slider::LinearVertical);
-	Sustain->setColour(Slider::trackColourId, Colours::orange);
-	Sustain->setColour(Slider::thumbColourId, Colours::orange);
+	//Sustain->setColour(Slider::trackColourId, Colours::orange);
+	//Sustain->setColour(Slider::thumbColourId, Colours::orange);
 	Sustain->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Sustain->setTextValueSuffix("Sustain");
     Sustain->setTooltip("Controls the volume of the sound while a note is held");
@@ -71,8 +71,8 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 	//Release->setRange(0, 100, 1.0);
 	Release->setComponentID((String)ENVELOPE_RELEASE);
 	Release->setSliderStyle(Slider::LinearVertical);
-	Release->setColour(Slider::trackColourId, Colours::orange);
-	Release->setColour(Slider::thumbColourId, Colours::orange);
+	//Release->setColour(Slider::trackColourId, Colours::orange);
+	//Release->setColour(Slider::thumbColourId, Colours::orange);
 	Release->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Release->setTextValueSuffix("Release-");
     Release->setTooltip("Controls how fast the sound fades out when a note is released");
@@ -93,11 +93,11 @@ void envelope::paint (Graphics& g)
        drawing code..
     */
 
-	g.fillAll(Colours::darkgrey);
-    g.setColour (Colours::black);
+	g.fillAll(Colour(SoundshapeLAFs::base2ID)); // background
+    g.setColour (Colour(SoundshapeLAFs::base1textID)); // outline
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-    g.setColour (Colours::white);
-    g.setFont (getHeight() * .15f);
+    g.setColour (Colour(SoundshapeLAFs::base2textID)); // axes and lettering
+    g.setFont (getHeight() * .12f);
     g.drawText ("ADSR Envelope", getLocalBounds(), Justification::centredTop, true);   // draw some placeholder text
 	auto area = getLocalBounds().removeFromLeft(getWidth()/5);
 	float margin = area.getHeight() * .15f;
@@ -106,7 +106,7 @@ void envelope::paint (Graphics& g)
 	Line<float> l3(area.getWidth() * .2f, area.getHeight() - margin, area.getWidth() * .8f, area.getHeight() - margin);
 
 	// draws scale 
-	area.reduce(0.0f, area.getHeight() * .08f);
+	area.reduce(0.0f, area.getHeight() * .05f);
 	g.setFont(getHeight() *.08f);
 	g.drawText("Max", area, Justification::centredTop, true);
 	g.drawText("Min", area, Justification::centredBottom, true);

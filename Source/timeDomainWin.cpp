@@ -91,7 +91,7 @@ void timeDomainWin::paint (Graphics& g)
 				wavePath.lineTo(x, y);
 			}
 		}
-		g.setColour(getLookAndFeel().findColour(Slider::thumbColourId));
+		g.setColour(getLookAndFeel().findColour(ComboBox::buttonColourId)); // this colourID should always be the base2 color of the current lookandfeel
 		g.strokePath(wavePath, PathStrokeType(2.0f));
 	}
     

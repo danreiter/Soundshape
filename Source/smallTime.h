@@ -14,6 +14,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "timeDomainWin.h"
+#include "laf.h"
 
 #define PROFILE_SELECT_BUTTON 5001
 

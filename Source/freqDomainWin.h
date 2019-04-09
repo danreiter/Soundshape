@@ -14,6 +14,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Converter.h"
+#include "laf.h"
 
 #define FREQ_DOMAIN 3000
 

@@ -60,8 +60,8 @@ void FeqWindow::paint(Graphics& g)
 	   You should replace everything in this method with your own
 	   drawing code..
 	*/
-	// default widow settings
-	g.setColour(Colours::white);
+	// default window settings
+	g.setColour(Colour(SoundshapeLAFs::base2textID));
 	g.setFont(14.0f);
 	g.drawText("viewWindow", getLocalBounds(),
 		Justification::centred, true);   // draw some placeholder text
@@ -71,7 +71,7 @@ void FeqWindow::paint(Graphics& g)
 	view.setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 	
 	// draw outline around window
-	g.setColour(Colours::black);
+	g.setColour(Colour(SoundshapeLAFs::base1textID));
 	g.drawLine(0.0f, getHeight() - view.getScrollBarThickness(), getWidth(), getHeight() - view.getScrollBarThickness());
 	g.drawRect(getLocalBounds(), 1);
 
