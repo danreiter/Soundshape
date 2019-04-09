@@ -560,12 +560,13 @@ bool MainComponent::saveAs()
 	{
 		File tempFile = chooser.getResult();
 		String fileName = tempFile.getFileName();
-		if (pushedWriteBtn)
-		{
-			selectedFile = tempFile;
-		}
 		if (fileName.endsWith((String) ".xml"))
 		{
+			if (pushedWriteBtn)
+			{
+				selectedFile = tempFile;
+			}
+
 			//save file
 			String docString = IOHandler::createStateDocument(IOHandler::createStateXML(*converterPtr, valueTreeState));
 			IOHandler::writeStateXMLFile(tempFile, docString);
@@ -584,7 +585,17 @@ bool MainComponent::saveAs()
 				if (selectedFile == tempFile)
 				{
 					presetPath == tempFile.getParentDirectory();
-					loadPresetPath();
+					cb.clear();
+					cb.addItem("New Sound", 1);
+					DirectoryIterator iter(presetPath, false, "*.xml");
+					int i = 2;
+					while (iter.next())
+					{
+						File nextSound(iter.getFile());
+						pushedWriteBtn = true;
+						cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
+						i++;
+					}
 					pushedWriteBtn = true;
 					cb.setText(fileName.dropLastCharacters(4));
 				}
