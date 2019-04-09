@@ -584,7 +584,7 @@ bool MainComponent::saveAs()
 			{
 				if (selectedFile == tempFile)
 				{
-					presetPath == tempFile.getParentDirectory();
+					presetPath = tempFile.getParentDirectory();
 					cb.clear();
 					cb.addItem("New Sound", 1);
 					DirectoryIterator iter(presetPath, false, "*.xml");
