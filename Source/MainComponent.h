@@ -19,6 +19,7 @@
 #include "envelope.h"
 #include "Converter.h"
 #include "PluginProcessor.h"
+#include "IOHandler.h"
 
 #define WRITE_BUTTON 2008
 

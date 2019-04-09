@@ -437,25 +437,27 @@ void MainComponent::buttonClicked(Button* button)
 	// add Button hides and shows buttons to add frequency spikes 
 	if (button->getComponentID() == writeButton->getComponentID())
 	{
+		pushedWriteBtn = true;
 		if (selectedFile == newFile)
 		{
 			saveAs();
-			cb.setSelectedItemIndex(cb.getNumItems()-1);
+	/*		cb.setSelectedItemIndex(cb.getNumItems()-1);
 			String fileName = cb.getText();
-			fileName.append((String)"xml", 4);
-			selectedFile = File(presetPath.getChildFile(fileName));
+			fileName.append((String)".xml", 4);
+			selectedFile = File(presetPath.getChildFile(fileName));*/
+
 		}
 		else
 		{
 			promptSaveOptions();
-			if (newSave)
-			{
-				cb.setSelectedItemIndex(cb.getNumItems() - 1);
-				String fileName = cb.getText(); 
-				fileName.append((String)"xml", 4);
-				selectedFile = File(presetPath.getChildFile(fileName));
-				newSave = false;
-			}
+			//if (newSave)
+			//{
+			//	cb.setSelectedItemIndex(cb.getNumItems() - 1);
+			//	String fileName = cb.getText(); 
+			//	fileName.append((String)".xml", 4);
+			//	selectedFile = File(presetPath.getChildFile(fileName));
+			//	newSave = false;
+			//}
 		}
 		repaint();
 	}
@@ -519,10 +521,17 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 		else
 		{
 			saveFilePrompt();
-			String fileName = cb.getText();
-			fileName.append((String)"xml", 4);
-			selectedFile = File(presetPath.getChildFile(fileName));
-			// loadFile();
+			if (cb.getSelectedItemIndex() == 0)
+			{
+				selectedFile = newFile;
+			}
+			else
+			{
+				String fileName = cb.getText();
+				fileName.append((String)".xml", 4);
+				selectedFile = File(presetPath.getChildFile(fileName));
+			}
+			loadFile();
 		}
 
 	};
@@ -535,6 +544,8 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 bool MainComponent::save()
 {
 	// selectedFile is the full path to the current sound
+	String docString = IOHandler::createStateDocument(IOHandler::createStateXML(*converterPtr, valueTreeState));
+	IOHandler::writeStateXMLFile(selectedFile, docString);
 	return false;
 }
 //-------------------------------------------------------------------------------------
@@ -548,11 +559,36 @@ bool MainComponent::saveAs()
 	if (chooser.browseForFileToSave(true))
 	{
 		File tempFile = chooser.getResult();
-		String testString = tempFile.getFileName();
-		if (testString.endsWith((String) ".xml"))
+		String fileName = tempFile.getFileName();
+		if (pushedWriteBtn)
+		{
+			selectedFile = tempFile;
+		}
+		if (fileName.endsWith((String) ".xml"))
 		{
 			//save file
-			cb.addItem(testString.dropLastCharacters(4), cb.getNumItems() + 1);
+			String docString = IOHandler::createStateDocument(IOHandler::createStateXML(*converterPtr, valueTreeState));
+			IOHandler::writeStateXMLFile(tempFile, docString);
+			if (presetPath == tempFile.getParentDirectory())
+			{	 
+					pushedWriteBtn = true;
+					cb.addItem(fileName.dropLastCharacters(4), cb.getNumItems() + 1);
+					if (selectedFile == tempFile)
+					{
+						pushedWriteBtn = true;
+						cb.setSelectedItemIndex(cb.getNumItems() - 1);
+					}
+			}
+			else
+			{
+				if (selectedFile == tempFile)
+				{
+					presetPath == tempFile.getParentDirectory();
+					loadPresetPath();
+					pushedWriteBtn = true;
+					cb.setText(fileName.dropLastCharacters(4));
+				}
+			}
 		}
 
 	}
@@ -578,17 +614,19 @@ void MainComponent::loadFile()
 
 	// load file from selectedFile
 	// call load sound or other function to up
-	/*
-		file handling here
-		if(selectedFile == newFile)
-		{
-			load 0 profile
-		}
-		else
-		{
-			load selectedFile
-		}
-	*/
+	
+	//file handling here
+	XmlElement* stateXml = XmlDocument::parse(selectedFile);
+	if (stateXml != nullptr) {
+		IOHandler::restoreStateFromXml(valueTreeState, *converterPtr, stateXml);
+	}
+	else
+	{
+		pushedWriteBtn = true;
+		cb.setSelectedItemIndex(0);
+		selectedFile = newFile;
+	}
+		
 	//do After file load
 	fWindow.setProfile();
 	repaint();
@@ -879,17 +917,18 @@ void MainComponent::loadPresetPath()
 {
 	cb.clear();
 	cb.addItem("New Sound", 1);
-	pushedWriteBtn = true;
+
 	DirectoryIterator iter(presetPath, false, "*.xml");
 	int i = 2;
 	while(iter.next())
 	{
 		File nextSound(iter.getFile());
-
+		pushedWriteBtn = true;
 		cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
 		i++;
 	}
 	selectedFile = newFile;
+	pushedWriteBtn = true;
 	cb.setSelectedItemIndex(0);
 }
 //-------------------------------------------------------------------------------------
