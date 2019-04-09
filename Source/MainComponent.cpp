@@ -526,7 +526,7 @@ void MainComponent::loadSound()
 	timeSize = 10;
 	currentProfile = 0;
 
-	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile);
+	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile, laf);
 	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
 	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, this, converterPtr);
 	volComp.setListeners(this, this);
@@ -607,12 +607,12 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 	switch (_commandID)
 	{
 		case CommandIDs::menuPositionInsideWindow:
-			_result.setInfo("Toolbar Menu", "Places the menu bar inside the application window", "Menu", 0);
+			_result.setInfo("Drop down Menu", "Places the menu bar inside the application window", "Menu", 0);
 			_result.setTicked(menuBarPosition == MenuBarPosition::window);
 			_result.addDefaultKeypress('w', ModifierKeys::shiftModifier);
 			break;
 		case CommandIDs::menuPositionBurgerMenu:
-			_result.setInfo("Sidebar Menu", "Uses a burger menu", "Menu", 0);
+			_result.setInfo("Sidebar Menu", "Uses a side bar menu", "Menu", 0);
 			_result.setTicked(menuBarPosition == MenuBarPosition::burger);
 			_result.addDefaultKeypress('b', ModifierKeys::shiftModifier);
 			break;
