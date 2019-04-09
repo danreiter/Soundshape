@@ -477,18 +477,7 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 {
 	if(comboBoxThatHasChanged->getComponentID() == cb.getComponentID())
 	{
-		if (comboBoxThatHasChanged->getSelectedItemIndex() == 0)
-		{
-			selectedFile = newFile;
-		}
-		else
-		{
 			saveFilePrompt();
-			String fileName = comboBoxThatHasChanged->getText();
-			fileName.append(String(".txt"), 4);
-			selectedFile = File(presetPath.getChildFile(fileName));
-			int i = 1;
-		}
 	};
 }
 //-------------------------------------------------------------------------------------
@@ -508,11 +497,49 @@ bool MainComponent::save()
 //-------------------------------------------------------------------------------------
 bool MainComponent::saveAs()
 {
-	// get user input for file name
-	// write xml file to presetPath
-	// new file to comboBox 'cb'
+	FileChooser chooser("Save As File Name", presetPath, ".xml");
+	if (chooser.browseForFileToSave(true))
+	{
+
+		// write xml file to presetPath
+		// new file to comboBox 'cb'
+	}
 	// set index of comboBox to new file name
 	return false;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function saveAs is for saving new sounds
+//-------------------------------------------------------------------------------------
+void MainComponent::loadFile()
+{
+
+	
+	timeBlock = 0;
+	selectedProfile = 0;
+	timeSize = 10;
+	currentProfile = 0;
+	add = -1;
+	harm = -1;
+	zoom = 1.0;
+
+	// load file from selectedFile
+	// call load sound or other function to up
+	/*
+		file handling here
+		if(selectedFile == newFile)
+		{
+			load 0 profile
+		}
+		else
+		{
+			load selectedFile
+		}
+	*/
+	//do After file load
+	fWindow.setProfile();
+	repaint();
 }
 //-------------------------------------------------------------------------------------
 
@@ -747,7 +774,7 @@ void MainComponent::setMenuBarPosition(MenuBarPosition newPosition)
 //-------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------
-// Function setMenuBarPosition
+// Function setTheme
 //-------------------------------------------------------------------------------------
 void MainComponent::setTheme(CommandID newTheme)
 {

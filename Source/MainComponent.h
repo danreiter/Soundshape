@@ -112,6 +112,7 @@ public:
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
 	bool save();
 	bool saveAs();
+	void loadFile();
 
 	
 
