@@ -216,12 +216,12 @@ fundFreq::fundFreq()
 	fundFreqSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	fundFreqSlider->setRange(0.0f, 12.0f, 1.0);
 	fundFreqSlider->setValue(num, sendNotificationAsync);
+	fundFreqSlider->setTooltip("Set the fundamental frequency.");
 	fundFreqSlider->onValueChange = [this] 
 	{
 		num = fundFreqSlider->getValue();
 		num = num % 12;
 		fundFreqSlider->setValue(num, sendNotificationAsync);
-	upBtn->setTooltip("Cycles up the list of keys");
 		updateText();
 	};
 

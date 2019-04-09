@@ -42,8 +42,6 @@ bigTime::bigTime(AudioProcessorValueTreeState& _valueStateTree)
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
 	playTime->setRange(0, 50, 1);
 	playTime->setMinAndMaxValues(0, 50);
-    //playTime->setColour(Slider::trackColourId, Colours::red);
-    //playTime->setColour(Slider::thumbColourId, Colours::red);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	playTime->setTooltip("Controls how much of the sound is played when the Play Button is pressed");
 
@@ -54,15 +52,6 @@ bigTime::bigTime(AudioProcessorValueTreeState& _valueStateTree)
 		tb->setRadioGroupId(TIME_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
-		//tb->setColour(TextButton::textColourOffId, Colours::black);
-		//tb->setColour(TextButton::textColourOnId, Colours::black);
-		//tb->setColour(TextButton::buttonColourId, Colours::orange);
-		//tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		//tb->onStateChange = [this]
-		//{
-		//	auto * focused = Component::getCurrentlyFocusedComponent();
-		//	*xPoint = focused->getComponentID().getIntValue();
-		//};
 	}
 
     // hook up as a listener for changes to the play slider
@@ -85,10 +74,10 @@ void bigTime::paint(Graphics& g)
 	int btnWidth = (int)(getWidth() / (*time));
 
 	Rectangle<float> BackGround(0, 0, 10 * btnWidth, getHeight());
-	g.setColour(Colours::burlywood);
+	g.setColour(Colour(SoundshapeLAFs::base1ID));
 	g.fillRect(BackGround);
 
-	g.fillAll(Colour(SoundshapeLAFs::base1ID));
+
 	// Fills background color of selected time domain
 	g.setColour(Colour(SoundshapeLAFs::background2ID));
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
@@ -103,7 +92,7 @@ void bigTime::paint(Graphics& g)
 	}
 
 	// Set bounds and location for the play time slider
-    g.setColour(Colour(SoundshapeLAFs::background1ID));
+    //g.setColour(Colour(SoundshapeLAFs::background1ID));
     playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
 
 }

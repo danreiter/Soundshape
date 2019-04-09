@@ -185,10 +185,6 @@ void freqDomainWin::setProfileControl()
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
 		tb->setClickingTogglesState(false);
-		//tb->setColour(TextButton::textColourOnId, Colours::lightgreen);
-		//tb->setColour(TextButton::buttonColourId, Colours::lightgreen);
-		//tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
-		//tb->setColour(TextButton::textColourOffId, Colours::black);
 		tb->setVisible(false);
 		if (buttonParent != NULL)
 		{
