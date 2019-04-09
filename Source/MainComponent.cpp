@@ -856,7 +856,7 @@ void MainComponent::loadPresetPath()
 	cb.clear();
 	cb.addItem("New Sound", 1);
 	pushedWriteBtn = true;
-	DirectoryIterator iter(presetPath, false, "*.txt");
+	DirectoryIterator iter(presetPath, false, "*.xml");
 	int i = 2;
 	while(iter.next())
 	{
