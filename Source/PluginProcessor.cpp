@@ -166,17 +166,14 @@ void Soundshape_pluginAudioProcessor::panic()
 
     // TEMPORARY testing xml
     // *********************
-    auto state = valueTreeState.copyState();
-    std::unique_ptr<XmlElement> xml(state.createXml());
-    XmlElement *profileXML = IOHandler::createProfileXML(converter);
-    xml->addChildElement(profileXML);
-    String docString = xml->createDocument("");
+
+    String docString = IOHandler::createStateDocument(IOHandler::createStateXML(converter, valueTreeState));
     File f(File::getCurrentWorkingDirectory().getChildFile("test.xml"));
-    FileOutputStream ostream(f);
-    if (ostream.openedOk()) {
-        ostream.setPosition(0);
-        ostream.truncate();
-        ostream.writeText(docString,false,false,nullptr);
+    IOHandler::writeStateXMLFile(f, docString);
+    // Code for loading state from XML
+    XmlElement* stateXml = XmlDocument::parse(f);
+    if (stateXml != nullptr) {
+        IOHandler::restoreStateFromXml(valueTreeState, converter, stateXml);
     }
     // ****************************
 }
@@ -287,7 +284,13 @@ void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData
 
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    // reading a preset from the host
 
+    XmlElement* xmlState = getXmlFromBinary(data, sizeInBytes);
+    if (xmlState != nullptr) {
+        // this method handles deleting the xmlState for us.
+        IOHandler::restoreStateFromXml(valueTreeState, converter, xmlState);
+    }
 }
 
 //==============================================================================
