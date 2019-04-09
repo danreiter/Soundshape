@@ -81,10 +81,11 @@ void Converter::addShiftedProfiles(int chunk)
             float velocityScale = noteVelocities[i] / 127; // TODO : or get velocity form sustained note
             float noteFreq = (float)MidiMessage::getMidiNoteInHertz(i);
             float ratio = noteFreq / referenceFrequency;
-            
+
             for (int j = 0; j < SOUNDSHAPE_CHUNK_SIZE; j++) {
                 if (profile[j].r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
-                    float targetFreq = binToFreq(j, sampleRate) * ratio;
+                    // OLD : float targetFreq = binToFreq(j, sampleRate) * ratio;
+                    float targetFreq = j* ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
                         int bin = freqToBin(targetFreq, sampleRate);
                         shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;// *velocityScale;
@@ -93,6 +94,15 @@ void Converter::addShiftedProfiles(int chunk)
             }
         }
     }
+}
+
+// The sample rate is set when the plugin becomes ready-to-play
+void Converter::setSampleRate(double _sampleRate)
+{
+    // we also need to inform the envelope
+    envelope.adsrEnvelope.setSampleRate(_sampleRate);
+    double oldSampleRate = sampleRate;
+    sampleRate = _sampleRate; // new value for sample rate
 }
 
 void Converter::renderPreview(int chunk)
@@ -227,42 +237,6 @@ void Converter::parameterChanged(const String & parameterID, float newValue)
 }
 
 
-// The sample rate is set when the plugin becomes ready-to-play
-void Converter::setSampleRate(double _sampleRate)
-{
-    double oldSampleRate = sampleRate;
-    sampleRate = _sampleRate; // new value for sample rate
-
-    // the internal profile data structure needs to be completely remade when
-    // the sample rate changes.
-    // The current profile data structure needs to be zero'd out, and
-    // replaced with a new version of its old self with spikes' locations shifted.
-
-    for (int i = 0; i < profile.size(); i++) {
-        tempProfile[i] = profile[i];
-        profile[i] = { 0,0 };
-    }
-
-    for (int chunk = 0; chunk < SOUNDSHAPE_PROFILE_ROWS; chunk++) {
-        for (int sourceBin = 0; sourceBin < SOUNDSHAPE_CHUNK_SIZE; sourceBin++) {
-            // recopy frequency spikes from the old profile, putting them in the correct bins (by using the old sample rate)
-            size_t sourceRawIndex = chunk * SOUNDSHAPE_CHUNK_SIZE + sourceBin;
-            int destinationBin = freqToBin(binToFreq(sourceBin, oldSampleRate), sampleRate);
-            size_t destinationRawIndex = chunk * SOUNDSHAPE_CHUNK_SIZE + destinationBin;
-            if (destinationBin < SOUNDSHAPE_CHUNK_SIZE / 2) {
-                profile[destinationRawIndex] = tempProfile[sourceRawIndex];
-            }
-
-            // cleanup temporary structure for future use
-            tempProfile[sourceRawIndex] = { 0,0 };
-        }
-    }
-
-    // we also need to inform the envelope
-    envelope.adsrEnvelope.setSampleRate(_sampleRate);
-
-}
-
 double Converter::getSampleRate()
 {
     return sampleRate;
@@ -279,11 +253,13 @@ void Converter::updateFrequencyValue(int chunk, int freq, float value)
     if (freq > sampleRate / 2 - 1) {
         return; // do nothing
     }
-    setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
+    // OLD : setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
+    setProfileRawPoint(chunk, freq, value);
 }
 
 
 
 float Converter::getFrequencyValue(int chunk, int freq) {
-    return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
+    // OLD: return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
+    return getProfileRawPoint(chunk, freq).r;
 }

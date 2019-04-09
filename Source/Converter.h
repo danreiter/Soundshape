@@ -92,6 +92,7 @@ private:
     std::array<float, 128> sustainedNoteVelocities;
 
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
+    float referenceSampleRate = 44100.0f; // Hz. This is what the profile assumes it was derived from. Converts to actual sampler rate during synthesis
     double sampleRate;
     int samplesPlayed = 0; // keeps track of how many samples we've written to the buffer. Wraps around whene xceeds size of a profile chunk
 

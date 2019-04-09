@@ -27,13 +27,13 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                 std::make_unique<AudioParameterFloat>(
                                     "attack",
                                     "Attack",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterFloat>(
                                     "decay",
                                     "Decay",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterFloat>(
@@ -45,7 +45,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                 std::make_unique<AudioParameterFloat>(
                                     "release",
                                     "Release",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterInt>(
@@ -80,6 +80,18 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);
+
+
+    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
+    converter.setSampleRate(44100.0f);
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converter.updateFrequencyValue(i, 1 * 440, 500.0f);
+        converter.updateFrequencyValue(i, 2 * 440, 300.0f);
+        converter.updateFrequencyValue(i, 4 * 440, 200.0f);
+        converter.updateFrequencyValue(i, 6 * 440, 100.0f);
+        converter.updateFrequencyValue(i, 8 * 440, 50.0f);
+        converter.renderPreview(i);
+    }
 
     if (SOUNDSHAPE_RUN_TESTS) {
         int result = Catch::Session().run();
@@ -188,15 +200,6 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
     // between frequency values and indexes for its internal structure
     converter.setSampleRate(sampleRate);
 
-    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
-    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
-        converter.updateFrequencyValue(i, 1 * 440, 500.0f);
-        converter.updateFrequencyValue(i, 2 * 440, 300.0f);
-        converter.updateFrequencyValue(i, 4 * 440, 200.0f);
-        converter.updateFrequencyValue(i, 6 * 440, 100.0f);
-        converter.updateFrequencyValue(i, 8 * 440, 50.0f);
-        converter.renderPreview(i);
-    }
 }
 
 void Soundshape_pluginAudioProcessor::releaseResources()
