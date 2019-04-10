@@ -451,12 +451,14 @@ void MainComponent::buttonClicked(Button* button)
 	if (button->getComponentID().getIntValue() == EXPORT_BUTTON)
 	{
 		// need back end call for export
+		importFile();
 	}
 
 	// Import button
 	if (button->getComponentID().getIntValue() == IMPORT_BUTTON)
 	{
 		// need back end call for export
+		exportFile();
 	}
 
 	// Panic button
@@ -522,7 +524,7 @@ bool MainComponent::save()
 //-------------------------------------------------------------------------------------
 bool MainComponent::saveAs()
 {
-	FileChooser chooser("Save As File Name", presetPath, ".xml");
+	FileChooser chooser("Save As File Name", presetPath, "*.xml");
 	if (chooser.browseForFileToSave(true))
 	{
 		File tempFile = chooser.getResult();
@@ -608,6 +610,36 @@ void MainComponent::loadFile()
 	//do After file load
 	fWindow.setProfile();
 	repaint();
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function importFile
+//-------------------------------------------------------------------------------------
+void MainComponent::importFile()
+{
+	FileChooser chooser("Please select file to import.", presetPath, "*.wav|*.flac|*.ogg");
+	if (chooser.browseForFileToOpen())
+	{
+		File import = chooser.getResult();
+
+		//do import stuff here
+	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function exportFile
+//-------------------------------------------------------------------------------------
+void MainComponent::exportFile()
+{
+	FileChooser chooser("Please select file to import.", presetPath, "*.wav|*.flac|*.ogg");
+	if (chooser.browseForFileToSave(true))
+	{
+		File import = chooser.getResult();
+
+		//do export stuff here
+	}
 }
 //-------------------------------------------------------------------------------------
 

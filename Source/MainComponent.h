@@ -116,6 +116,8 @@ public:
 	bool save();
 	bool saveAs();
 	void loadFile();
+	void importFile();
+	void exportFile();
 	void showKey(bool vis);
 
 	
