@@ -29,6 +29,7 @@ freqDomainWin::freqDomainWin()
 	harm = &temp;
 	laf = new CustomLookAndFeel();
 	SoundshapeLAFs::setDefaultColors(*laf);
+
 }
 
 
@@ -168,6 +169,7 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	size = _size;
 	setProfileControl();
 	laf = _laf;
+
 }
 //==============================================================================
 

@@ -39,7 +39,8 @@ void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener
 {
 	view.getHorizontalScrollBar().setLookAndFeel(_laf);
 	zoom = _zoom;                                                   // pass reference to zoom
-	base.setBase(_harm, _add, _parent, _bParent, _profile, _size, _chunk, _laf);  // passes referneces to frequency domain component
+	base.setBase(_harm, _add, _parent, _bParent, _profile, _size, _chunk, _laf);
+	view.getHorizontalScrollBar().setLookAndFeel(_laf); // passes referneces to frequency domain component
 }
 //==============================================================================
 

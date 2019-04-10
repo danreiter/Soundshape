@@ -40,7 +40,7 @@ void SoundshapeLAFs::setDefaultColors(LookAndFeel& laf) // there will be one of 
 	laf.setColour(TextButton::buttonOnColourId, base2);
 	laf.setColour(TextButton::textColourOnId, base2text);
 
-	laf.setColour(ComboBox::backgroundColourId, Colours::peachpuff);
+	laf.setColour(ComboBox::backgroundColourId, Colours::peachpuff); // change
 	laf.setColour(ComboBox::textColourId, base1text);
 	laf.setColour(ComboBox::arrowColourId, base1text);
 	laf.setColour(ComboBox::buttonColourId, base2);
