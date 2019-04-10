@@ -33,7 +33,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 
 	//------Passing references to child components----------------
-	//loadSound(); moved to bottom
+
 
 	//------------------------------------------------------------
 
@@ -140,7 +140,7 @@ void MainComponent::showKey(bool vis)
 {
 	if (vis)
 	{
-		keyboardWindow *keyboard = new keyboardWindow(converterPtr);
+		keyboardPopup *keyboard = new keyboardPopup(converterPtr);
 		keyboard->addToDesktop(ComponentPeer::windowIsTemporary);
 		midiKeyboard = keyboard;
 		Rectangle<int> area(0, 0, 600, 100);

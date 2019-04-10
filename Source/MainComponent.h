@@ -20,65 +20,10 @@
 #include "Converter.h"
 #include "PluginProcessor.h"
 #include "IOHandler.h"
+#include "keyboardPopup.h"
 
 #define WRITE_BUTTON 2008
 
-//==============================================================================
-/*
-	Struct for Keyboard exparament
-*/
-//==============================================================================
-class keyboardWindow : public Component 
-{
-	public:
-		keyboardWindow(Converter * _converter) : keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard) {
-			
-			keyboardState.addListener(_converter);
-			addAndMakeVisible(keyboardComponent);
-
-			setSize(1000, 400);
-		}
-		~keyboardWindow() {}
-
-		void mouseDown(const MouseEvent& e) override
-		{
-			dragger.startDraggingComponent(this, e);
-		}
-
-		void mouseDrag(const MouseEvent& e) override
-		{
-			// as there's no titlebar we have to manage the dragging ourselves
-			dragger.dragComponent(this, e, nullptr);
-		}
-
-		void paint(Graphics &g) override
-		{
-			g.fillAll(Colours::black);
-			Rectangle<float> titleArea(0, 0, getWidth(), getHeight() / 2);
-			g.setColour(Colours::white);
-			
-			//title.setText((String)"Soundshape", dontSendNotification);
-			//g.setJustificationType(Justification::centred);
-			g.setFont(Font::bold);
-			g.setFont(Font::italic);
-			g.setFont((getHeight() / 2) * .8);
-			g.drawText("Soundshape", titleArea, Justification::centred, true);
-			keyboardComponent.setBounds(0,getHeight()/2,getWidth(), getHeight()/2);
-			
-		}
-		void setConverter(Converter* _converter) {
-			
-		}
-
-
-	private:
-		MidiKeyboardState keyboardState;
-		MidiKeyboardComponent keyboardComponent;
-		ComponentDragger dragger;
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(keyboardWindow)
-};
-
-//==============================================================================
 //==============================================================================
 /*
 	Struct for burger Menu component
@@ -195,9 +140,6 @@ private:
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	
-	//MidiKeyboardState keyboardState;           
-	//MidiKeyboardComponent keyboardComponent;
-	//keyboardWindow *midiKeyboard;
 	Component::SafePointer<Component> midiKeyboard;
 
 	// Varible for notes in hz
