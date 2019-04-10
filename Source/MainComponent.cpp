@@ -360,7 +360,28 @@ void MainComponent::sliderValueChanged(Slider * slider)
 
 	repaint();
 }
+
 //-------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------
+// Function listensfor buttons to gget hovered, pressed, or released
+//------------------------------------------------------------------------------------
+void MainComponent::buttonStateChanged(Button * button)
+{
+    // Play button
+    if (button->getComponentID().getIntValue() == PLAY_BUTTON)
+    {
+        if (button->getState() == Button::buttonDown) {
+            processor.playFreq(16.0f * notes[fund.getNote()]);
+        }
+        else {
+            processor.panic();
+        }
+    }
+}
+//-------------------------------------------------------------------------------------
+
+
 
 //-------------------------------------------------------------------------------------
 // Function listens to buttons of child components
@@ -412,12 +433,6 @@ void MainComponent::buttonClicked(Button* button)
 			promptSaveOptions();
 		}
 		repaint();
-	}
-
-	// Play button
-	if (button->getComponentID().getIntValue() == PLAY_BUTTON)
-	{
-		
 	}
 
 	// Sustained Play button
