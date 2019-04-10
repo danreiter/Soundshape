@@ -165,22 +165,7 @@ void Soundshape_pluginAudioProcessor::changeProgramName (int index, const String
 
 void Soundshape_pluginAudioProcessor::panic()
 {
-    for (int i = 0; i < 16; i++) {
-        keyState.allNotesOff(i);
-    }
-
-    // TEMPORARY testing xml
-    // *********************
-
-    String docString = IOHandler::createStateDocument(IOHandler::createStateXML(converter, valueTreeState));
-    File f(File::getCurrentWorkingDirectory().getChildFile("test.xml"));
-    IOHandler::writeStateXMLFile(f, docString);
-    // Code for loading state from XML
-    XmlElement* stateXml = XmlDocument::parse(f);
-    if (stateXml != nullptr) {
-        IOHandler::restoreStateFromXml(valueTreeState, converter, stateXml);
-    }
-    // ****************************
+    converter.panic();
 }
 
 void Soundshape_pluginAudioProcessor::playFreq(float freq)

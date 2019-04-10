@@ -66,6 +66,11 @@ public:
     */
     void envelopeListenTo(String paramName, AudioProcessorValueTreeState& valueTreeState);
 
+    /**
+    Moves the sustain pedal up and makes all notes' envelopes be reset. This is used to cut off ALL current noise.
+    */
+    void panic();
+
 private:
 
     int freqToBin(int freq, double rate);

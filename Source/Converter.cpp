@@ -217,6 +217,14 @@ void Converter::envelopeListenTo(String paramName, AudioProcessorValueTreeState 
     }
 }
 
+void Converter::panic()
+{
+    sustainPressed = false;
+    for (int i = 0; i < 128; i++) {
+        noteStates[i].adsrEnvelope.noteOff();
+    }
+}
+
 int Converter::freqToBin(int freq, double rate) {
     double ratio = (double)(SOUNDSHAPE_CHUNK_SIZE * freq) / rate;
     int result = (int)std::round(ratio);
