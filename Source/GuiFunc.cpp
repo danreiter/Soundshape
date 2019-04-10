@@ -93,7 +93,6 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	// add play button
 	playBtn = new TextButton("Play");
 	playBtn->setComponentID((String)PLAY_BUTTON);
-	playBtn->setClickingTogglesState(false);
 	playBtn->setTooltip("Plays the sound once"); // is this right?
 
 	// add sustained play button

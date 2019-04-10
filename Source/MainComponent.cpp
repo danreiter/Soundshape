@@ -357,42 +357,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 		repaint();
 	}
 
-	// on change update volume settings
-	if (slider->getComponentID().getIntValue() == VOLUME_SLIDER)
-	{
-		//Needs hook up to back end
 
-	}
-
-	// on change update attack settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_ATTACK)
-	{
-		//Needs set up with back end calls
-	}
-
-	// on change update decay settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_DECAY)
-	{
-		//Needs set up with back end calls
-	}
-
-	// on change update release settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_RELEASE)
-	{
-		//Needs set up with back end calls
-	}
-
-	// on change update sustain settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_SUSTAIN)
-	{
-		//Needs set up with back end calls
-	}
-	// Funmental fruquency setting buttons
-	if (slider->getComponentID().getIntValue() == FUND_FREQ_SLIDER)
-	{
-		// need back end call for fundmental frequency
-
-	}
 	repaint();
 }
 //-------------------------------------------------------------------------------------
@@ -441,23 +406,10 @@ void MainComponent::buttonClicked(Button* button)
 		if (selectedFile == newFile)
 		{
 			saveAs();
-	/*		cb.setSelectedItemIndex(cb.getNumItems()-1);
-			String fileName = cb.getText();
-			fileName.append((String)".xml", 4);
-			selectedFile = File(presetPath.getChildFile(fileName));*/
-
 		}
 		else
 		{
 			promptSaveOptions();
-			//if (newSave)
-			//{
-			//	cb.setSelectedItemIndex(cb.getNumItems() - 1);
-			//	String fileName = cb.getText(); 
-			//	fileName.append((String)".xml", 4);
-			//	selectedFile = File(presetPath.getChildFile(fileName));
-			//	newSave = false;
-			//}
 		}
 		repaint();
 	}
@@ -465,7 +417,7 @@ void MainComponent::buttonClicked(Button* button)
 	// Play button
 	if (button->getComponentID().getIntValue() == PLAY_BUTTON)
 	{
-
+		
 	}
 
 	// Sustained Play button
