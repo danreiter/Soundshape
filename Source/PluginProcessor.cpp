@@ -67,10 +67,15 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 {
 
     // different parameters can have different objects handle the logic of them changing if necessary
-    valueTreeState.addParameterListener("attack", &converter.getEnvelope());
-    valueTreeState.addParameterListener("decay", &converter.getEnvelope());
-    valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
-    valueTreeState.addParameterListener("release", &converter.getEnvelope());
+    converter.envelopeListenTo("attack", valueTreeState);
+    converter.envelopeListenTo("decay", valueTreeState);
+    converter.envelopeListenTo("sustain", valueTreeState);
+    converter.envelopeListenTo("release", valueTreeState);
+
+    //valueTreeState.addParameterListener("attack", &converter.getEnvelope());
+    //valueTreeState.addParameterListener("decay", &converter.getEnvelope());
+    //valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
+    //valueTreeState.addParameterListener("release", &converter.getEnvelope());
     valueTreeState.addParameterListener("gain", &converter);
 
     // the beginningChunk and endingChunk parameters need 2 listeners : the converter and also the GUI.
