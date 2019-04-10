@@ -138,6 +138,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	menuItemsChanged();
 	//------------------------------------------------------------
 
+
 	setSize(600, 400);
 }
 
@@ -707,6 +708,10 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::ToolTips:
 		tips = (!tips);
+		if (!tips)
+			ttp.setMillisecondsBeforeTipAppears(1000000);
+		else
+			ttp.setMillisecondsBeforeTipAppears(700);
 		break;
 	case CommandIDs::Tutorial:
 		break;	
