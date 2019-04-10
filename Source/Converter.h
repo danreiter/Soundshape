@@ -41,17 +41,34 @@ public:
 
     void parameterChanged(const String &parameterID, float newValue) override;
 
-    // getters/setters for managin the profile
+    /**
+    Update the sample rate that audio playback is at.
+    <b> This MUST be called when the host changes its sampling rate or else output will be out-of-tune. </b>
+    */
     void setSampleRate(double _sampleRate);
+
     double getSampleRate();
+
+    /**
+    Sets the frequency profile bin of the specified chunk corresponding to the specified frequency to a value.
+    @param chunk The first index of the 2D profile array; which section of the profile you want to update.
+    @param freq The frequency in Hz that you want to update.
+    @param value the float value to change it to.
+    */
     void updateFrequencyValue(int chunk, int freq, float value);
+
+    /**
+    Get the value of a bin in a profile chunk.
+    @return the value of the bin.
+    */
     float getFrequencyValue(int chunk, int bin);
 
     /** Fill the buffer with the processed inverse discrete fourier transform of
     the data in row currentChunk of the profile, according to which keys are pressed in the
     key state.
+    @param buffer the AudioBuffer with channels to fill. If it has 2 channels, then the first is copied into the others.
     */
-    void synthesize(int currentChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState);
+    void synthesize(AudioBuffer<float>& buffer);
 
     /** 
     Tell the converter of the sustain pedal is held down or not.
@@ -93,25 +110,38 @@ private:
     float gain = 0.99;
 
     //*===================================
-    //* THESE STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE 
-    //* MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK
+    //* 
 
-    // The frequency domain profile of the current preset.
-    // Each row is the spectrum of the desired sound for a single note at the specified time.
-    // Implemented 1-dimensionally. This class's interface still treats this 2-dimensionally
-    // Data is complex
+    /**
+    The frequency domain profile of the current preset.
+    Each row is the spectrum of the desired sound for a single note at the specified time.
+    Implemented 1-dimensionally. This class's accessors still treats this 2-dimensionally.
+    Data is complex.
+    <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE
+    MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b>
+    */
     std::vector<kiss_fft_cpx> profile;
 
-    // Temporary chunks for copying/intermediate work during synthesis.
-    // These are twice as long as the actual chunks because the IFFT might need the extra samples to work
+    /**
+    Temporary chunk for copying/intermediate work during synthesis.
+    Twice as long as the actual chunks because the IFFT might need the extra samples to work
+    <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE
+    MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b>
+    */
     std::vector<kiss_fft_cpx> shiftedProfile;
+
+    /**
+    Temporary chunk for copying/intermediate work during synthesis.
+    Twice as long as the actual chunks because the IFFT might need the extra samples to work
+    <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE
+    MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b>
+    */
     std::vector<float> tempChunk;
 
-    // temporary storage of last rendered DFT for crossfading
+    /**
+    Temporary storage of last rendered DFT for crossfading.
+    */
     std::vector<float> previousDFT;
-
-    // temporary storage for data rearrangement when sample rate changes
-    std::vector<kiss_fft_cpx> tempProfile;
     
     //*======================================
 
@@ -132,22 +162,24 @@ private:
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
     float referenceSampleRate = 44100.0f; // Hz. This is what the profile assumes it was derived from. Converts to actual sampler rate during synthesis
     double sampleRate;
-    int samplesPlayed = 0; // keeps track of how many samples we've written to the buffer. Wraps around when exceeds size of a profile chunk
+
     int currentChunk = 0;
 
     AudioFormatManager formatManager;
 
-    // object for inverse FFT during synthesis
-    //dsp::FFT inverseTransform;
+    /** COnfiguration object for inverse FFT during real-time synthesis. */
     kiss_fftr_cfg inverseFFT;
 
-    // object for doing the inverse FFT when rendering previews
+    /** object for doing the inverse FFT when rendering previews */
     kiss_fftr_cfg previewInverseFFT;
 
-    // TODO : This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading)
+    /**This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading) */
     int currentIndex = 0;
 
-    // keep track of where to start and end a sound's playback
+    /** If this exceeds the samples per chunk, were done with that chunk.*/
+    int samplesWritten = 0;
+
+    /** keep track of where to start and end a sound's playback. This are manged by AudioParameters */
     int beginningChunk = 0;
     int endingChunk = 1;
 

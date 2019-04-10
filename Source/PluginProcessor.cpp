@@ -65,17 +65,12 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
     converter(valueTreeState)
 #endif
 {
-
-    // different parameters can have different objects handle the logic of them changing if necessary
+    // The converter sets up its listeners for simplicity. (It has a listener for these params on every MIDI key)
     converter.envelopeListenTo("attack", valueTreeState);
     converter.envelopeListenTo("decay", valueTreeState);
     converter.envelopeListenTo("sustain", valueTreeState);
     converter.envelopeListenTo("release", valueTreeState);
 
-    //valueTreeState.addParameterListener("attack", &converter.getEnvelope());
-    //valueTreeState.addParameterListener("decay", &converter.getEnvelope());
-    //valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
-    //valueTreeState.addParameterListener("release", &converter.getEnvelope());
     valueTreeState.addParameterListener("gain", &converter);
 
     // the beginningChunk and endingChunk parameters need 2 listeners : the converter and also the GUI.
@@ -248,15 +243,8 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear(i, 0, buffer.getNumSamples());
     }
-    // To determine the index of the appropriate chunk, we keep track of the
-    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
-    // we start keeping track of how many samples we process. Once this number exceeds
-    // the number of samples that each chunk represents, we increment the index (accounting
-    // for things like looping). If there are no notes down at the moment, then
-    // we should reset the index to the beginning of the range in the UI slider.
-    // We should also skip all DSP if there are no notes down or the number of samples to process
-    // happens to be 0.
-    converter.synthesize(currentChunk, buffer, keyState);
+
+    converter.synthesize(buffer);
 }
 
 

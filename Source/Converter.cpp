@@ -3,7 +3,6 @@
 Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : 
     valueTreeState(_valueTreeState),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
-    tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
@@ -24,10 +23,8 @@ Converter::~Converter() {
     kiss_fftr_free(previewInverseFFT);
 }
 
-void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState)
+void Converter::synthesize(AudioBuffer<float>& buffer)
 {
-    // TODO : CHANGE THIS TO INTERPOLATE BETWEEN CHUNKS WHEN IT'S TIME
-
     // fill the buffer with the transformed and processed data derived from row profileChunk of the profile
     // First make local copy so profile bins used in this method won't change during synthesis
     // copy the appropriate chunk from the converter object's profile matrix
@@ -36,10 +33,10 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     int numSamples = buffer.getNumSamples();
 
     kiss_fft_cpx zeroCpx = { 0,0 };
-    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx);
-    addShiftedProfiles(profileChunk, numSamples);
+    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx); // clear the shifted profile data
+    addShiftedProfiles(currentChunk, numSamples); //re-shift
 
-    // TODO : change this to only be computed when it NEEDS to be.
+    // perform an inverse FFT on the shifted profile. This scales according to each key's envelope state
     kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
 
     for (int i = 0; i < buffer.getNumSamples(); i++) {
@@ -53,8 +50,19 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
     }
 
     buffer.copyFrom(0,0, tempChunk.data(), numSamples); // left channel
-    // apply envelope
-    //envelope.adsrEnvelope.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
+
+    samplesWritten += numSamples;
+    if (samplesWritten > SOUNDSHAPE_CHUNK_SIZE) {
+        samplesWritten = 0;
+        currentChunk += 1;
+
+       if (currentChunk >= endingChunk || currentChunk > SOUNDSHAPE_PROFILE_ROWS) {
+            currentChunk = beginningChunk;
+       }
+    }
+
+    // reset play to beginning of section
+
     // apply gain
     buffer.applyGain(gain);
     if (buffer.getNumChannels() == 2) {
@@ -144,14 +152,6 @@ void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int mi
 
     // When a note is played on the keyboard, we need to enter the attack state of
     // that note's associated ADSR envelope.
-    //bool isTimeForAttack = true;
-    //for (int i = 0; i < 128; i++) {
-        //if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) {
-        //    isTimeForAttack = false;
-        //}
-    //}
-
-    //noteVelocities[midiNoteNumber] = velocity;
 
     noteStates[midiNoteNumber].adsrEnvelope.noteOn();
     noteStates[midiNoteNumber].sustained = false;
@@ -160,20 +160,6 @@ void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int mi
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
-    //if (sustainPressed == true) {
-    //    sustainedNoteVelocities[midiNoteNumber] = noteVelocities[midiNoteNumber];
-    //}
-    //noteVelocities[midiNoteNumber] = 0;
-    //// if no notes being sustained or currently pressed, go into release phase
-    //bool isTimeForRelease = true;
-    //for (int i = 0; i < 128; i++) {
-    //    if (sustainedNoteVelocities[i] != 0 || noteVelocities[i] != 0) {
-    //        isTimeForRelease = false;
-    //    }
-    //}
-    //if (isTimeForRelease) {
-    //    envelope.adsrEnvelope.noteOff();
-    //}
     if (sustainPressed == false) {
         noteStates[midiNoteNumber].adsrEnvelope.noteOff();
     }
@@ -186,21 +172,8 @@ void Converter::setSustain(bool sustainState)
 {
     sustainPressed = sustainState;
     if (sustainState == false) {
-        // turn off all notes that arent currently pressed,
+        // turn off all notes that aren't currently pressed,
         // and check if any notes are still pressed.
-
-
-        //bool isTimeForRelease = true;
-        //for (int i = 0; i < 128; i++) {
-        //    sustainedNoteVelocities[i] = 0.0f;
-        //    if (noteVelocities[i] != 0) {
-        //        isTimeForRelease = false;
-        //    }
-        //}
-        //if (isTimeForRelease) {
-        //    envelope.adsrEnvelope.noteOff();
-        //}
-
         for (int i = 0; i < 128; i++) {
             if (noteStates[i].sustained == true) {
                 noteStates[i].sustained = false;
@@ -284,8 +257,6 @@ void Converter::updateFrequencyValue(int chunk, int freq, float value)
     // OLD : setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
     setProfileRawPoint(chunk, freq, value);
 }
-
-
 
 float Converter::getFrequencyValue(int chunk, int freq) {
     // OLD: return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
