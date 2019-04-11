@@ -19,37 +19,51 @@ SoundshapeLAFs::SoundshapeLAFs()
 
 SoundshapeLAFs::~SoundshapeLAFs() {}
 
-void SoundshapeLAFs::setColors(LookAndFeel& laf) // there will be one of these for each theme
+void CustomLookAndFeel::initColors(Colour base1, Colour base1text, Colour base2, Colour base2text, Colour background1, Colour background2, Colour background3)
+{
+
+	setColour(SoundshapeLAFs::base1ID, base1);
+	setColour(SoundshapeLAFs::base1textID, base1text);
+	setColour(SoundshapeLAFs::base2ID, base2);
+	setColour(SoundshapeLAFs::base2textID, base2text);
+	setColour(SoundshapeLAFs::background1ID, background1);
+	setColour(SoundshapeLAFs::background2ID, background2);
+	setColour(SoundshapeLAFs::background3ID, background3);
+
+}
+
+void CustomLookAndFeel::setColors() // there will be one of these for each theme
 {// need to create an array parameter to hold the base and background colours
 
-	Colour base1 = Colour(base1ID);
-	Colour base1text = Colour(base1textID);
-	Colour base2 = Colour(base2ID);
-	Colour base2text = Colour(base2textID);
+	Colour base1 = findColour(SoundshapeLAFs::base1ID);
+	Colour base1text = findColour(SoundshapeLAFs::base1textID);
+	Colour base2 = findColour(SoundshapeLAFs::base2ID);
+	Colour base2text = findColour(SoundshapeLAFs::base2textID);
+	Colour background2 = findColour(SoundshapeLAFs::background2ID);
 
-	laf.setColour(ResizableWindow::backgroundColourId, base2); // may need to change
+	setColour(ResizableWindow::backgroundColourId, base2); // may need to change
 
-	laf.setColour(Slider::thumbColourId, base1);
-	laf.setColour(Slider::trackColourId, base1);
-	laf.setColour(Slider::textBoxOutlineColourId, base1);
-	laf.setColour(Slider::textBoxBackgroundColourId, base2);
-	laf.setColour(Slider::textBoxTextColourId, base2text);
+	setColour(Slider::thumbColourId, base1);
+	setColour(Slider::trackColourId, base1);
+	setColour(Slider::textBoxOutlineColourId, base1);
+	setColour(Slider::textBoxBackgroundColourId, base2);
+	setColour(Slider::textBoxTextColourId, base2text);
 
-	laf.setColour(TextButton::buttonColourId, base1);
-	laf.setColour(TextButton::textColourOffId, base1text);
-	laf.setColour(TextButton::buttonOnColourId, base2);
-	laf.setColour(TextButton::textColourOnId, base2text);
+	setColour(TextButton::buttonColourId, base1);
+	setColour(TextButton::textColourOffId, base1text);
+	setColour(TextButton::buttonOnColourId, base2);
+	setColour(TextButton::textColourOnId, base2text);
 
-	laf.setColour(ComboBox::backgroundColourId, Colours::peachpuff); // change
-	laf.setColour(ComboBox::textColourId, base1text);
-	laf.setColour(ComboBox::arrowColourId, base1text);
-	laf.setColour(ComboBox::buttonColourId, base2);
-	laf.setColour(ComboBox::focusedOutlineColourId, base1text);
-	laf.setColour(ComboBox::outlineColourId, base2);
+	setColour(ComboBox::backgroundColourId, background2); // change
+	setColour(ComboBox::textColourId, base1text);
+	setColour(ComboBox::arrowColourId, base1text);
+	setColour(ComboBox::buttonColourId, base2);
+	setColour(ComboBox::focusedOutlineColourId, base1text);
+	setColour(ComboBox::outlineColourId, base2);
 
-	laf.setColour(ScrollBar::thumbColourId, base1);
-	laf.setColour(ScrollBar::trackColourId, base2);
-	laf.setColour(ScrollBar::backgroundColourId, base2);
+	setColour(ScrollBar::thumbColourId, base1);
+	setColour(ScrollBar::trackColourId, base2);
+	setColour(ScrollBar::backgroundColourId, base2);
 
 
 }
@@ -103,14 +117,14 @@ void CustomLookAndFeel::drawLinearSliderBackground(Graphics& g, int x, int y, in
 		off.addRectangle(r);
 	}
 	if(slider.isTwoValue())
-		g.setColour(Colour(SoundshapeLAFs::base2ID));
+		g.setColour(findColour(SoundshapeLAFs::base2ID));
 	else
-		g.setColour(Colour(SoundshapeLAFs::base1ID));
+		g.setColour(findColour(SoundshapeLAFs::base1ID));
 	g.fillPath(on);
 
 	if(slider.isTwoValue())
-		g.setColour(Colour(SoundshapeLAFs::base1textID));
+		g.setColour(findColour(SoundshapeLAFs::base1textID));
 	else
-		g.setColour(Colour(SoundshapeLAFs::base2ID));
+		g.setColour(findColour(SoundshapeLAFs::base2ID));
 	g.fillPath(off);
 }

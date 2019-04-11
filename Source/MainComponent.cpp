@@ -26,7 +26,11 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	presetPath = File().getCurrentWorkingDirectory();
 	selectedFile = newFile;
 	laf = new CustomLookAndFeel();
-	SoundshapeLAFs::setColors(*laf);
+	laf->initColors(Colour(SoundshapeLAFs::base1ID), Colour(SoundshapeLAFs::base1textID), 
+		Colour(SoundshapeLAFs::base2ID), Colour(SoundshapeLAFs::base2textID), 
+		Colour(SoundshapeLAFs::background1ID), Colour(SoundshapeLAFs::background2ID),
+		Colour(SoundshapeLAFs::background3ID));
+	laf->setColors();
 	
 
 	//------------------------------------------------------------
@@ -165,14 +169,14 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 				}
 				else if (subChild->getComponentID().getIntValue() == IMPORT_BUTTON)
 				{
-					subChild->setColour(TextButton::buttonColourId, Colour(SoundshapeLAFs::base2ID));
-					subChild->setColour(TextButton::textColourOffId, Colour(SoundshapeLAFs::base2textID));
+					subChild->setColour(TextButton::buttonColourId, laf->findColour(SoundshapeLAFs::base2ID));
+					subChild->setColour(TextButton::textColourOffId, laf->findColour(SoundshapeLAFs::base2textID));
 
 				}
 				else if (subChild->getComponentID().getIntValue() == EXPORT_BUTTON)
 				{
-					subChild->setColour(TextButton::buttonColourId, Colour(SoundshapeLAFs::base2ID));
-					subChild->setColour(TextButton::textColourOffId, Colour(SoundshapeLAFs::base2textID));
+					subChild->setColour(TextButton::buttonColourId, laf->findColour(SoundshapeLAFs::base2ID));
+					subChild->setColour(TextButton::textColourOffId, laf->findColour(SoundshapeLAFs::base2textID));
 				}
 			}
 		}
@@ -185,8 +189,8 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 				if (subChild->getComponentID().getIntValue() == PLAYTIME_SLIDER)
 				{
 
-					subChild->setColour(Slider::thumbColourId, Colour(SoundshapeLAFs::background3ID));
-					subChild->setColour(Slider::trackColourId, Colour(SoundshapeLAFs::background3ID));
+					subChild->setColour(Slider::thumbColourId, laf->findColour(SoundshapeLAFs::background3ID));
+					subChild->setColour(Slider::trackColourId, laf->findColour(SoundshapeLAFs::background3ID));
 
 				}
 
@@ -218,7 +222,7 @@ void MainComponent::setConverter(Converter *_converter) {
 void MainComponent::paint(Graphics& g)
 {
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
-	g.fillAll(Colour(SoundshapeLAFs::background1ID));
+	g.fillAll(laf->findColour(SoundshapeLAFs::background1ID));
 
 	// setting the boundary components for the child components
 	auto area = getLocalBounds();
@@ -702,9 +706,15 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::DefaultTheme:
 		setTheme(CommandIDs::DefaultTheme);
+		laf->initColors(Colours::orange, Colours::black, Colours::darkblue, Colours::white, Colours::lightgrey, Colours::peachpuff, Colours::red);
+		laf->setColors();
+		setAllLookAndFeels(laf, this);
 		break;
 	case CommandIDs::TestTheme:
 		setTheme(CommandIDs::TestTheme);
+		laf->initColors(Colour(0xff40005b), Colours::white, Colours::darkviolet, Colours::white, Colour(0xff202020), Colours::violet, Colours::red);
+		laf->setColors();
+		setAllLookAndFeels(laf, this);
 		break;
 	case CommandIDs::ToolTips:
 		tips = (!tips);

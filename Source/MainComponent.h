@@ -147,7 +147,7 @@ private:
     Soundshape_pluginAudioProcessor& processor;
     AudioProcessorValueTreeState& valueTreeState; // back-end parameters
 
-	LookAndFeel * laf;
+	CustomLookAndFeel * laf;
 
 	ApplicationCommandManager commandManager;
 	std::unique_ptr<MenuBarComponent> menuBar;

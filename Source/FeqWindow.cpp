@@ -34,7 +34,7 @@ FeqWindow::~FeqWindow()
 //==============================================================================
 // Function set zoom to a reference from the parent and passes refences to the frequency domain component
 //==============================================================================
-void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  Converter * _profile, int _size, int* _chunk, LookAndFeel * _laf)
+void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  Converter * _profile, int _size, int* _chunk, CustomLookAndFeel * _laf)
 //void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, float * _profile, int _size, int* _chunk)
 {
 	view.getHorizontalScrollBar().setLookAndFeel(_laf);
@@ -63,7 +63,7 @@ void FeqWindow::paint(Graphics& g)
 	   drawing code..
 	*/
 	// default window settings
-	g.setColour(Colour(SoundshapeLAFs::base2textID));
+	g.setColour(findColour(SoundshapeLAFs::base2textID));
 	g.setFont(14.0f);
 	g.drawText("viewWindow", getLocalBounds(),
 		Justification::centred, true);   // draw some placeholder text
@@ -73,7 +73,7 @@ void FeqWindow::paint(Graphics& g)
 	view.setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 	
 	// draw outline around window
-	g.setColour(Colour(SoundshapeLAFs::base1textID));
+	g.setColour(findColour(SoundshapeLAFs::base1textID));
 	g.drawLine(0.0f, getHeight() - view.getScrollBarThickness(), getWidth(), getHeight() - view.getScrollBarThickness());
 	g.drawRect(getLocalBounds(), 1);
 

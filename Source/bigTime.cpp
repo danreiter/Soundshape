@@ -74,12 +74,12 @@ void bigTime::paint(Graphics& g)
 	int btnWidth = (int)(getWidth() / (*time));
 
 	Rectangle<float> BackGround(0, 0, 10 * btnWidth, getHeight());
-	g.setColour(Colour(SoundshapeLAFs::base1ID));
+	g.setColour(findColour(SoundshapeLAFs::base1ID));
 	g.fillRect(BackGround);
 
 
 	// Fills background color of selected time domain
-	g.setColour(Colour(SoundshapeLAFs::background2ID));
+	g.setColour(findColour(SoundshapeLAFs::background2ID));
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
 	
@@ -92,7 +92,7 @@ void bigTime::paint(Graphics& g)
 	}
 
 	// Set bounds and location for the play time slider
-    //g.setColour(Colour(SoundshapeLAFs::background1ID));
+    //g.setColour(findColour(SoundshapeLAFs::background1ID));
     playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
 
 }

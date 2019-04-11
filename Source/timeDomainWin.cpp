@@ -41,7 +41,7 @@ void timeDomainWin::paint (Graphics& g)
     */
 
 	// draw center line across window 
-	g.setColour(Colour(SoundshapeLAFs::base1textID));
+	g.setColour(findColour(SoundshapeLAFs::base1textID));
 	Point<float> centerStart(0.0f, getHeight() / 2.0f);
 	Point<float> centerEnd(getWidth(), getHeight()/2.0f);
 	Line<float> centerLine(centerStart, centerEnd);
@@ -63,10 +63,10 @@ void timeDomainWin::paint (Graphics& g)
 		Line<float> l(p1, p2);
 		if (i == *currentProfile)
 		{
-			g.setColour(Colour(SoundshapeLAFs::background3ID));
+			g.setColour(findColour(SoundshapeLAFs::background3ID));
 			Rectangle<float> profile(rec.getTopLeft().getX(), 0, tick, getHeight());
 			g.fillRect(profile);
-			g.setColour(Colour(SoundshapeLAFs::base1textID));
+			g.setColour(findColour(SoundshapeLAFs::base1textID));
 		}
 		g.drawLine(l);
 		g.drawText(String(i), rec1, Justification::centredLeft);
@@ -88,7 +88,7 @@ void timeDomainWin::paint (Graphics& g)
 				wavePath.lineTo(x, y);
 			}
 		}
-		g.setColour(Colour(SoundshapeLAFs::base2ID)); // this colourID should always be the base2 color of the current lookandfeel
+		g.setColour(findColour(SoundshapeLAFs::base2ID)); // this colourID should always be the base2 color of the current lookandfeel
 		g.strokePath(wavePath, PathStrokeType(2.0f));
 	}
     

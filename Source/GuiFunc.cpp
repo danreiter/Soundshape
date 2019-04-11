@@ -31,8 +31,8 @@ volumeBox::~volumeBox(){}
 void volumeBox::paint(Graphics& g)
 {
 	// paints the graphics surounding the volume slider
-	g.fillAll(Colour(SoundshapeLAFs::base2ID));
-	g.setColour(Colour(SoundshapeLAFs::base1ID));// this may or may not work.
+	g.fillAll(findColour(SoundshapeLAFs::base2ID));
+	g.setColour(findColour(SoundshapeLAFs::base1ID));// this may or may not work.
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
@@ -186,7 +186,7 @@ fundFreq::fundFreq()
 
 		// text box to display current note in fundamental frequency
 	txtBox = new Label("fundFreq", "A");
-	txtBox->setColour(Label::textColourId, Colour(SoundshapeLAFs::base2textID));
+	txtBox->setColour(Label::textColourId, findColour(SoundshapeLAFs::base2textID));
 	updateText();
 
 	fundFreqSlider = new Slider(Slider::IncDecButtons, Slider::NoTextBox);
@@ -215,11 +215,11 @@ fundFreq::~fundFreq()
 void fundFreq::paint(Graphics & g)
 {
 	//  sets background color
-	Colour bgColour = Colour(SoundshapeLAFs::base2ID);
+	Colour bgColour = findColour(SoundshapeLAFs::base2ID);
 	g.fillAll(bgColour);   // clear the background
 	
 	// draws outline of the component
-	g.setColour(Colour(SoundshapeLAFs::base1ID));
+	g.setColour(findColour(SoundshapeLAFs::base1ID));
 	g.drawRect(getLocalBounds(), 1);
 
 	// set text box location

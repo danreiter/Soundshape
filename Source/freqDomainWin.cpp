@@ -28,7 +28,7 @@ freqDomainWin::freqDomainWin()
 	add = &temp;
 	harm = &temp;
 	laf = new CustomLookAndFeel();
-	SoundshapeLAFs::setColors(*laf);
+	resetColors();
 
 }
 
@@ -37,6 +37,13 @@ freqDomainWin::~freqDomainWin()
 {
 }
 //==============================================================================
+
+void freqDomainWin::resetColors()
+{
+
+	laf->setColors();
+
+}
 
 //==============================================================================
 //  Paint Funciton
@@ -54,11 +61,11 @@ void freqDomainWin::paint (Graphics& g)
 	int n = getWidth() * 10;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
-	g.fillAll(Colour(SoundshapeLAFs::background2ID));
+	g.fillAll(laf->findColour(SoundshapeLAFs::background2ID));
 
-	g.setColour(Colour(SoundshapeLAFs::background2ID));
+	g.setColour(laf->findColour(SoundshapeLAFs::background2ID));
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-	g.setColour(Colour(SoundshapeLAFs::base1textID)); // freq-domain scale/axes
+	g.setColour(Colours::black); // freq-domain scale/axes
 	g.setFont(14.0f);
 	float margin = getHeight() *.10f;
 	Line<float> vLine(margin, margin, margin, getHeight() - margin);
@@ -158,7 +165,7 @@ void freqDomainWin::resized()
 //==============================================================================
 //  setBase passes need references to freqDomainWin
 //==============================================================================
-void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk, LookAndFeel * _laf)
+void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk, CustomLookAndFeel * _laf)
 {
 	harm = _harm;                // flag for harmonic correctness is on/off
 	add = _add;                  // flag for add buttons visiblity on/off
