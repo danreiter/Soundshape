@@ -26,7 +26,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	presetPath = File().getCurrentWorkingDirectory();
 	selectedFile = newFile;
 	laf = new CustomLookAndFeel();
-	SoundshapeLAFs::setDefaultColors(*laf);
+	SoundshapeLAFs::setColors(*laf);
 	
 
 	//------------------------------------------------------------
@@ -176,7 +176,7 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 				}
 			}
 		}
-		else if (child == &bTWindow)
+		/*else if (child == &bTWindow)
 		{
 
 			for (auto * subChild : child->getChildren())
@@ -192,7 +192,7 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 
 			}
 
-		}
+		}*/
 		else if (child->getComponentID().getIntValue() == WRITE_BUTTON)
 		{
 			child->setColour(TextButton::buttonColourId, laf->findColour(TextButton::buttonOnColourId));
@@ -709,7 +709,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 	case CommandIDs::ToolTips:
 		tips = (!tips);
 		if (!tips)
-			ttp.setMillisecondsBeforeTipAppears(1000000);
+			ttp.setMillisecondsBeforeTipAppears(1000000); // 16 minutes and 40 seconds
 		else
 			ttp.setMillisecondsBeforeTipAppears(700);
 		break;

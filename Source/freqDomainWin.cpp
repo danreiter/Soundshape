@@ -28,7 +28,7 @@ freqDomainWin::freqDomainWin()
 	add = &temp;
 	harm = &temp;
 	laf = new CustomLookAndFeel();
-	SoundshapeLAFs::setDefaultColors(*laf);
+	SoundshapeLAFs::setColors(*laf);
 
 }
 

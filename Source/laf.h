@@ -17,7 +17,7 @@ class SoundshapeLAFs : public Component
 public:
 	SoundshapeLAFs();
 	~SoundshapeLAFs();
-	static void setDefaultColors(LookAndFeel& laf); // there will be one of these for each theme.
+	static void setColors(LookAndFeel& laf); // there will be one of these for each theme.
 
 	// custom enum for all the colour IDs Soundshape needs
 	enum SSColours
@@ -42,9 +42,9 @@ private:
 struct CustomLookAndFeel : public LookAndFeel_V2
 {
 
-	// this didn't prove useful
-	/*void drawLinearSlider(Graphics& g, int x, int y, int width, int height,
+	
+	void drawLinearSliderBackground(Graphics& g, int x, int y, int width, int height,
 		float sliderPos, float minSliderPos, float maxSliderPos,
-		const Slider::SliderStyle style, Slider& slider) override;*/
+		const Slider::SliderStyle style, Slider& slider) override;
 
 };
