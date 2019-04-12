@@ -172,13 +172,13 @@ void CustomLookAndFeel::drawLinearSliderBackground(Graphics& g, int x, int y, in
 		off.addRectangle(r);
 	}
 	if(slider.isTwoValue())
-		g.setColour(findColour(SoundshapeLAFs::base2ID));
+		g.setColour(Colours::white);
 	else
 		g.setColour(findColour(SoundshapeLAFs::base1ID));
 	g.fillPath(on);
 
 	if(slider.isTwoValue())
-		g.setColour(findColour(SoundshapeLAFs::base1textID));
+		g.setColour(findColour(SoundshapeLAFs::base2ID));
 	else
 		g.setColour(Colours::grey);
 	g.fillPath(off);

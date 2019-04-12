@@ -840,7 +840,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::TestTheme:
 		setTheme(CommandIDs::TestTheme);
-		laf->initColors(Colour(0xff40005b), Colours::white, Colours::darkviolet, Colours::white, Colour(0xff202020), Colours::violet, Colours::red);
+		laf->initColors(Colour(0xff40005b), Colours::white, Colours::darkred, Colours::white, Colour(0xff202020), Colours::violet, Colours::deeppink);
 		laf->setColors();
 		setAllLookAndFeels(laf, this);
 		break;
