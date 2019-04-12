@@ -87,7 +87,7 @@ void Converter::addShiftedProfiles(int chunk, int numSamples)
             float ratio = noteFreq / referenceFrequency;
 
             for (int j = 0; j < SOUNDSHAPE_CHUNK_SIZE; j++) {
-                if (profile[j].r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
+                if ( getProfileRawPoint(chunk,j).r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
                     float targetFreq = j* ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
                         int bin = freqToBin(targetFreq, sampleRate);
