@@ -66,6 +66,8 @@ void CustomLookAndFeel::setColors() // there will be one of these for each theme
 	setColour(ScrollBar::trackColourId, base2);
 	setColour(ScrollBar::backgroundColourId, base2);
 
+	setColour(Label::textColourId, base2text);
+
 
 }
 

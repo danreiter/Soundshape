@@ -32,7 +32,7 @@ void volumeBox::paint(Graphics& g)
 {
 	// paints the graphics surounding the volume slider
 	g.fillAll(findColour(SoundshapeLAFs::base2ID));
-	g.setColour(findColour(SoundshapeLAFs::base1ID));// this may or may not work.
+	g.setColour(findColour(SoundshapeLAFs::base1ID));
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
@@ -185,12 +185,12 @@ fundFreq::fundFreq()
 
 		// text box to display current note in fundamental frequency
 	txtBox = new Label("fundFreq", "A");
-	txtBox->setColour(Label::textColourId, findColour(SoundshapeLAFs::base2textID));
+	//txtBox->setColour(Label::textColourId, findColour(SoundshapeLAFs::base2textID));
 	updateText();
 
 	fundFreqSlider = new Slider(Slider::IncDecButtons, Slider::NoTextBox);
 	fundFreqSlider->setComponentID((String)FUND_FREQ_SLIDER);
-	fundFreqSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	//fundFreqSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	fundFreqSlider->setRange(0.0f, 12.0f, 1.0);
 	fundFreqSlider->setValue(num, sendNotificationAsync);
 	fundFreqSlider->setTooltip("Set the fundamental frequency.");
