@@ -92,8 +92,8 @@ void bigTime::paint(Graphics& g)
 	}
 
 	// Set bounds and location for the play time slider
-    //g.setColour(findColour(SoundshapeLAFs::background1ID));
-    playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
+	//g.setColour(Colour(SoundshapeLAFs::background1ID));
+    playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .1f) / 2.0f), (getWidth() + ((getHeight() * .15f) / 2.0f)), getHeight() * .1f);
 
 }
 //==============================================================================

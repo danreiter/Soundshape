@@ -13,34 +13,80 @@
 
 #define SOUNDSHAPE_PREVIEW_CHUNK_SIZE 128 // how many samples of each rendered chunk to save for drawing
 
-// Stores parameters like the envelope and performs common tasks for time domain <-> frequency domain transformations.
+/**
+Stores parameters like the envelope and performs common tasks for time domain <-> frequency domain transformations.
+
+This class is used for performing DSP tasks such as FFTs (forward and inversed).
+It is used by the Soundshape_pluginAudioProcessor to combine its frequency profile data
+with information about the current state of all attached MIDI keyboards in order to synthesize
+chunks of audio during the audio thread's callback.
+
+This listens for changes in audio parameters and keyboard states. It uses one ADSR per key
+to manage making each note on the keyboard have its own voice with individual attack, sustain, 
+decay, and release.
+
+Profile data is stored contiguously in memory. When at least one key's ADSR is active,
+playback begins. Playback involves going through a range of chunks of the profile,
+generating their inverse FFTs based on which keys are being pressed (and those keys' 
+current envelope position). Playback stops once all 
+ADSR envelopes become idle, and will later resume at the beginning of the range the next time it begins.
+
+*/
 class Converter : public MidiKeyboardStateListener, public AudioProcessorValueTreeState::Listener
 {
 public:
     Converter(AudioProcessorValueTreeState& _valueTreeState);
     ~Converter();
 
-    // getters for AudioParameter stuff
-    EnvelopeParams& getEnvelope();
 
     void parameterChanged(const String &parameterID, float newValue) override;
 
-    // getters/setters for managin the profile
+    /**
+    Update the sample rate that audio playback is at.
+    <b> This MUST be called when the host changes its sampling rate or else output will be out-of-tune. </b>
+    */
     void setSampleRate(double _sampleRate);
+
     double getSampleRate();
+
+    /**
+    Sets the frequency profile bin of the specified chunk corresponding to the specified frequency to a value.
+    @param chunk The first index of the 2D profile array; which section of the profile you want to update.
+    @param freq The frequency in Hz that you want to update.
+    @param value the float value to change it to.
+    */
     void updateFrequencyValue(int chunk, int freq, float value);
+
+    /**
+    Get the value of a bin in a profile chunk.
+    @return the value of the bin.
+    */
     float getFrequencyValue(int chunk, int bin);
 
-    // Fill the buffer with the processed inverse discrete fourier transform of
-    // the data in row currentChunk of the profile, according to which keys are pressed in the
-    // key state
-    void synthesize(int currentChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState);
+    /** Fill the buffer with the processed inverse discrete fourier transform of
+    the data in row currentChunk of the profile, according to which keys are pressed in the
+    key state.
+    @param buffer the AudioBuffer with channels to fill. If it has 2 channels, then the first is copied into the others.
+    */
+    void synthesize(AudioBuffer<float>& buffer);
 
+    /** 
+    Tell the converter of the sustain pedal is held down or not.
+    */
     void setSustain(bool sustainState);
 
     void renderPreview(int chunk);
     float getPreviewSample(int chunk, int index);
 
+    /**
+    Sets up all the envelopes ( one per MIDI key) to listen to a certain envelope parameter in the AudioProcessorValueTreeState
+    */
+    void envelopeListenTo(String paramName, AudioProcessorValueTreeState& valueTreeState);
+
+    /**
+    Moves the sustain pedal up and makes all notes' envelopes be reset. This is used to cut off ALL current noise.
+    */
+    void panic();
 
 private:
 
@@ -51,66 +97,89 @@ private:
     void handleNoteOn(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
     void handleNoteOff(MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override;
 
-    // Prepares that buffer for an inverse FFT representing currently pressed keys
-    void addShiftedProfiles(int chunk);
+    /** 
+    Prepares the shiftedProfiles buffer for an inverse FFT representing currently pressed keys.
+    
+    This tries to scale each shifted profile by an envelope sample of the key, so those envelopes need to know
+    how many samples this is going to make.
+    **/
+    void addShiftedProfiles(int chunk, int numSamples);
 
     AudioProcessorValueTreeState& valueTreeState;
     // updated whenever the actual audioparameter changes
     float gain = 0.99;
 
     //*===================================
-    //* THESE STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE 
-    //* MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK
+    //* 
 
-    // The frequency domain profile of the current preset.
-    // Each row is the spectrum of the desired sound for a single note at the specified time.
-    // Implemented 1-dimensionally. This class's interface still treats this 2-dimensionally
-    // Data is complex
+    /**
+    The frequency domain profile of the current preset.
+    Each row is the spectrum of the desired sound for a single note at the specified time.
+    Implemented 1-dimensionally. This class's accessors still treats this 2-dimensionally.
+    Data is complex.
+    <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE
+    MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b>
+    */
     std::vector<kiss_fft_cpx> profile;
 
-    // Temporary chunks for copying/intermediate work during synthesis.
-    // These are twice as long as the actual chunks because the IFFT might need the extra samples to work
+    /**
+    Temporary chunk for copying/intermediate work during synthesis.
+    Twice as long as the actual chunks because the IFFT might need the extra samples to work
+    <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE
+    MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b>
+    */
     std::vector<kiss_fft_cpx> shiftedProfile;
+
+    /**
+    Temporary chunk for copying/intermediate work during synthesis.
+    Twice as long as the actual chunks because the IFFT might need the extra samples to work
+    <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE
+    MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b>
+    */
     std::vector<float> tempChunk;
 
-    // temporary storage of last rendered DFT for crossfading
+    /**
+    Temporary storage of last rendered DFT for crossfading.
+    */
     std::vector<float> previousDFT;
-
-    // temporary storage for data rearrangement when sample rate changes
-    std::vector<kiss_fft_cpx> tempProfile;
     
     //*======================================
 
+    /** Stores previews of synthesized data. This can be used to draw parts of the wave in the GUI.
+    It's size is determined in a SOUNDSHAPE_PREVIEW_CHUNK_SIZE. */
     std::vector<float> previewChunks;
-    std::vector<float> tempRenderbuffer;
-    std::vector<kiss_fft_cpx> tempRenderProfile; // temporary data for the profile before its rendered for previews in the GUI
 
-    // stores velocity information for each note, 0 to 127 (128 possible notes)
-    // these are the notes that are currently pressed
-    std::array<float, 128> noteVelocities;
-    // and these are the ones that arent pressed but are being sustained by the pedal
-    std::array<float, 128> sustainedNoteVelocities;
+    std::vector<float> tempRenderbuffer;
+
+    /** temporary data for the profile before its rendered for previews in the GUI */
+    std::vector<kiss_fft_cpx> tempRenderProfile;
+
+    /** Stores an ADSR envelope for each note. In Converter::addShiftedProfiles, this lets
+    us giuve each note on a keyboard its own "voice."
+    */
+    std::array<EnvelopeParams, 128> noteStates;
 
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
+    float referenceSampleRate = 44100.0f; // Hz. This is what the profile assumes it was derived from. Converts to actual sampler rate during synthesis
     double sampleRate;
-    int samplesPlayed = 0; // keeps track of how many samples we've written to the buffer. Wraps around whene xceeds size of a profile chunk
 
-    // manages the adsr envelope and lsitens for when they get changed
-    EnvelopeParams envelope;
+    int currentChunk = 0;
 
     AudioFormatManager formatManager;
 
-    // object for inverse FFT during synthesis
-    //dsp::FFT inverseTransform;
+    /** COnfiguration object for inverse FFT during real-time synthesis. */
     kiss_fftr_cfg inverseFFT;
 
-    // object for doing the inverse FFT when rendering previews
+    /** object for doing the inverse FFT when rendering previews */
     kiss_fftr_cfg previewInverseFFT;
 
-    // TODO : This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading)
+    /**This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading) */
     int currentIndex = 0;
 
-    // keep track of where to start and end a sound's playback
+    /** If this exceeds the samples per chunk, were done with that chunk.*/
+    int samplesWritten = 0;
+
+    /** keep track of where to start and end a sound's playback. This are manged by AudioParameters */
     int beginningChunk = 0;
     int endingChunk = 1;
 

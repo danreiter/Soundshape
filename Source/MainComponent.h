@@ -19,6 +19,8 @@
 #include "envelope.h"
 #include "Converter.h"
 #include "PluginProcessor.h"
+#include "IOHandler.h"
+#include "keyboardPopup.h"
 
 #define WRITE_BUTTON 2008
 
@@ -92,6 +94,7 @@ public:
 	void paint(Graphics&) override;
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
+    void buttonStateChanged(Button* button) override;
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
 	void loadSound();
@@ -112,6 +115,10 @@ public:
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
 	bool save();
 	bool saveAs();
+	void loadFile();
+	void importFile();
+	void exportFile();
+	void showKey(bool vis);
 
 	
 
@@ -136,8 +143,7 @@ private:
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	
-	MidiKeyboardState keyboardState;           
-	MidiKeyboardComponent keyboardComponent;
+	Component::SafePointer<Component> midiKeyboard;
 
 	// Varible for notes in hz
     static float notes[12];
@@ -153,7 +159,7 @@ private:
 	std::unique_ptr<MenuBarComponent> menuBar;
 	MenuBarPosition menuBarPosition = MenuBarPosition::burger;
 
-	SidePanel sidePanel{ "Menu", 150, true };
+	SidePanel sidePanel{ "Menu", 300, true };
 
 	BurgerMenuComponent burgerMenu;
 	BurgerMenuHeader menuHeader{ sidePanel };
@@ -165,6 +171,7 @@ private:
 	File presetPath;
 	File selectedFile;
 	const File newFile = File();
+	bool pushedWriteBtn = true, newSave = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

@@ -27,13 +27,13 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                 std::make_unique<AudioParameterFloat>(
                                     "attack",
                                     "Attack",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterFloat>(
                                     "decay",
                                     "Decay",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterFloat>(
@@ -45,7 +45,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                 std::make_unique<AudioParameterFloat>(
                                     "release",
                                     "Release",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterInt>(
@@ -65,12 +65,12 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
     converter(valueTreeState)
 #endif
 {
+    // The converter sets up its listeners for simplicity. (It has a listener for these params on every MIDI key)
+    converter.envelopeListenTo("attack", valueTreeState);
+    converter.envelopeListenTo("decay", valueTreeState);
+    converter.envelopeListenTo("sustain", valueTreeState);
+    converter.envelopeListenTo("release", valueTreeState);
 
-    // different parameters can have different objects handle the logic of them changing if necessary
-    valueTreeState.addParameterListener("attack", &converter.getEnvelope());
-    valueTreeState.addParameterListener("decay", &converter.getEnvelope());
-    valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
-    valueTreeState.addParameterListener("release", &converter.getEnvelope());
     valueTreeState.addParameterListener("gain", &converter);
 
     // the beginningChunk and endingChunk parameters need 2 listeners : the converter and also the GUI.
@@ -80,6 +80,18 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);
+
+
+    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
+    converter.setSampleRate(44100.0f);
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converter.updateFrequencyValue(i, 1 * 440, 500.0f);
+        converter.updateFrequencyValue(i, 2 * 440, 300.0f);
+        converter.updateFrequencyValue(i, 4 * 440, 200.0f);
+        converter.updateFrequencyValue(i, 6 * 440, 100.0f);
+        converter.updateFrequencyValue(i, 8 * 440, 50.0f);
+        converter.renderPreview(i);
+    }
 
     if (SOUNDSHAPE_RUN_TESTS) {
         int result = Catch::Session().run();
@@ -148,25 +160,7 @@ void Soundshape_pluginAudioProcessor::changeProgramName (int index, const String
 
 void Soundshape_pluginAudioProcessor::panic()
 {
-    for (int i = 0; i < 16; i++) {
-        keyState.allNotesOff(i);
-    }
-
-    // TEMPORARY testing xml
-    // *********************
-    auto state = valueTreeState.copyState();
-    std::unique_ptr<XmlElement> xml(state.createXml());
-    XmlElement *profileXML = IOHandler::createProfileXML(converter);
-    xml->addChildElement(profileXML);
-    String docString = xml->createDocument("");
-    File f(File::getCurrentWorkingDirectory().getChildFile("test.xml"));
-    FileOutputStream ostream(f);
-    if (ostream.openedOk()) {
-        ostream.setPosition(0);
-        ostream.truncate();
-        ostream.writeText(docString,false,false,nullptr);
-    }
-    // ****************************
+    converter.panic();
 }
 
 void Soundshape_pluginAudioProcessor::playFreq(float freq)
@@ -188,15 +182,6 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
     // between frequency values and indexes for its internal structure
     converter.setSampleRate(sampleRate);
 
-    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
-    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
-        converter.updateFrequencyValue(i, 1 * 440, 500.0f);
-        converter.updateFrequencyValue(i, 2 * 440, 300.0f);
-        converter.updateFrequencyValue(i, 4 * 440, 200.0f);
-        converter.updateFrequencyValue(i, 6 * 440, 100.0f);
-        converter.updateFrequencyValue(i, 8 * 440, 50.0f);
-        converter.renderPreview(i);
-    }
 }
 
 void Soundshape_pluginAudioProcessor::releaseResources()
@@ -258,15 +243,8 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear(i, 0, buffer.getNumSamples());
     }
-    // To determine the index of the appropriate chunk, we keep track of the
-    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
-    // we start keeping track of how many samples we process. Once this number exceeds
-    // the number of samples that each chunk represents, we increment the index (accounting
-    // for things like looping). If there are no notes down at the moment, then
-    // we should reset the index to the beginning of the range in the UI slider.
-    // We should also skip all DSP if there are no notes down or the number of samples to process
-    // happens to be 0.
-    converter.synthesize(currentChunk, buffer, keyState);
+
+    converter.synthesize(buffer);
 }
 
 
@@ -284,7 +262,13 @@ void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData
 
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    // reading a preset from the host
 
+    XmlElement* xmlState = getXmlFromBinary(data, sizeInBytes);
+    if (xmlState != nullptr) {
+        // this method handles deleting the xmlState for us.
+        IOHandler::restoreStateFromXml(valueTreeState, converter, xmlState);
+    }
 }
 
 //==============================================================================

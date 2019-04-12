@@ -1,24 +1,21 @@
 #include "Converter.h"
 
 Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : 
-    valueTreeState(_valueTreeState), envelope(),
+    valueTreeState(_valueTreeState),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
-    tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previewChunks(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_PREVIEW_CHUNK_SIZE),
     tempRenderbuffer(2*SOUNDSHAPE_CHUNK_SIZE),
-    tempRenderProfile(2*SOUNDSHAPE_CHUNK_SIZE),
-    noteVelocities({{0}}),
-    sustainedNoteVelocities({{0}})
+    tempRenderProfile(2*SOUNDSHAPE_CHUNK_SIZE)
 {
     // set up inverse FFT config objects
     // This needs manually freed (use destructor)
     inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
     previewInverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
 
-    envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
+    //envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
 }
 
 Converter::~Converter() {
@@ -26,20 +23,20 @@ Converter::~Converter() {
     kiss_fftr_free(previewInverseFFT);
 }
 
-void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState)
+void Converter::synthesize(AudioBuffer<float>& buffer)
 {
-    // TODO : CHANGE THIS TO INTERPOLATE BETWEEN CHUNKS WHEN IT'S TIME
-
     // fill the buffer with the transformed and processed data derived from row profileChunk of the profile
     // First make local copy so profile bins used in this method won't change during synthesis
     // copy the appropriate chunk from the converter object's profile matrix
     // Then, duplicate it according to each downed MIDI note.
 
-    kiss_fft_cpx zeroCpx = { 0,0 };
-    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx);
-    addShiftedProfiles(profileChunk);
+    int numSamples = buffer.getNumSamples();
 
-    // TODO : change this to only be computed when it NEEDS to be.
+    kiss_fft_cpx zeroCpx = { 0,0 };
+    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx); // clear the shifted profile data
+    addShiftedProfiles(currentChunk, numSamples); //re-shift
+
+    // perform an inverse FFT on the shifted profile. This scales according to each key's envelope state
     kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
 
     for (int i = 0; i < buffer.getNumSamples(); i++) {
@@ -52,47 +49,71 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
         }
     }
 
-    buffer.copyFrom(0,0, tempChunk.data(), buffer.getNumSamples()); // left channel
-    // apply envelope
-    envelope.adsrEnvelope.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
+    buffer.copyFrom(0,0, tempChunk.data(), numSamples); // left channel
+
+    samplesWritten += numSamples;
+    if (samplesWritten > SOUNDSHAPE_CHUNK_SIZE) {
+        samplesWritten = 0;
+        currentChunk += 1;
+
+       if (currentChunk >= endingChunk || currentChunk > SOUNDSHAPE_PROFILE_ROWS) {
+            currentChunk = beginningChunk;
+       }
+    }
+
+    // reset play to beginning of section
+
     // apply gain
     buffer.applyGain(gain);
     if (buffer.getNumChannels() == 2) {
         // stereo, just copy to the other channel
-        buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
+        buffer.copyFrom(1, 0, buffer, 0, 0, numSamples); // copy to Right channel
     }   
 }
 
 
-void Converter::addShiftedProfiles(int chunk)
+void Converter::addShiftedProfiles(int chunk, int numSamples)
 {
-    // *******************
-    // TODO : instead of building the shifted profile while synthesizing each chunk, should it be gradually built as
-    // each MIDI messaage is received?
-    // *******************
 
-    // cycles through active notes (noteVelocities), adding a shifted profile to a temporary "profile structure" for each.
-    for (int i = 0; i < noteVelocities.size(); i++) {
-        if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) { // expensive operation, so should only be done when absolutely necessary
+    // cycles through active notes, adding a shifted profile to a temporary "profile structure" for each.
+    for (int i = 0; i < noteStates.size(); i++) {
+        if (noteStates[i].adsrEnvelope.isActive()) { // expensive operation, so should only be done when absolutely necessary
             
-            // Calculate as a percentage of max value. This can be changed to something more appropriate if needed (exponential?)
-            // It probably also needs to be considered how a change in velocity would change the frequency domain
+            // Scale the shifted profile by the current strnength of the note it's being shifted too.
+            
+            float currentEnvelopeSample = noteStates[i].adsrEnvelope.getNextSample();
 
-            float velocityScale = noteVelocities[i] / 127; // TODO : or get velocity form sustained note
             float noteFreq = (float)MidiMessage::getMidiNoteInHertz(i);
             float ratio = noteFreq / referenceFrequency;
-            
+
             for (int j = 0; j < SOUNDSHAPE_CHUNK_SIZE; j++) {
                 if (profile[j].r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
-                    float targetFreq = binToFreq(j, sampleRate) * ratio;
+                    float targetFreq = j* ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
                         int bin = freqToBin(targetFreq, sampleRate);
-                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;// *velocityScale;
+                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r * currentEnvelopeSample;
                     }
                 }
             }
+
+            // since we could only use 1 sample of this envelope, fast forward
+            for (int sample = 0; sample < numSamples - 1; sample++) {
+                noteStates[i].adsrEnvelope.getNextSample();
+            }
+
         }
     }
+}
+
+// The sample rate is set when the plugin becomes ready-to-play
+void Converter::setSampleRate(double _sampleRate)
+{
+    // we also need to inform the envelopes for each note
+    for (int i = 0; i < 128; i++) {
+        noteStates[i].adsrEnvelope.setSampleRate(_sampleRate);
+    }
+    double oldSampleRate = sampleRate;
+    sampleRate = _sampleRate; // new value for sample rate
 }
 
 void Converter::renderPreview(int chunk)
@@ -129,38 +150,21 @@ float Converter::getPreviewSample(int chunk, int index)
 void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
 
-    // Only enter the noteOn phase of the envelope if there are no notes already playing or being sustained
-    bool isTimeForAttack = true;
-    for (int i = 0; i < 128; i++) {
-        if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) {
-            isTimeForAttack = false;
-        }
-    }
+    // When a note is played on the keyboard, we need to enter the attack state of
+    // that note's associated ADSR envelope.
 
-    // Possibly change this in the future to only work for user-specified MIDI channels?
-    noteVelocities[midiNoteNumber] = velocity;
-
-    if (isTimeForAttack) {
-        envelope.adsrEnvelope.noteOn();
-    }
+    noteStates[midiNoteNumber].adsrEnvelope.noteOn();
+    noteStates[midiNoteNumber].sustained = false;
 
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
-    if (sustainPressed == true) {
-        sustainedNoteVelocities[midiNoteNumber] = noteVelocities[midiNoteNumber];
+    if (sustainPressed == false) {
+        noteStates[midiNoteNumber].adsrEnvelope.noteOff();
     }
-    noteVelocities[midiNoteNumber] = 0;
-    // if no notes being sustained or currently pressed, go into release phase
-    bool isTimeForRelease = true;
-    for (int i = 0; i < 128; i++) {
-        if (sustainedNoteVelocities[i] != 0 || noteVelocities[i] != 0) {
-            isTimeForRelease = false;
-        }
-    }
-    if (isTimeForRelease) {
-        envelope.adsrEnvelope.noteOff();
+    else {
+        noteStates[midiNoteNumber].sustained = true;
     }
 }
 
@@ -168,18 +172,29 @@ void Converter::setSustain(bool sustainState)
 {
     sustainPressed = sustainState;
     if (sustainState == false) {
-        // turn off all notes that arent currently pressed,
+        // turn off all notes that aren't currently pressed,
         // and check if any notes are still pressed.
-        bool isTimeForRelease = true;
         for (int i = 0; i < 128; i++) {
-            sustainedNoteVelocities[i] = 0.0f;
-            if (noteVelocities[i] != 0) {
-                isTimeForRelease = false;
+            if (noteStates[i].sustained == true) {
+                noteStates[i].sustained = false;
+                noteStates[i].adsrEnvelope.noteOff();
             }
         }
-        if (isTimeForRelease) {
-            envelope.adsrEnvelope.noteOff();
-        }
+    }
+}
+
+void Converter::envelopeListenTo(String paramName, AudioProcessorValueTreeState & valueTreeState)
+{
+    for (int i = 0; i < 128; i++) {
+        valueTreeState.addParameterListener(paramName, &noteStates[i]);
+    }
+}
+
+void Converter::panic()
+{
+    sustainPressed = false;
+    for (int i = 0; i < 128; i++) {
+        noteStates[i].adsrEnvelope.noteOff();
     }
 }
 
@@ -208,10 +223,6 @@ void Converter::setProfileRawPoint(int chunk, int i, float value) {
 }
 
 
-EnvelopeParams & Converter::getEnvelope()
-{
-    return envelope;
-}
 
 void Converter::parameterChanged(const String & parameterID, float newValue)
 {
@@ -226,42 +237,6 @@ void Converter::parameterChanged(const String & parameterID, float newValue)
     }
 }
 
-
-// The sample rate is set when the plugin becomes ready-to-play
-void Converter::setSampleRate(double _sampleRate)
-{
-    double oldSampleRate = sampleRate;
-    sampleRate = _sampleRate; // new value for sample rate
-
-    // the internal profile data structure needs to be completely remade when
-    // the sample rate changes.
-    // The current profile data structure needs to be zero'd out, and
-    // replaced with a new version of its old self with spikes' locations shifted.
-
-    for (int i = 0; i < profile.size(); i++) {
-        tempProfile[i] = profile[i];
-        profile[i] = { 0,0 };
-    }
-
-    for (int chunk = 0; chunk < SOUNDSHAPE_PROFILE_ROWS; chunk++) {
-        for (int sourceBin = 0; sourceBin < SOUNDSHAPE_CHUNK_SIZE; sourceBin++) {
-            // recopy frequency spikes from the old profile, putting them in the correct bins (by using the old sample rate)
-            size_t sourceRawIndex = chunk * SOUNDSHAPE_CHUNK_SIZE + sourceBin;
-            int destinationBin = freqToBin(binToFreq(sourceBin, oldSampleRate), sampleRate);
-            size_t destinationRawIndex = chunk * SOUNDSHAPE_CHUNK_SIZE + destinationBin;
-            if (destinationBin < SOUNDSHAPE_CHUNK_SIZE / 2) {
-                profile[destinationRawIndex] = tempProfile[sourceRawIndex];
-            }
-
-            // cleanup temporary structure for future use
-            tempProfile[sourceRawIndex] = { 0,0 };
-        }
-    }
-
-    // we also need to inform the envelope
-    envelope.adsrEnvelope.setSampleRate(_sampleRate);
-
-}
 
 double Converter::getSampleRate()
 {
@@ -279,11 +254,11 @@ void Converter::updateFrequencyValue(int chunk, int freq, float value)
     if (freq > sampleRate / 2 - 1) {
         return; // do nothing
     }
-    setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
+    // OLD : setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
+    setProfileRawPoint(chunk, freq, value);
 }
 
-
-
 float Converter::getFrequencyValue(int chunk, int freq) {
-    return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
+    // OLD: return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
+    return getProfileRawPoint(chunk, freq).r;
 }

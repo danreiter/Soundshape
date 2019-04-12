@@ -10,8 +10,8 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	enve(_valueTreeState),
 	valueTreeState(_valueTreeState),
 	volComp(_valueTreeState),
-    bTWindow(_valueTreeState),
-	keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    bTWindow(_valueTreeState)//,
+	//keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
 	//----------Setting reference to the converter----------------------------------
     setConverter(&(processor.getConverter()));
@@ -37,7 +37,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 
 
 	//------Passing references to child components----------------
-	//loadSound(); moved to bottom
+
 
 	//------------------------------------------------------------
 
@@ -111,10 +111,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(harmonicButton);
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
-	addAndMakeVisible(keyboardComponent);
-	keyboardState.addListener(&keyboardComponent);
-
-
 
 	if (menuBarPosition != MenuBarPosition::burger)
 		sidePanel.showOrHide(false);
@@ -140,11 +136,35 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 	burgerMenu.setLookAndFeel(laf);
 	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
-	menuItemsChanged();
+	
 	//------------------------------------------------------------
-
-
 	setSize(600, 400);
+}
+
+void MainComponent::showKey(bool vis)
+{
+	if (vis)
+	{
+		keyboardPopup *keyboard = new keyboardPopup(converterPtr);
+		keyboard->addToDesktop(ComponentPeer::windowIsTemporary);
+		midiKeyboard = keyboard;
+		Rectangle<int> area(0, 0, 600, 100);
+
+		RectanglePlacement placement(RectanglePlacement::xLeft
+			| RectanglePlacement::yBottom
+			| RectanglePlacement::doNotResize);
+
+		auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
+			.getMainDisplay().userArea.reduced(20));
+		keyboard->setBounds(result);
+
+		keyboard->setVisible(vis);
+	}
+	else
+	{
+		midiKeyboard->setVisible(vis);
+		midiKeyboard.deleteAndZero();
+	}
 }
 
 MainComponent::~MainComponent()
@@ -221,8 +241,10 @@ void MainComponent::setConverter(Converter *_converter) {
 //------------------------------------------------------------------------------------
 // Function paint
 //------------------------------------------------------------------------------------
-void MainComponent::paint(Graphics& g)
+void MainComponent::paint(Graphics& g) 
 {
+	menuItemsChanged();
+
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(laf->findColour(SoundshapeLAFs::background1ID));
 
@@ -341,45 +363,31 @@ void MainComponent::sliderValueChanged(Slider * slider)
 		repaint();
 	}
 
-	// on change update volume settings
-	if (slider->getComponentID().getIntValue() == VOLUME_SLIDER)
-	{
-		//Needs hook up to back end
 
-	}
-
-	// on change update attack settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_ATTACK)
-	{
-		//Needs set up with back end calls
-	}
-
-	// on change update decay settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_DECAY)
-	{
-		//Needs set up with back end calls
-	}
-
-	// on change update release settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_RELEASE)
-	{
-		//Needs set up with back end calls
-	}
-
-	// on change update sustain settings
-	if (slider->getComponentID().getIntValue() == ENVELOPE_SUSTAIN)
-	{
-		//Needs set up with back end calls
-	}
-	// Funmental fruquency setting buttons
-	if (slider->getComponentID().getIntValue() == FUND_FREQ_SLIDER)
-	{
-		// need back end call for fundmental frequency
-
-	}
 	repaint();
 }
+
 //-------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------
+// Function listensfor buttons to gget hovered, pressed, or released
+//------------------------------------------------------------------------------------
+void MainComponent::buttonStateChanged(Button * button)
+{
+    // Play button
+    if (button->getComponentID().getIntValue() == PLAY_BUTTON)
+    {
+        if (button->getState() == Button::buttonDown) {
+            processor.playFreq(16.0f * notes[fund.getNote()]);
+        }
+        else{
+            processor.panic();
+        }
+    }
+}
+//-------------------------------------------------------------------------------------
+
+
 
 //-------------------------------------------------------------------------------------
 // Function listens to buttons of child components
@@ -421,6 +429,7 @@ void MainComponent::buttonClicked(Button* button)
 	// add Button hides and shows buttons to add frequency spikes 
 	if (button->getComponentID() == writeButton->getComponentID())
 	{
+		pushedWriteBtn = true;
 		if (selectedFile == newFile)
 		{
 			saveAs();
@@ -430,12 +439,6 @@ void MainComponent::buttonClicked(Button* button)
 			promptSaveOptions();
 		}
 		repaint();
-	}
-
-	// Play button
-	if (button->getComponentID().getIntValue() == PLAY_BUTTON)
-	{
-
 	}
 
 	// Sustained Play button
@@ -454,12 +457,14 @@ void MainComponent::buttonClicked(Button* button)
 	if (button->getComponentID().getIntValue() == EXPORT_BUTTON)
 	{
 		// need back end call for export
+		importFile();
 	}
 
 	// Import button
 	if (button->getComponentID().getIntValue() == IMPORT_BUTTON)
 	{
 		// need back end call for export
+		exportFile();
 	}
 
 	// Panic button
@@ -484,18 +489,26 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 {
 	if(comboBoxThatHasChanged->getComponentID() == cb.getComponentID())
 	{
-		if (comboBoxThatHasChanged->getSelectedItemIndex() == 0)
+		if (pushedWriteBtn)
 		{
-			selectedFile = newFile;
+			pushedWriteBtn = false;
 		}
 		else
 		{
 			saveFilePrompt();
-			String fileName = comboBoxThatHasChanged->getText();
-			fileName.append(String(".txt"), 4);
-			selectedFile = File(presetPath.getChildFile(fileName));
-			int i = 1;
+			if (cb.getSelectedItemIndex() == 0)
+			{
+				selectedFile = newFile;
+			}
+			else
+			{
+				String fileName = cb.getText();
+				fileName.append((String)".xml", 4);
+				selectedFile = File(presetPath.getChildFile(fileName));
+			}
+			loadFile();
 		}
+
 	};
 }
 //-------------------------------------------------------------------------------------
@@ -506,6 +519,8 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 bool MainComponent::save()
 {
 	// selectedFile is the full path to the current sound
+	String docString = IOHandler::createStateDocument(IOHandler::createStateXML(*converterPtr, valueTreeState));
+	IOHandler::writeStateXMLFile(selectedFile, docString);
 	return false;
 }
 //-------------------------------------------------------------------------------------
@@ -515,11 +530,122 @@ bool MainComponent::save()
 //-------------------------------------------------------------------------------------
 bool MainComponent::saveAs()
 {
-	// get user input for file name
-	// write xml file to presetPath
-	// new file to comboBox 'cb'
+	FileChooser chooser("Save As File Name", presetPath, "*.xml");
+	if (chooser.browseForFileToSave(true))
+	{
+		File tempFile = chooser.getResult();
+		String fileName = tempFile.getFileName();
+		if (fileName.endsWith((String) ".xml"))
+		{
+			if (pushedWriteBtn)
+			{
+				selectedFile = tempFile;
+			}
+
+			//save file
+			String docString = IOHandler::createStateDocument(IOHandler::createStateXML(*converterPtr, valueTreeState));
+			IOHandler::writeStateXMLFile(tempFile, docString);
+			if (presetPath == tempFile.getParentDirectory())
+			{	 
+					pushedWriteBtn = true;
+					cb.addItem(fileName.dropLastCharacters(4), cb.getNumItems() + 1);
+					if (selectedFile == tempFile)
+					{
+						pushedWriteBtn = true;
+						cb.setSelectedItemIndex(cb.getNumItems() - 1);
+					}
+			}
+			else
+			{
+				if (selectedFile == tempFile)
+				{
+					presetPath = tempFile.getParentDirectory();
+					cb.clear();
+					cb.addItem("New Sound", 1);
+					DirectoryIterator iter(presetPath, false, "*.xml");
+					int i = 2;
+					while (iter.next())
+					{
+						File nextSound(iter.getFile());
+						pushedWriteBtn = true;
+						cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
+						i++;
+					}
+					pushedWriteBtn = true;
+					cb.setText(fileName.dropLastCharacters(4));
+				}
+			}
+		}
+
+	}
 	// set index of comboBox to new file name
 	return false;
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function saveAs is for saving new sounds
+//-------------------------------------------------------------------------------------
+void MainComponent::loadFile()
+{
+
+	
+	timeBlock = 0;
+	selectedProfile = 0;
+	timeSize = 10;
+	currentProfile = 0;
+	add = -1;
+	harm = -1;
+	zoom = 1.0;
+
+	// load file from selectedFile
+	// call load sound or other function to up
+	
+	//file handling here
+	XmlElement* stateXml = XmlDocument::parse(selectedFile);
+	if (stateXml != nullptr) {
+		IOHandler::restoreStateFromXml(valueTreeState, *converterPtr, stateXml);
+	}
+	else
+	{
+		pushedWriteBtn = true;
+		cb.setSelectedItemIndex(0);
+		selectedFile = newFile;
+	}
+		
+	//do After file load
+	fWindow.setProfile();
+	repaint();
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function importFile
+//-------------------------------------------------------------------------------------
+void MainComponent::importFile()
+{
+	FileChooser chooser("Please select file to import.", presetPath, "*.wav|*.flac|*.ogg");
+	if (chooser.browseForFileToOpen())
+	{
+		File import = chooser.getResult();
+
+		//do import stuff here
+	}
+}
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// Function exportFile
+//-------------------------------------------------------------------------------------
+void MainComponent::exportFile()
+{
+	FileChooser chooser("Please select file to import.", presetPath, "*.wav|*.flac|*.ogg");
+	if (chooser.browseForFileToSave(true))
+	{
+		File import = chooser.getResult();
+
+		//do export stuff here
+	}
 }
 //-------------------------------------------------------------------------------------
 
@@ -601,7 +727,6 @@ void MainComponent::menuItemSelected(int, int)
 //-------------------------------------------------------------------------------------
 ApplicationCommandTarget * MainComponent::getNextCommandTarget()
 {
-	//return &outerCommandTarget;
 	return findFirstTargetParentComponent();
 }
 //-------------------------------------------------------------------------------------
@@ -702,6 +827,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::Keyboard:
 		showKeyboard = !showKeyboard;
+		showKey(showKeyboard);
 		break;
 	case CommandIDs::PresetPath:
 		setPresetPath();
@@ -764,7 +890,7 @@ void MainComponent::setMenuBarPosition(MenuBarPosition newPosition)
 //-------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------
-// Function setMenuBarPosition
+// Function setTheme
 //-------------------------------------------------------------------------------------
 void MainComponent::setTheme(CommandID newTheme)
 {
@@ -772,17 +898,19 @@ void MainComponent::setTheme(CommandID newTheme)
 	{
 		currentTheme = newTheme;
 		
-		if (menuBarPosition != MenuBarPosition::burger)
-			sidePanel.showOrHide(false);
+		
+		sidePanel.showOrHide(false);
 
 		menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
 		burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
 		menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 
 		sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
-		menuItemsChanged();;
+		menuItemsChanged();
 
 		repaint();
+		if (menuBarPosition == MenuBarPosition::burger)
+			sidePanel.showOrHide(true);
 	}
 }
 
@@ -817,16 +945,17 @@ void MainComponent::loadPresetPath()
 	cb.clear();
 	cb.addItem("New Sound", 1);
 
-	DirectoryIterator iter(presetPath, false, "*.txt");
+	DirectoryIterator iter(presetPath, false, "*.xml");
 	int i = 2;
 	while(iter.next())
 	{
 		File nextSound(iter.getFile());
-
+		pushedWriteBtn = true;
 		cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
 		i++;
 	}
 	selectedFile = newFile;
+	pushedWriteBtn = true;
 	cb.setSelectedItemIndex(0);
 }
 //-------------------------------------------------------------------------------------
@@ -844,6 +973,7 @@ void MainComponent::saveFilePrompt()
 	if (result == 0)
 	{
 		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
 	}
 	else if (result == 1)
 	{
@@ -854,12 +984,14 @@ void MainComponent::saveFilePrompt()
 		else
 		{
 			promptSaveOptions();
+
 		}
 		// user picked item 1
 	}
 	else if (result == 2)
 	{
 		// user picked item 2
+		pushedWriteBtn = false;
 	}
 
 }
@@ -879,20 +1011,31 @@ void MainComponent::promptSaveOptions()
 	if (result == 0)
 	{
 		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
+		newSave = false;
 	}
 	else if (result == 1)
 	{
 		save();
+		pushedWriteBtn = false;
+		newSave = false;
 		// user picked item 1
 	}
 	else if (result == 2)
 	{
 		saveAs();
+		if (pushedWriteBtn)
+		{
+			pushedWriteBtn = false;
+			newSave = true;
+		}
 		// user picked item 2
 	}
 	else if (result == 3)
 	{
 		// user picked item 2
+		pushedWriteBtn = false;
+		newSave = false;
 	}
 }
 //-------------------------------------------------------------------------------------
