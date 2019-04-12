@@ -45,9 +45,10 @@ void CustomLookAndFeel::setColors() // there will be one of these for each theme
 
 	setColour(Slider::thumbColourId, base1);
 	setColour(Slider::trackColourId, base1);
-	setColour(Slider::textBoxOutlineColourId, base1);
-	setColour(Slider::textBoxBackgroundColourId, base2);
-	setColour(Slider::textBoxTextColourId, base2text);
+	setColour(Slider::textBoxOutlineColourId, Colours::black); // these never changed for some reason so I'm making them neutral colors
+	setColour(Slider::textBoxBackgroundColourId, Colours::white); // ditto
+	setColour(Slider::textBoxTextColourId, Colours::black);
+	setColour(Slider::textBoxHighlightColourId, Colours::yellow);
 
 	setColour(TextButton::buttonColourId, base1);
 	setColour(TextButton::textColourOffId, base1text);
@@ -68,12 +69,66 @@ void CustomLookAndFeel::setColors() // there will be one of these for each theme
 
 }
 
-//int LookAndFeel_V2::getSliderThumbRadius(Slider& slider)
-//{
-//	return jmin(7,
-//		slider.getHeight() / 2,
-//		slider.getWidth() / 2) + 2;
-//}
+namespace LookAndFeelHelpers
+{
+	static Colour createBaseColour(Colour buttonColour,
+		bool hasKeyboardFocus,
+		bool shouldDrawButtonAsHighlighted,
+		bool shouldDrawButtonAsDown) noexcept
+	{
+		const float sat = hasKeyboardFocus ? 1.3f : 0.9f;
+		const Colour baseColour(buttonColour.withMultipliedSaturation(sat));
+
+		if (shouldDrawButtonAsDown)        return baseColour.contrasting(0.2f);
+		if (shouldDrawButtonAsHighlighted) return baseColour.contrasting(0.1f);
+
+		return baseColour;
+	}
+
+	static TextLayout layoutTooltipText(const String& text, Colour colour) noexcept
+	{
+		const float tooltipFontSize = 13.0f;
+		const int maxToolTipWidth = 400;
+
+		AttributedString s;
+		s.setJustification(Justification::centred);
+		s.append(text, Font(tooltipFontSize, Font::bold), colour);
+
+		TextLayout tl;
+		tl.createLayoutWithBalancedLineLengths(s, (float)maxToolTipWidth);
+		return tl;
+	}
+}
+
+void CustomLookAndFeel::drawShinyButtonShape(Graphics& g, float x, float y, float w, float h,
+	float maxCornerSize, const Colour& baseColour, float strokeWidth,
+	bool flatOnLeft, bool flatOnRight, bool flatOnTop, bool flatOnBottom)
+{
+	if (w <= strokeWidth * 1.1f || h <= strokeWidth * 1.1f)
+		return;
+
+	auto cs = jmin(maxCornerSize, w * 0.5f, h * 0.5f);
+
+	Path outline;
+	outline.addRoundedRectangle(x, y, w, h, cs, cs,
+		!(flatOnLeft || flatOnTop),
+		!(flatOnRight || flatOnTop),
+		!(flatOnLeft || flatOnBottom),
+		!(flatOnRight || flatOnBottom));
+
+	ColourGradient cg(baseColour, 0.0f, y,
+		baseColour.overlaidWith(Colour(0x070000ff)), 0.0f, y + h,
+		false);
+
+	cg.addColour(0.5, baseColour.overlaidWith(Colour(0x33ffffff)));
+	cg.addColour(0.51, baseColour.overlaidWith(Colour(0x110000ff)));
+
+	g.setGradientFill(cg);
+	g.fillPath(outline);
+
+	g.setColour(Colour(0x80000000));
+	g.strokePath(outline, PathStrokeType(strokeWidth));
+}
 
 void CustomLookAndFeel::drawLinearSliderBackground(Graphics& g, int x, int y, int width, int height,
 	float /*sliderPos*/,
@@ -125,6 +180,43 @@ void CustomLookAndFeel::drawLinearSliderBackground(Graphics& g, int x, int y, in
 	if(slider.isTwoValue())
 		g.setColour(findColour(SoundshapeLAFs::base1textID));
 	else
-		g.setColour(findColour(SoundshapeLAFs::base2ID));
+		g.setColour(Colours::grey);
 	g.fillPath(off);
+}
+
+void CustomLookAndFeel::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
+	float sliderPos, float minSliderPos, float maxSliderPos,
+	const Slider::SliderStyle style, Slider& slider)
+{
+	//g.fillAll(slider.findColour(Slider::backgroundColourId));
+
+	if (style == Slider::LinearBar || style == Slider::LinearBarVertical)
+	{
+		width *= 2;
+		const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
+
+		Colour baseColour;
+		int sliderID = slider.getComponentID().getIntValue();
+		if (sliderID % 440 == 0 && sliderID != 0)
+			baseColour = Colour(0xffee0000);
+		else
+			baseColour = Colour(0xff0000ee);
+
+		drawShinyButtonShape(g,
+			(float)x,
+			style == Slider::LinearBarVertical ? sliderPos
+			: (float)y,
+			style == Slider::LinearBarVertical ? (float)(width)
+			: (sliderPos - x),
+			style == Slider::LinearBarVertical ? (height - sliderPos)
+			: (float)height, 0.0f,
+			baseColour,
+			slider.isEnabled() ? 0.9f : 0.3f,
+			true, true, true, true);
+	}
+	else
+	{
+		drawLinearSliderBackground(g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+		drawLinearSliderThumb(g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+	}
 }

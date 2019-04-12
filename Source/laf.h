@@ -47,6 +47,14 @@ struct CustomLookAndFeel : public LookAndFeel_V2
 		float sliderPos, float minSliderPos, float maxSliderPos,
 		const Slider::SliderStyle style, Slider& slider) override;
 
+	void drawLinearSlider(Graphics& g, int x, int y, int width, int height,
+		float sliderPos, float minSliderPos, float maxSliderPos,
+		const Slider::SliderStyle style, Slider& slider) override;
+
+	void drawShinyButtonShape(Graphics& g, float x, float y, float w, float h,
+		float maxCornerSize, const Colour& baseColour, float strokeWidth,
+		bool flatOnLeft, bool flatOnRight, bool flatOnTop, bool flatOnBottom);
+
 	void initColors(Colour base1, Colour base1text, Colour base2, Colour base2text, Colour background1, Colour background2,  Colour background3);
 
 	void setColors();

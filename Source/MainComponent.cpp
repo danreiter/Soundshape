@@ -119,15 +119,16 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	if (menuBarPosition != MenuBarPosition::burger)
 		sidePanel.showOrHide(false);
 
-	setAllLookAndFeels(laf, this);
+	
 
 	loadSound();
 	addAndMakeVisible(fWindow);
-
+	setAllLookAndFeels(laf, this);
 
 	//----------Menu settings----------------------------------
 	menuBar.reset(new MenuBarComponent(this));
 	addAndMakeVisible(menuBar.get());
+	menuBar->setLookAndFeel(laf);
 	setApplicationCommandManagerToWatch(&commandManager);
 	commandManager.registerAllCommandsForTarget(this);
 	addKeyListener(commandManager.getKeyMappings());
@@ -156,9 +157,9 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 {
 	for (auto* child : comp->getChildren())
 	{
-		child->setLookAndFeel(laf); // this will change everything in Soundshape to the default colors of laf
-		String temp = child->getComponentID();
-		DBG("id is " << temp);
+		child->setLookAndFeel(laf); // this will change everything in Soundshape to the current colors of laf
+		//String temp = child->getComponentID();
+		//DBG("id is " << temp);
 		//if (child->getComponentID().getIntValue() == PANIC_BUTTON)
 		if(child == &volComp) // to change specific buttons from non-this components, we need to specifically loop through those components
 		{
@@ -206,6 +207,7 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 		
 
 	}
+	//zoomSlider->setLookAndFeel(laf);
 }
 
 //------------------------------------------------------------------------------------

@@ -28,6 +28,10 @@ freqDomainWin::freqDomainWin()
 	add = &temp;
 	harm = &temp;
 	laf = new CustomLookAndFeel();
+	laf->initColors(Colour(SoundshapeLAFs::base1ID), Colour(SoundshapeLAFs::base1textID),
+		Colour(SoundshapeLAFs::base2ID), Colour(SoundshapeLAFs::base2textID),
+		Colour(SoundshapeLAFs::background1ID), Colour(SoundshapeLAFs::background2ID),
+		Colour(SoundshapeLAFs::background3ID));
 	resetColors();
 
 }
@@ -195,7 +199,8 @@ void freqDomainWin::setProfileControl()
 		tb->setComponentID(String(i));
 		tb->setClickingTogglesState(false);
 		tb->setVisible(false);
-		tb->setLookAndFeel(laf);
+		//tb->setLookAndFeel(laf);
+		tb->setColour(TextButton::buttonColourId, Colours::white);
 		if (buttonParent != NULL)
 		{
 			tb->addListener(buttonParent);
