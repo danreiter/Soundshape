@@ -457,14 +457,14 @@ void MainComponent::buttonClicked(Button* button)
 	if (button->getComponentID().getIntValue() == EXPORT_BUTTON)
 	{
 		// need back end call for export
-		importFile();
+		exportFile();
 	}
 
 	// Import button
 	if (button->getComponentID().getIntValue() == IMPORT_BUTTON)
 	{
 		// need back end call for export
-		exportFile();
+		importFile();
 	}
 
 	// Panic button
@@ -624,7 +624,7 @@ void MainComponent::loadFile()
 //-------------------------------------------------------------------------------------
 void MainComponent::importFile()
 {
-	FileChooser chooser("Please select file to import.", presetPath, "*.wav|*.flac|*.ogg");
+	FileChooser chooser("Please select file to import.", presetPath, "*.wav;*.flac;*.ogg");
 	if (chooser.browseForFileToOpen())
 	{
 		File import = chooser.getResult();
@@ -639,12 +639,40 @@ void MainComponent::importFile()
 //-------------------------------------------------------------------------------------
 void MainComponent::exportFile()
 {
-	FileChooser chooser("Please select file to import.", presetPath, "*.wav|*.flac|*.ogg");
-	if (chooser.browseForFileToSave(true))
+	String ext = "";
+	PopupMenu exportPrompt;
+	exportPrompt.addSectionHeader("Please choose an extention to export?");
+	exportPrompt.addItem(1, "WAV");
+	exportPrompt.addItem(2, "OGG");
+	exportPrompt.addItem(3, "FLAC");
+	exportPrompt.addItem(4, "cancel");
+	const int result = exportPrompt.show();
+	if (result == 0)
 	{
-		File import = chooser.getResult();
+		// user dismissed the menu without picking anything
+		pushedWriteBtn = false;
+	}
+	else if (result == 1)
+	{
+		ext = ".wav";
+	}
+	else if (result == 2)
+	{
+		ext = ".ogg";
+	}
+	else if (result == 3)
+	{
+		ext = ".flac";
+	}
+	if (ext != "")
+	{
+		FileChooser chooser("Please select file to import.", presetPath, ext);
+		if (chooser.browseForFileToSave(true))
+		{
+			File exportFile = chooser.getResult();
 
-		//do export stuff here
+			//do export stuff here
+		}
 	}
 }
 //-------------------------------------------------------------------------------------
