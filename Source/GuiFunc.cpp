@@ -87,7 +87,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 
 	// add import button
 	importBtn = new TextButton("Import");
-	importBtn->setComponentID((String)EXPORT_BUTTON);
+	importBtn->setComponentID((String)IMPORT_BUTTON);
 	importBtn->setTooltip("Loads a sound from a specified file location");
 
 	// add play button

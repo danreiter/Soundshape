@@ -112,7 +112,7 @@ void Converter::setSampleRate(double _sampleRate)
     for (int i = 0; i < 128; i++) {
         noteStates[i].adsrEnvelope.setSampleRate(_sampleRate);
     }
-    double oldSampleRate = sampleRate;
+    //double oldSampleRate = sampleRate;
     sampleRate = _sampleRate; // new value for sample rate
 }
 

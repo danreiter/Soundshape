@@ -624,7 +624,7 @@ void MainComponent::loadFile()
 //-------------------------------------------------------------------------------------
 void MainComponent::importFile()
 {
-	FileChooser chooser("Please select file to import.", presetPath, "*.wav;*.flac;*.ogg");
+	FileChooser chooser("Please select file to import.", presetPath, "*.wav;*.flac;*.ogg",false);
 	if (chooser.browseForFileToOpen())
 	{
 		File import = chooser.getResult();
@@ -641,7 +641,7 @@ void MainComponent::exportFile()
 {
 	String ext = "";
 	PopupMenu exportPrompt;
-	exportPrompt.addSectionHeader("Please choose an extention to export?");
+	exportPrompt.addSectionHeader("Export file type:");
 	exportPrompt.addItem(1, "WAV");
 	exportPrompt.addItem(2, "OGG");
 	exportPrompt.addItem(3, "FLAC");
@@ -654,19 +654,19 @@ void MainComponent::exportFile()
 	}
 	else if (result == 1)
 	{
-		ext = ".wav";
+		ext = "*.wav";
 	}
 	else if (result == 2)
 	{
-		ext = ".ogg";
+		ext = "*.ogg";
 	}
 	else if (result == 3)
 	{
-		ext = ".flac";
+		ext = "*.flac";
 	}
 	if (ext != "")
 	{
-		FileChooser chooser("Please select file to import.", presetPath, ext);
+		FileChooser chooser("Export Audio", presetPath, ext,false);
 		if (chooser.browseForFileToSave(true))
 		{
 			File exportFile = chooser.getResult();
