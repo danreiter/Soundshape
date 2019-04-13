@@ -21,6 +21,7 @@
 #include "PluginProcessor.h"
 #include "IOHandler.h"
 #include "keyboardPopup.h"
+#include "otherPopups.h"
 
 #define WRITE_BUTTON 2008
 
@@ -119,6 +120,7 @@ public:
 	void importFile();
 	void exportFile();
 	void showKey(bool vis);
+	void showLic(bool vis);
 
 	
 
@@ -143,7 +145,7 @@ private:
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	
-	Component::SafePointer<Component> midiKeyboard;
+	Component::SafePointer<Component> midiKeyboard, licenseWindow;
 
 	// Varible for notes in hz
     static float notes[12];
@@ -166,6 +168,7 @@ private:
 	CommandID currentTheme = CommandIDs::DefaultTheme;
 	bool tips = true;
 	bool showKeyboard = false;
+	bool showLicense = false;
 
 	//-----------File handling-----------------------------------------------
 	File presetPath;

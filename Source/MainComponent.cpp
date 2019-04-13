@@ -167,6 +167,39 @@ void MainComponent::showKey(bool vis)
 	}
 }
 
+void MainComponent::showLic(bool vis)
+{
+
+	if (vis)
+	{
+
+		LWindow * LWin = new LWindow();
+		LWin->addToDesktop(ComponentPeer::windowIsTemporary);
+		licenseWindow = LWin;
+
+		Rectangle<int> area(0, 0, 600, 100);
+
+		RectanglePlacement placement(RectanglePlacement::xLeft
+			| RectanglePlacement::yBottom
+			| RectanglePlacement::doNotResize);
+
+		auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
+			.getMainDisplay().userArea.reduced(20));
+		LWin->setBounds(result);
+
+		LWin->setVisible(vis);
+
+	}
+	else
+	{
+
+		licenseWindow->setVisible(vis);
+		licenseWindow.deleteAndZero();
+
+	}
+
+}
+
 MainComponent::~MainComponent()
 {
 }
@@ -884,6 +917,8 @@ bool MainComponent::perform(const InvocationInfo & info)
 	case CommandIDs::Developers:
 		break;	
 	case CommandIDs::Licence:
+		showLicense = !showLicense;
+		showLic(showLicense);
 		break;
 	default:
 		return false;
