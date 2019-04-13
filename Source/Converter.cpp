@@ -8,12 +8,14 @@ Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) :
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previewChunks(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_PREVIEW_CHUNK_SIZE),
     tempRenderbuffer(2*SOUNDSHAPE_CHUNK_SIZE),
-    tempRenderProfile(2*SOUNDSHAPE_CHUNK_SIZE)
+    tempRenderProfile(2*SOUNDSHAPE_CHUNK_SIZE),
+    tempExportProfile(2*SOUNDSHAPE_CHUNK_SIZE,{0,0})
 {
     // set up inverse FFT config objects
     // This needs manually freed (use destructor)
     inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
     previewInverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
+    exportInverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
 
     //envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
 }
@@ -21,6 +23,7 @@ Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) :
 Converter::~Converter() {
     kiss_fftr_free(inverseFFT);
     kiss_fftr_free(previewInverseFFT);
+    kiss_fftr_free(exportInverseFFT);
 }
 
 void Converter::synthesize(AudioBuffer<float>& buffer)
@@ -112,6 +115,7 @@ void Converter::setSampleRate(double _sampleRate)
     for (int i = 0; i < 128; i++) {
         noteStates[i].adsrEnvelope.setSampleRate(_sampleRate);
     }
+    exportRenderEnvelope.adsrEnvelope.setSampleRate(_sampleRate);
     //double oldSampleRate = sampleRate;
     sampleRate = _sampleRate; // new value for sample rate
 }
@@ -138,8 +142,26 @@ void Converter::renderPreview(int chunk)
             previewChunks[renderIndex] =  (thisRowWeight * previewChunks[renderIndex]) + ((1.0f - thisRowWeight) * previewChunks[lastRowIndex]);
         }
     }
-    
 }
+
+void Converter::renderExportChunkToBuffer(int chunk, AudioBuffer<float> &buffer, double exportSampleRate) {
+    if(chunk == 0){
+        exportRenderEnvelope.adsrEnvelope.reset();
+        exportRenderEnvelope.adsrEnvelope.noteOn();
+    }
+    kiss_fft_cpx zeroCpx = { 0,0 };
+    std::fill(tempExportProfile.begin(), tempExportProfile.end(), zeroCpx);
+    for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++){
+        int targetBin = freqToBin(i,exportSampleRate);
+        if( binToFreq(i,sampleRate) < exportSampleRate / 2) {
+            tempExportProfile[targetBin] = getProfileRawPoint(chunk, i);
+        }
+    }
+    kiss_fftri(exportInverseFFT, tempExportProfile.data(),buffer.getWritePointer(0));
+    buffer.applyGain(0,0,buffer.getNumSamples(), 1.0f/tempExportProfile.size());
+    exportRenderEnvelope.adsrEnvelope.applyEnvelopeToBuffer(buffer,0,buffer.getNumSamples());
+}
+
 
 float Converter::getPreviewSample(int chunk, int index)
 {
@@ -185,9 +207,13 @@ void Converter::setSustain(bool sustainState)
 
 void Converter::envelopeListenTo(String paramName, AudioProcessorValueTreeState & valueTreeState)
 {
+    // make each key's envelope listen to parameter changes.
     for (int i = 0; i < 128; i++) {
         valueTreeState.addParameterListener(paramName, &noteStates[i]);
     }
+    // make our extra envelope forrendering also listen
+    valueTreeState.addParameterListener(paramName, &exportRenderEnvelope);
+
 }
 
 void Converter::panic()

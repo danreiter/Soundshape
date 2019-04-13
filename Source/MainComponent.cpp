@@ -654,24 +654,34 @@ void MainComponent::exportFile()
 	}
 	else if (result == 1)
 	{
-		ext = "*.wav";
+		ext = ".wav";
 	}
 	else if (result == 2)
 	{
-		ext = "*.ogg";
+		ext = ".ogg";
 	}
 	else if (result == 3)
 	{
-		ext = "*.flac";
+		ext = ".flac";
 	}
 	if (ext != "")
 	{
-		FileChooser chooser("Export Audio", presetPath, ext,false);
+		FileChooser chooser("Export Audio as " + ext, presetPath, "*"+ext, false);
 		if (chooser.browseForFileToSave(true))
 		{
-			File exportFile = chooser.getResult();
+			// .withFileExtension is intelligent about if they enter the extension themselves or not
+			File outFile = chooser.getResult().withFileExtension(ext);
 
-			//do export stuff here
+			// this method handles the correct audio format based on the file name
+			bool success = IOHandler::exportConverterAudio(outFile,converterPtr);
+			if(success){
+				AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "Success",
+											"Exported " + outFile.getFileName());
+			}
+			else{
+				AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, "Error",
+						"There was problem writing to that file.");
+			}
 		}
 	}
 }

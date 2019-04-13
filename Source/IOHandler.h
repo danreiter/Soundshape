@@ -88,7 +88,17 @@ public:
     */
     static void restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
         XmlElement* xml);
-   
+
+    /**
+     * Exports the entire Soundshape time domain to an audio file whose format is specified by the extension.
+     *
+     * Supported file extensions are .wav .flac and .ogg.
+     *
+     * @param outFile The file that will be created/overwritten.
+     * @param converterPtr Pointer to the converter object whose data is being exported.
+     * @return Whether writing was successful.
+     */
+    static bool exportConverterAudio(File& outFile, Converter* converterPtr);
 
 private:
 

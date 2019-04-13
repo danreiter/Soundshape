@@ -90,3 +90,55 @@ void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState
     }
     delete xml;
 }
+
+
+bool IOHandler::exportConverterAudio(File& outFile, Converter* converterPtr){
+
+    String ext = outFile.getFileExtension();
+    AudioFormatManager formatManager;
+
+    // THIS IS NOT A LEAK. These objects are destroyed by the manager.
+    formatManager.registerFormat(new WavAudioFormat(),false);
+    formatManager.registerFormat(new FlacAudioFormat(), false);
+    formatManager.registerFormat(new OggVorbisAudioFormat(),false);
+
+    AudioFormat* format =  formatManager.findFormatForFileExtension(ext); // doesnt need deleted manually
+
+    double exportSampleRate = 48000.0; // hz
+    int bitsPerSample = 16;
+    int numChannels = 1;
+    StringPairArray metadata({""}); // empty metadata
+    int qualityOption = 10; // don't know what this does
+
+    // THIS IS NOT A LEAK. This will be used in a writer which should delete it.
+    FileOutputStream* outStream = new FileOutputStream(outFile);
+    // truncate the file if it exists, and start writing
+    if(outStream->openedOk()){
+
+        outStream->setPosition(0);
+        outStream->truncate();
+
+        AudioFormatWriter* writer = format->createWriterFor(
+                outStream,
+                exportSampleRate,
+                numChannels,
+                bitsPerSample,
+                metadata,
+                qualityOption
+        );
+
+        if(writer != nullptr) {
+            // temp storage for rendering one chunk at a time to the export file. Just 1 channel
+            AudioBuffer<float> writeBuffer(1, SOUNDSHAPE_CHUNK_SIZE);
+            for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+                converterPtr->renderExportChunkToBuffer(i, writeBuffer,exportSampleRate);
+                writer->writeFromAudioSampleBuffer(writeBuffer,0,SOUNDSHAPE_CHUNK_SIZE);
+            }
+
+        }
+        writer->flush();
+        delete writer;
+        return true;
+    }
+    return false;
+}

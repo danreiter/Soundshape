@@ -10,3 +10,7 @@ Envelope Test\.ipynb
 SoundshapeProcessorPsuedocode\.txt
 
 Docs\*
+
+*.ogg
+*.flac
+*.wav

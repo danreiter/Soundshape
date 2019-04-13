@@ -75,8 +75,33 @@ public:
     */
     void setSustain(bool sustainState);
 
+    /**
+     * Draws the IFFT of one chunk of profile data into its buffers.
+     *
+     * Useful for drawing the beginning of waveforms in a GUI.
+     * @param chunk The row in the data structure to update.
+     */
     void renderPreview(int chunk);
+
+    /**
+     * Get a sample in the preview rendered with renderPreview.
+     *
+     * @param chunk The row of profile data.
+     * @param index Index into this row.
+     * @return The specified sample.
+     */
     float getPreviewSample(int chunk, int index);
+
+    /**
+     * Writes the IFFT of a profile chunk to an AudioBuffer.
+     *
+     * Applies the Attack, Decay, and Sustain regions of the ADSR envelope.
+     *
+     * @param chunk Which part of the profile to render.
+     * @param buffer A buffer of floats to fill. Should only have 1 channel (channel 0).
+     * @param exportSampleRate The sample rate of the data being exported.
+     */
+    void renderExportChunkToBuffer(int chunk, AudioBuffer<float>& buffer, double exportSampleRate);
 
     /**
     Sets up all the envelopes ( one per MIDI key) to listen to a certain envelope parameter in the AudioProcessorValueTreeState
@@ -149,6 +174,7 @@ private:
     It's size is determined in a SOUNDSHAPE_PREVIEW_CHUNK_SIZE. */
     std::vector<float> previewChunks;
 
+    /** Stores the IFFT of profiles when rendering previews for the GUI */
     std::vector<float> tempRenderbuffer;
 
     /** temporary data for the profile before its rendered for previews in the GUI */
@@ -158,6 +184,14 @@ private:
     us giuve each note on a keyboard its own "voice."
     */
     std::array<EnvelopeParams, 128> noteStates;
+
+    /** An extra envelope for rendering exports.
+     * Gets reset whenever a exporting starts happening at chunk 0.
+     */
+     EnvelopeParams exportRenderEnvelope;
+
+     /** temporary data for the profile before its rendered for exporting IFFT data */
+     std::vector<kiss_fft_cpx> tempExportProfile;
 
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
     float referenceSampleRate = 44100.0f; // Hz. This is what the profile assumes it was derived from. Converts to actual sampler rate during synthesis
@@ -173,8 +207,12 @@ private:
     /** object for doing the inverse FFT when rendering previews */
     kiss_fftr_cfg previewInverseFFT;
 
+    /** object for inverse FFT when exporting data */
+    kiss_fftr_cfg exportInverseFFT;
+
     /**This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading) */
     int currentIndex = 0;
+    int currentExportIndex = 0;
 
     /** If this exceeds the samples per chunk, were done with that chunk.*/
     int samplesWritten = 0;
