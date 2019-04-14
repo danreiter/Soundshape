@@ -42,6 +42,7 @@ private:
 struct CustomLookAndFeel : public LookAndFeel_V2
 {
 
+public:
 	
 	void drawLinearSliderBackground(Graphics& g, int x, int y, int width, int height,
 		float sliderPos, float minSliderPos, float maxSliderPos,

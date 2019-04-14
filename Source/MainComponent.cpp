@@ -167,8 +167,40 @@ void MainComponent::showKey(bool vis)
 	}
 }
 
+void MainComponent::showLic(bool vis)
+{
+
+	if(vis)
+	{
+		LWindow * LWin = new LWindow("License", laf->findColour(SoundshapeLAFs::background2ID), 7, &showLicense);
+		//LWin->addToDesktop(ComponentPeer::windowIsTemporary);
+		licenseWindow = LWin;
+
+		Rectangle<int> area(0, 0, 600, 600);
+
+		RectanglePlacement placement(RectanglePlacement::xLeft
+			| RectanglePlacement::yTop
+			| RectanglePlacement::doNotResize);
+
+		auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
+			.getMainDisplay().userArea.reduced(20));
+		LWin->setBounds(result);
+
+		LWin->setVisible(true);
+	}
+	else
+	{
+	licenseWindow->setVisible(vis);
+	licenseWindow.deleteAndZero();
+	}
+
+}
+
 MainComponent::~MainComponent()
 {
+
+	showLic(false);
+
     if (showKeyboard) {
         showKey(false);
         showKeyboard = false;
@@ -908,6 +940,13 @@ bool MainComponent::perform(const InvocationInfo & info)
 	case CommandIDs::Developers:
 		break;	
 	case CommandIDs::Licence:
+		if (!showLicense)
+		{
+
+			showLicense = true;
+			showLic(true);
+
+		}
 		break;
 	default:
 		return false;

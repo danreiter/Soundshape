@@ -7,6 +7,8 @@
               pluginManufacturerCode="Soun" pluginCode="Shap" pluginVST3Category="Instrument,Stereo,Synth">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
+      <FILE id="ESgxQA" name="otherPopups.cpp" compile="1" resource="0" file="Source/otherPopups.cpp"/>
+      <FILE id="j009mq" name="otherPopups.h" compile="0" resource="0" file="Source/otherPopups.h"/>
       <FILE id="fIo6yp" name="keyboardPopup.cpp" compile="1" resource="0"
             file="Source/keyboardPopup.cpp"/>
       <FILE id="Y4yQ6g" name="keyboardPopup.h" compile="0" resource="0" file="Source/keyboardPopup.h"/>
