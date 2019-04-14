@@ -169,6 +169,10 @@ void MainComponent::showKey(bool vis)
 
 MainComponent::~MainComponent()
 {
+    if (showKeyboard) {
+        showKey(false);
+        showKeyboard = false;
+    }
 }
 //==============================================================================
 
