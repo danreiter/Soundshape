@@ -26,7 +26,7 @@ public:
 private:
 
 	bool * vis;
-
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LWindow)
 
 
 };

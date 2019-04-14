@@ -167,30 +167,40 @@ void MainComponent::showKey(bool vis)
 	}
 }
 
-void MainComponent::showLic()
+void MainComponent::showLic(bool vis)
 {
 
-	
-	LWindow * LWin = new LWindow("License", laf->findColour(SoundshapeLAFs::background2ID), 7, &showLicense);
-	LWin->addToDesktop(ComponentPeer::windowIsTemporary);
-	licenseWindow = LWin;
+	if(vis)
+	{
+		LWindow * LWin = new LWindow("License", laf->findColour(SoundshapeLAFs::background2ID), 7, &showLicense);
+		//LWin->addToDesktop(ComponentPeer::windowIsTemporary);
+		licenseWindow = LWin;
 
-	Rectangle<int> area(0, 0, 600, 600);
+		Rectangle<int> area(0, 0, 600, 600);
 
-	RectanglePlacement placement(RectanglePlacement::xLeft
-		| RectanglePlacement::yTop
-		| RectanglePlacement::doNotResize);
+		RectanglePlacement placement(RectanglePlacement::xLeft
+			| RectanglePlacement::yTop
+			| RectanglePlacement::doNotResize);
 
-	auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
-		.getMainDisplay().userArea.reduced(20));
-	LWin->setBounds(result);
+		auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
+			.getMainDisplay().userArea.reduced(20));
+		LWin->setBounds(result);
 
-	LWin->setVisible(true);
+		LWin->setVisible(true);
+	}
+	else
+	{
+	licenseWindow->setVisible(vis);
+	licenseWindow.deleteAndZero();
+	}
 
 }
 
 MainComponent::~MainComponent()
 {
+
+	showLic(false);
+
 }
 //==============================================================================
 
@@ -910,7 +920,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 		{
 
 			showLicense = true;
-			showLic();
+			showLic(true);
 
 		}
 		break;

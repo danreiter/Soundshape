@@ -19,7 +19,12 @@ LWindow::LWindow(const String& name, Colour backgroundColour, int buttonsNeeded,
 
 }
 
-LWindow::~LWindow(){}
+LWindow::~LWindow()
+{
+
+	
+
+}
 
 void LWindow::closeButtonPressed()
 {
