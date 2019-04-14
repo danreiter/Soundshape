@@ -13,16 +13,19 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 //License Window
-class LWindow : public Component
+class LWindow : public DocumentWindow
 {
 
 public:
 
-	LWindow();
+	LWindow(const String& name, Colour backgroundColour, int buttonsNeeded, bool * vis);
 	~LWindow();
+	void closeButtonPressed() override;
 	void paint(Graphics& g) override;
 
 private:
+
+	bool * vis;
 
 
 

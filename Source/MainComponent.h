@@ -120,7 +120,7 @@ public:
 	void importFile();
 	void exportFile();
 	void showKey(bool vis);
-	void showLic(bool vis);
+	void showLic();
 
 	
 
