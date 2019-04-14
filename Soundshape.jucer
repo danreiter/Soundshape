@@ -73,9 +73,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1" isDebug="1"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
-                       defines="SOUNDSHAPE_RUN_TESTS = 0"/>
+        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1" isDebug="1" enableIncrementalLinking="1"/>
+        <CONFIGURATION isDebug="0" name="Release" defines="SOUNDSHAPE_RUN_TESTS = 0"
+                       targetName="Soundshape" enableIncrementalLinking="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>

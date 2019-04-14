@@ -58,6 +58,13 @@ public:
     void updateFrequencyValue(int chunk, int freq, float value);
 
     /**
+     * Sets all bins in this profile chunk to 0
+     *
+     * @param chunk The index of the chunk to clear.
+     */
+     void clearChunk(int chunk);
+
+    /**
     Get the value of a bin in a profile chunk.
     @return the value of the bin.
     */
@@ -102,6 +109,20 @@ public:
      * @param exportSampleRate The sample rate of the data being exported.
      */
     void renderExportChunkToBuffer(int chunk, AudioBuffer<float>& buffer, double exportSampleRate);
+
+
+    /**
+     * Updates the profile to the spectral content of an audio buffer.
+     *
+     * Perform an FFT on the input buffer and fill every odd-numbered frequency spike
+     * in the profile (up to 4000 Hz because this is what we set in the GUI; this can be changed in
+     * the implementation). Tries to shift the FFT data so that its strongest spike is at 440 Hz.
+     *
+     * @param chunk Which chunk to replace in the profile.
+     * @param buffer The input audio data.
+     * @param importSampleRate Sample rate in Hz of the data in the buffer.
+     */
+    void analyzeChunkIntoProfile(int chunk, AudioBuffer<float>& buffer, double importSampleRate);
 
     /**
     Sets up all the envelopes ( one per MIDI key) to listen to a certain envelope parameter in the AudioProcessorValueTreeState
@@ -190,8 +211,10 @@ private:
      */
      EnvelopeParams exportRenderEnvelope;
 
-     /** temporary data for the profile before its rendered for exporting IFFT data */
-     std::vector<kiss_fft_cpx> tempExportProfile;
+     /** data storage for the profile before its rendered for exporting IFFT data
+      * or for an FFT of imported data before its shifted and written to the profile*/
+     std::vector<kiss_fft_cpx> tempImportExportProfile;
+
 
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
     float referenceSampleRate = 44100.0f; // Hz. This is what the profile assumes it was derived from. Converts to actual sampler rate during synthesis
@@ -209,6 +232,9 @@ private:
 
     /** object for inverse FFT when exporting data */
     kiss_fftr_cfg exportInverseFFT;
+
+    /** Object for <b>forward</b> transforms for importing and anlyzing audio data. */
+    kiss_fftr_cfg importFFT;
 
     /**This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading) */
     int currentIndex = 0;

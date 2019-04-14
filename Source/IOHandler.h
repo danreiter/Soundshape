@@ -92,14 +92,57 @@ public:
     /**
      * Exports the entire Soundshape time domain to an audio file whose format is specified by the extension.
      *
-     * Supported file extensions are .wav .flac and .ogg.
+     * Supported file extensions are .wav .flac and .ogg. This method throws a SoundshapeAudioExportException
+     * if the export process encounters a problem.
      *
      * @param outFile The file that will be created/overwritten.
      * @param converterPtr Pointer to the converter object whose data is being exported.
-     * @return Whether writing was successful.
      */
-    static bool exportConverterAudio(File& outFile, Converter* converterPtr);
+    static void exportConverterAudio(File& outFile, Converter* converterPtr);
+
+    /**
+     * Imports an audio file and overwrites a Converter's profile with its spectral content.
+     *
+     * The converter performs a spectral analysis on each chunk of audio
+     * in the file and overwrites its current profile with this data.
+     * Accepted file formats are .wav, .flac, and .ogg.
+     * The Converter's profile will be filled up with as much of the audio as it can, and the
+     * rest of its profile will be zeros.
+     *
+     * <b> This will throw a SoundshapeAudioImportException if the import process didn't happen properly.</b>
+     * This could occur if there weren't enough samples in the data to fill up even one chunk or if the
+     * specified file has a bad format or file extension.
+     *
+     * @param inFile The file to analyze.
+     * @param converterPtr A pointer to the target Converter object.
+     */
+    static void importConverterAudio(File &inFile, Converter* converterPtr);
+
+
+    static double exportSampleRate;
+    static int bitsPerSample ;
+    static int numChannels;
+    static int qualityOption;
 
 private:
 
+};
+
+
+
+
+/**
+ * Exception for problems during exporting a profile as an audio file
+ */
+struct SoundshapeAudioExportException : public std::exception {
+    SoundshapeAudioExportException():exception(){}
+
+};
+
+
+/**
+ * Exception for problems during importing an audio file into a profile
+ */
+struct SoundshapeAudioImportException : public std::exception {
+    SoundshapeAudioImportException():exception(){}
 };

@@ -624,12 +624,21 @@ void MainComponent::loadFile()
 //-------------------------------------------------------------------------------------
 void MainComponent::importFile()
 {
-	FileChooser chooser("Please select file to import.", presetPath, "*.wav;*.flac;*.ogg",false);
+	FileChooser chooser("Please select file to import (.ogg, .wav, or .flac)", presetPath, "*.ogg;*.wav;*.flac",false);
 	if (chooser.browseForFileToOpen())
 	{
-		File import = chooser.getResult();
-
-		//do import stuff here
+		File inFile = chooser.getResult();//.withFileExtension();
+		try{
+		    IOHandler::importConverterAudio(inFile, converterPtr);
+            AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "Success",
+                                        "Imported " + inFile.getFileName());
+		}
+		catch (SoundshapeAudioImportException&){
+            AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, "Error",
+                                        "There was problem reading that file."
+                                        " Please make sure it is valid and has a proper extension."
+                                        " (.ogg, .wav, .flac)");
+		}
 	}
 }
 //-------------------------------------------------------------------------------------
@@ -673,15 +682,16 @@ void MainComponent::exportFile()
 			File outFile = chooser.getResult().withFileExtension(ext);
 
 			// this method handles the correct audio format based on the file name
-			bool success = IOHandler::exportConverterAudio(outFile,converterPtr);
-			if(success){
+			try {
+				IOHandler::exportConverterAudio(outFile, converterPtr);
 				AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "Success",
 											"Exported " + outFile.getFileName());
 			}
-			else{
+			catch (SoundshapeAudioExportException&) {
 				AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, "Error",
-						"There was problem writing to that file.");
+											"There was problem writing to that file.");
 			}
+
 		}
 	}
 }

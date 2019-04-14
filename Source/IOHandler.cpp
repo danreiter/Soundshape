@@ -1,5 +1,10 @@
 #include "IOHandler.h"
 
+double IOHandler::exportSampleRate = 48000.0; // hz
+int IOHandler::bitsPerSample = 16;
+int IOHandler::numChannels = 1;
+int IOHandler::qualityOption = 0; // don't know what this does
+
 XmlElement * IOHandler::createProfileXML(Converter & converter)
 {
     XmlElement* result = new XmlElement("Profile");
@@ -29,7 +34,7 @@ XmlElement * IOHandler::createProfileXML(Converter & converter)
 std::unique_ptr<XmlElement> IOHandler::createStateXML(Converter & converter, AudioProcessorValueTreeState & valueTreeState)
 {
     auto state = valueTreeState.copyState();
-    
+    // see the header file for the structure of a soundshape XML file
     std::unique_ptr<XmlElement> xml(new XmlElement(state.getType())); // gives it the "Soundshape" tag at the top
     XmlElement* paramsXml(state.createXml());
     paramsXml->setTagName("Parameters");
@@ -73,15 +78,15 @@ void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState
 
             int chunkIndex = chunkXml->getIntAttribute("index");
 
-            XmlElement* frequenyXml = chunkXml->getFirstChildElement();
-            while (frequenyXml != nullptr) {
+            XmlElement* frequencyXml = chunkXml->getFirstChildElement();
+            while (frequencyXml != nullptr) {
 
-                int bin = (int)frequenyXml->getDoubleAttribute("bin");
-                double value = frequenyXml->getDoubleAttribute("val");
+                int bin = (int)frequencyXml->getDoubleAttribute("bin");
+                double value = frequencyXml->getDoubleAttribute("val");
 
-                converter.updateFrequencyValue(chunkIndex, bin, value);
+                converter.updateFrequencyValue(chunkIndex, bin, (float)value);
 
-                frequenyXml = frequenyXml->getNextElement();
+                frequencyXml = frequencyXml->getNextElement();
             }
 
             // get its next sibling for iteration. eventually nullptr
@@ -92,7 +97,7 @@ void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState
 }
 
 
-bool IOHandler::exportConverterAudio(File& outFile, Converter* converterPtr){
+void IOHandler::exportConverterAudio(File& outFile, Converter* converterPtr){
 
     String ext = outFile.getFileExtension();
     AudioFormatManager formatManager;
@@ -104,13 +109,7 @@ bool IOHandler::exportConverterAudio(File& outFile, Converter* converterPtr){
 
     AudioFormat* format =  formatManager.findFormatForFileExtension(ext); // doesnt need deleted manually
 
-    double exportSampleRate = 48000.0; // hz
-    int bitsPerSample = 16;
-    int numChannels = 1;
-    StringPairArray metadata({""}); // empty metadata
-    int qualityOption = 10; // don't know what this does
-
-    // THIS IS NOT A LEAK. This will be used in a writer which should delete it.
+    // This is deleted by a writer if it can be created, needs deleted manually if that fails.
     FileOutputStream* outStream = new FileOutputStream(outFile);
     // truncate the file if it exists, and start writing
     if(outStream->openedOk()){
@@ -123,7 +122,7 @@ bool IOHandler::exportConverterAudio(File& outFile, Converter* converterPtr){
                 exportSampleRate,
                 numChannels,
                 bitsPerSample,
-                metadata,
+                {""},
                 qualityOption
         );
 
@@ -134,11 +133,69 @@ bool IOHandler::exportConverterAudio(File& outFile, Converter* converterPtr){
                 converterPtr->renderExportChunkToBuffer(i, writeBuffer,exportSampleRate);
                 writer->writeFromAudioSampleBuffer(writeBuffer,0,SOUNDSHAPE_CHUNK_SIZE);
             }
-
+            writer->flush();
+            delete writer;
         }
-        writer->flush();
-        delete writer;
-        return true;
+        else{
+            // writer was nullptr
+            delete outStream; // writer didn't delete it
+            throw SoundshapeAudioExportException();
+        }
     }
-    return false;
+    else{
+        throw SoundshapeAudioExportException();
+    }
+}
+
+void IOHandler::importConverterAudio(File &inFile, Converter *converterPtr) {
+
+    String ext = inFile.getFileExtension();
+    AudioFormatManager formatManager;
+
+    // THIS IS NOT A LEAK. These objects are destroyed by the manager.
+    formatManager.registerFormat(new WavAudioFormat(),false);
+    formatManager.registerFormat(new FlacAudioFormat(), false);
+    formatManager.registerFormat(new OggVorbisAudioFormat(),false);
+
+    FileInputStream* inStream = new FileInputStream(inFile); // don't delete manually; the reader will delete this.
+    AudioFormat* format = formatManager.findFormatForFileExtension(inFile.getFileExtension());
+    if(format == nullptr){
+        throw SoundshapeAudioImportException();
+    }
+
+    if(inStream->openedOk()){
+        AudioFormatReader* reader = format->createReaderFor(inStream,true); // reader auto deletes the stream if fails
+
+        if(reader != nullptr){
+
+            // stream is open and we can read this format. Start reading chunks.
+            juce::int64 samplesRead = 0;
+            int chunk = 0;
+            int bufferSize = SOUNDSHAPE_CHUNK_SIZE;
+            AudioBuffer<float> readBuffer(1, bufferSize);
+            // Keep reading chunks until there aren't enough samples left.
+            // We should throw an exception if there aren't enough samples in the
+            // file to even fill up a single chunk.
+            while(samplesRead + bufferSize < reader->lengthInSamples){
+                reader->read(&readBuffer, 0,bufferSize,samplesRead,true,true);
+                samplesRead += bufferSize;
+                converterPtr->analyzeChunkIntoProfile(chunk, readBuffer, reader->sampleRate);
+                chunk++;
+            }
+            if(chunk == 0){
+                // we never entered the while loop
+                throw SoundshapeAudioImportException();
+            }
+
+            delete reader;
+        }
+        else{
+            throw SoundshapeAudioImportException();
+        }
+    }
+    else{
+        // stream didn't open correctly at all
+        throw SoundshapeAudioImportException();
+    }
+
 }
