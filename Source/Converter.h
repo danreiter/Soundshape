@@ -216,6 +216,7 @@ private:
      std::vector<kiss_fft_cpx> tempImportExportProfile;
 
 
+
     float referenceFrequency = 440.0f; // Hz. This is what the lowest spike is assumed to represent.
     float referenceSampleRate = 44100.0f; // Hz. This is what the profile assumes it was derived from. Converts to actual sampler rate during synthesis
     double sampleRate;

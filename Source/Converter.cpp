@@ -1,15 +1,15 @@
 #include "Converter.h"
 
-Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : 
+Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) :
     valueTreeState(_valueTreeState),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previewChunks(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_PREVIEW_CHUNK_SIZE),
-    tempRenderbuffer(2*SOUNDSHAPE_CHUNK_SIZE, 0),
-    tempRenderProfile(2*SOUNDSHAPE_CHUNK_SIZE, {0,0}),
-    tempImportExportProfile(2*SOUNDSHAPE_CHUNK_SIZE,{0,0})
+    tempRenderbuffer(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
+    tempRenderProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
+    tempImportExportProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 })
 {
     // set up inverse FFT config objects
     // This needs manually freed (use destructor)
@@ -173,25 +173,37 @@ void Converter::analyzeChunkIntoProfile(int chunk, AudioBuffer<float> &buffer, d
     int numSamples = buffer.getNumSamples();
     kiss_fft_cpx zeroCpx = {0,0};
     std::fill(tempImportExportProfile.begin(), tempImportExportProfile.end(), zeroCpx);
+    // apply windowing function because of leakage
+    dsp::WindowingFunction<float> window(buffer.getNumSamples(), dsp::WindowingFunction<float>::hamming);
+    window.multiplyWithWindowingTable(buffer.getWritePointer(0),buffer.getNumSamples());
     kiss_fftr(importFFT, buffer.getReadPointer(0),tempImportExportProfile.data()); // channel 0
-    clearChunk(chunk);
+
+    clearChunk(chunk); // clear this part of the profile
 
     // fill up the profile with the magnitude of each frequency spike
-    for(int i = 0; i < buffer.getNumSamples(); i++){
-        float targetFrequency = binToFreq(i,importSampleRate);
+    for(int i = 2; i < std::min((double)4000, importSampleRate); i+=2){
+        // Iterate through each point in the profile we want to fill.
+        // For each one, find the bin of the input FFT buffer that
+        // corresponds to this profile frequency point.
+        
+        int sourceBin1 = freqToBin(i, importSampleRate);
+        int sourceBin2 = freqToBin(i + 1, importSampleRate);
 
-        auto magnitude = (float)sqrt(
-                pow(tempImportExportProfile[i].r, 2) +
-                pow(tempImportExportProfile[i].i, 2)
-                );
 
-        int index = (int)targetFrequency;
-        if(index > 0 && index){ // GUI constraints
+        // magnitude is length of vector to the complex point from the origin
+        auto magnitude =
+            (float)sqrt(
+                pow(tempImportExportProfile[sourceBin1].r, 2) +
+                pow(tempImportExportProfile[sourceBin1].i, 2)) +
+            (float)sqrt(
+                pow(tempImportExportProfile[sourceBin2].r, 2) +
+                pow(tempImportExportProfile[sourceBin2].i, 2)
+        );
 
-            if(index< 4000 && magnitude > 5){
-                setProfileRawPoint(chunk, index, magnitude);
-            }
+        if( magnitude > 5){
+            setProfileRawPoint(chunk, i, magnitude);
         }
+        
     }
 }
 
