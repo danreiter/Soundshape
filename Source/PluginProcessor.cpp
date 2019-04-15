@@ -3,9 +3,6 @@
 #include "PluginEditor.h"
 #include "IOHandler.h"
 
-#define CATCH_CONFIG_RUNNER
-#include "catch.h"
-
 //==============================================================================
 Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -94,7 +91,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
     }
 
     if (SOUNDSHAPE_RUN_TESTS) {
-        int result = Catch::Session().run();
+        // we can run unit tests here. These are only run in Debug mode
     }
 
 }
@@ -257,13 +254,14 @@ AudioProcessorEditor* Soundshape_pluginAudioProcessor::createEditor()
 //==============================================================================
 void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    
+    // save the state, called by the host
+    std::unique_ptr<XmlElement> stateXML = IOHandler::createStateXML(converter, valueTreeState);
+    copyXmlToBinary(*stateXML, destData);
 }
 
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // reading a preset from the host
-
     XmlElement* xmlState = getXmlFromBinary(data, sizeInBytes);
     if (xmlState != nullptr) {
         // this method handles deleting the xmlState for us.
