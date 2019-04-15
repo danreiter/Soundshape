@@ -198,8 +198,8 @@ void MainComponent::showLic(bool vis)
 
 MainComponent::~MainComponent()
 {
-
-	showLic(false);
+	if(showLicense)
+		showLic(false);
 
     if (showKeyboard) {
         showKey(false);
