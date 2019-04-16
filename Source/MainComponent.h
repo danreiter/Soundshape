@@ -120,7 +120,7 @@ public:
 	void importFile();
 	void exportFile();
 	void showKey(bool vis);
-	void showLic(bool vis);
+	void showLic();
 
 	
 
@@ -145,7 +145,8 @@ private:
 	int timeBlock, selectedProfile, currentProfile;		// Varible for tracking current selected time and frequency
 	double zoom;						// Varible for tracking current degree of zoom of frquency profile
 	
-	Component::SafePointer<Component> midiKeyboard, licenseWindow;
+	Component::SafePointer<Component> midiKeyboard;
+	Array<Component::SafePointer<Component>> licenseWindow;
 
 	// Varible for notes in hz
     static float notes[12];

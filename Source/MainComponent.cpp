@@ -167,40 +167,74 @@ void MainComponent::showKey(bool vis)
 	}
 }
 
-void MainComponent::showLic(bool vis)
+void MainComponent::showLic()
 {
 
-	if(vis)
-	{
-		LWindow * LWin = new LWindow("License", laf->findColour(SoundshapeLAFs::background2ID), 7, &showLicense);
-		//LWin->addToDesktop(ComponentPeer::windowIsTemporary);
-		licenseWindow = LWin;
+	//if(vis)
+	//{
+		String m;
 
-		Rectangle<int> area(0, 0, 600, 600);
+		m << "Dialog Windows can be used to quickly show a component, usually blocking mouse input to other windows." << newLine
+			<< newLine
+			<< "They can also be quickly closed with the escape key, try it now.";
 
-		RectanglePlacement placement(RectanglePlacement::xLeft
-			| RectanglePlacement::yTop
-			| RectanglePlacement::doNotResize);
+		DialogWindow::LaunchOptions options;
+		auto* label = new Label();
+		label->setText(m, dontSendNotification);
+		label->setColour(Label::textColourId, laf->findColour(SoundshapeLAFs::base1textID));
+		options.content.setOwned(label);
 
-		auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
-			.getMainDisplay().userArea.reduced(20));
-		LWin->setBounds(result);
+		Rectangle<int> area(0, 0, 300, 200);
 
-		LWin->setUsingNativeTitleBar(true);
-		LWin->setVisible(true);
-	}
-	else
-	{
-	licenseWindow->setVisible(vis);
-	licenseWindow.deleteAndZero();
-	}
+		options.content->setSize(area.getWidth(), area.getHeight());
+
+		options.dialogTitle = "License";
+		options.dialogBackgroundColour = laf->findColour(SoundshapeLAFs::background2ID);
+		options.escapeKeyTriggersCloseButton = true;
+		options.useNativeTitleBar = false;
+		options.resizable = true;
+
+		options.launchAsync();
+
+
+		////LWindow * LWin = new LWindow("License", laf->findColour(SoundshapeLAFs::background2ID), 7, &showLicense);
+
+		////LWin->addToDesktop(ComponentPeer::windowIsTemporary);
+		//licenseWindow = LWin;
+
+		//Rectangle<int> area(0, 0, 600, 600);
+
+		//RectanglePlacement placement(RectanglePlacement::xLeft
+		//	| RectanglePlacement::yTop
+		//	| RectanglePlacement::doNotResize);
+
+		//auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
+		//	.getMainDisplay().userArea.reduced(20));
+		//LWin->setBounds(result);
+
+		//LWin->setVisible(true);
+	//}
+	//else
+	//{
+	//	for (auto& license : licenseWindow)
+	//		license.deleteAndZero();
+
+	//	licenseWindow.clear();
+
+	//}
 
 }
 
 MainComponent::~MainComponent()
 {
-	if(showLicense)
-		showLic(false);
+	if (showLicense)
+	{
+
+		for (auto& license : licenseWindow)
+			license.deleteAndZero();
+
+		licenseWindow.clear();
+	}
 
     if (showKeyboard) {
         showKey(false);
@@ -944,8 +978,8 @@ bool MainComponent::perform(const InvocationInfo & info)
 		if (!showLicense)
 		{
 
-			showLicense = true;
-			showLic(true);
+
+			showLic();
 
 		}
 		break;

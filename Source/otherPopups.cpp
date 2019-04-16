@@ -16,7 +16,8 @@ LWindow::LWindow(const String& name, Colour backgroundColour, int buttonsNeeded,
 	
 	this->bgColour = backgroundColour;
 	this->vis = vis;
-	setSize(1200, 1200);
+	setTitleBarTextCentred(false);
+	setUsingNativeTitleBar(false);
 
 }
 
@@ -36,13 +37,21 @@ void LWindow::closeButtonPressed()
 
 void LWindow::paint(Graphics& g)
 {
+	String m;
 
-	g.fillAll(bgColour);
+	m << "Dialog Windows can be used to quickly show a component, usually blocking mouse input to other windows." << newLine
+		<< newLine
+		<< "They can also be quickly closed with the escape key, try it now.";
 
-	/*Rectangle<float> titleArea(0, 10, getWidth(), getHeight() / 8);
-	g.setFont(Font::bold);
-	g.setFont(Font::italic);
-	g.setFont((getHeight() / 2) * .8);
-	g.drawText("License", titleArea, Justification::centred, true);*/
+
+	//DialogWindow::LaunchOptions options
+
+	//g.fillAll(Colours::white);
+
+	//Rectangle<float> titleArea(0, 10, getWidth(), getHeight() / 8);
+	//g.setFont(Font::bold);
+	//g.setFont(Font::italic);
+	//g.setFont((getHeight() / 2) * .8);
+	//g.drawText("License", titleArea, Justification::centred, true);
 
 }
