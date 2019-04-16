@@ -172,19 +172,39 @@ void MainComponent::showLic()
 
 	//if(vis)
 	//{
-		String m;
+		String m = "Soundshape. Spectral synthesis applicaiton / audio plugin. \n"
+            "Copyright(C) 2019 by Mardigon Toler, Daniel Reiter, Gregory Hughes \n"
+            "\n"
+            "This program is free software : you can redistribute it and/or modify\n"
+            "it under the terms of the GNU General Public License as published by\n"
+            "the Free Software Foundation, either version 3 of the License, or\n"
+            "(at your option) any later version.\n "
+            "\n"
+            "This program is distributed in the hope that it will be useful, but\n"
+            "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the\n"
+            "GNU General Public License for more details.\n"
+            "\n"
+            "You should have received a copy of the GNU General Public License\n"
+            "along with this program.If not, see < http://www.gnu.org/licenses/>."
+            "\n"
+            "\n"
+            "Built with the JUCE framework: \n"
+            "www.juce.com"
+            "\n"
+            "VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe \n"
+            "and other countries."
+            ;
 
-		m << "Dialog Windows can be used to quickly show a component, usually blocking mouse input to other windows." << newLine
-			<< newLine
-			<< "They can also be quickly closed with the escape key, try it now.";
 
 		DialogWindow::LaunchOptions options;
 		auto* label = new Label();
+        
 		label->setText(m, dontSendNotification);
 		label->setColour(Label::textColourId, laf->findColour(SoundshapeLAFs::base1textID));
 		options.content.setOwned(label);
 
-		Rectangle<int> area(0, 0, 300, 200);
+		Rectangle<int> area(0, 0, 600, 300);
 
 		options.content->setSize(area.getWidth(), area.getHeight());
 
@@ -192,7 +212,7 @@ void MainComponent::showLic()
 		options.dialogBackgroundColour = laf->findColour(SoundshapeLAFs::background2ID);
 		options.escapeKeyTriggersCloseButton = true;
 		options.useNativeTitleBar = false;
-		options.resizable = true;
+		options.resizable = false;
 
 		options.launchAsync();
 
