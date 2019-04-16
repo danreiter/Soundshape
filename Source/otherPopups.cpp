@@ -14,6 +14,7 @@ LWindow::LWindow(const String& name, Colour backgroundColour, int buttonsNeeded,
 	: DocumentWindow (name, backgroundColour, buttonsNeeded)
 {
 	
+	this->bgColour = backgroundColour;
 	this->vis = vis;
 	setSize(1200, 1200);
 
@@ -36,9 +37,9 @@ void LWindow::closeButtonPressed()
 void LWindow::paint(Graphics& g)
 {
 
-	/*g.fillAll(Colours::white);
+	g.fillAll(bgColour);
 
-	Rectangle<float> titleArea(0, 10, getWidth(), getHeight() / 8);
+	/*Rectangle<float> titleArea(0, 10, getWidth(), getHeight() / 8);
 	g.setFont(Font::bold);
 	g.setFont(Font::italic);
 	g.setFont((getHeight() / 2) * .8);

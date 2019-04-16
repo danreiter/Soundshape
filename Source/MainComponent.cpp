@@ -186,6 +186,7 @@ void MainComponent::showLic(bool vis)
 			.getMainDisplay().userArea.reduced(20));
 		LWin->setBounds(result);
 
+		LWin->setUsingNativeTitleBar(true);
 		LWin->setVisible(true);
 	}
 	else
