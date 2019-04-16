@@ -24,8 +24,8 @@ public:
 	void paint(Graphics& g) override;
 
 private:
-
 	bool * vis;
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LWindow)
 
 
