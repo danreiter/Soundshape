@@ -17,7 +17,7 @@
 //==============================================================================
 //  Constructor
 //==============================================================================
-bigTime::bigTime(AudioProcessorValueTreeState& _valueStateTree)
+bigTime::bigTime(AudioProcessorValueTreeState& _valueTreeState):valueTreeState(_valueTreeState)
 {
 	
 	xPoint = new int;
@@ -41,9 +41,17 @@ bigTime::bigTime(AudioProcessorValueTreeState& _valueStateTree)
 	playTime->setComponentID((String)PLAYTIME_SLIDER);
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
 	playTime->setRange(0, 50, 1);
-	playTime->setMinAndMaxValues(0, 50);
+	//playTime->setMinAndMaxValues(0, 50);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	playTime->setTooltip("Controls how much of the sound is played when the Play Button is pressed");
+
+    // hook up as a listener for changes to the play slider
+    _valueTreeState.addParameterListener("beginningChunk", this);
+    _valueTreeState.addParameterListener("endingChunk", this);
+    int lowerPosition = _valueTreeState.getParameter("beginningChunk")->getValue();
+    int upperPosition = _valueTreeState.getParameter("endingChunk")->getValue();
+    playTime->setMinAndMaxValues(lowerPosition, upperPosition);
+
 
 	// Create buttons
 	for (int i = 0; i < *time; ++i)
@@ -53,15 +61,13 @@ bigTime::bigTime(AudioProcessorValueTreeState& _valueStateTree)
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
 	}
-
-    // hook up as a listener for changes to the play slider
-    _valueStateTree.addParameterListener("beginningChunk", this);
-    _valueStateTree.addParameterListener("endingChunk", this);
-
 }
 
 bigTime::~bigTime()
 {
+    valueTreeState.removeParameterListener("beginningChunk",this);
+    valueTreeState.removeParameterListener("endingChunk",this);
+    delete playTime;
 }
 //==============================================================================
 

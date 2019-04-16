@@ -35,7 +35,7 @@ std::unique_ptr<XmlElement> IOHandler::createStateXML(Converter & converter, Aud
 {
     auto state = valueTreeState.copyState();
     // see the header file for the structure of a soundshape XML file
-    std::unique_ptr<XmlElement> xml(new XmlElement(state.getType())); // gives it the "Soundshape" tag at the top
+    std::unique_ptr<XmlElement> xml(new XmlElement("Soundshape")); // gives it the "Soundshape" tag at the top
     XmlElement* paramsXml(state.createXml());
     paramsXml->setTagName("Parameters");
     xml->addChildElement(paramsXml);
@@ -60,10 +60,10 @@ void IOHandler::writeStateXMLFile(File f, String content)
 }
 
 void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
-    XmlElement*  xml)
+    std::unique_ptr<XmlElement>&  xml)
 {
-
-    if (xml->hasTagName(valueTreeState.state.getType())) {
+    
+    if (xml->hasTagName("Soundshape")) {
         // This is a soundshape preset, hopefully not corrupt
         // Get its parameters and reset the current AudioProcessorValueTreeState's state with it.
 
@@ -74,6 +74,9 @@ void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState
 
         // iterate through the profile chunks
         XmlElement* chunkXml = profileXml->getFirstChildElement();
+        for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+            converter.clearChunk(i);
+        }
         while (chunkXml != nullptr) {
 
             int chunkIndex = chunkXml->getIntAttribute("index");
@@ -93,7 +96,6 @@ void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState
             chunkXml = chunkXml->getNextElement(); 
         }
     }
-    delete xml;
 }
 
 

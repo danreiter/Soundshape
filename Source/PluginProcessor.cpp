@@ -20,7 +20,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     "Gain",
                                     0.00f,
                                     0.99f,
-                                    0.80f),
+                                    0.40f),
                                 std::make_unique<AudioParameterFloat>(
                                     "attack",
                                     "Attack",
@@ -56,7 +56,7 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     "Ending Section",
                                     0,
                                     50,
-                                    50)
+                                    2)
                                 }
     ),
     converter(valueTreeState)
@@ -262,7 +262,7 @@ void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // reading a preset from the host
-    XmlElement* xmlState = getXmlFromBinary(data, sizeInBytes);
+    std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
     if (xmlState != nullptr) {
         // this method handles deleting the xmlState for us.
         IOHandler::restoreStateFromXml(valueTreeState, converter, xmlState);

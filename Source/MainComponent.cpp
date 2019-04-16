@@ -638,7 +638,7 @@ void MainComponent::loadFile()
 	// call load sound or other function to up
 	
 	//file handling here
-	XmlElement* stateXml = XmlDocument::parse(selectedFile);
+	std::unique_ptr<XmlElement> stateXml(XmlDocument::parse(selectedFile));
 	if (stateXml != nullptr) {
 		IOHandler::restoreStateFromXml(valueTreeState, *converterPtr, stateXml);
 	}
@@ -648,7 +648,7 @@ void MainComponent::loadFile()
 		cb.setSelectedItemIndex(0);
 		selectedFile = newFile;
 	}
-		
+	
 	//do After file load
 	fWindow.setProfile();
 	repaint();

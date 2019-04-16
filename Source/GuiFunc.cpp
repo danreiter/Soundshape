@@ -114,6 +114,7 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 
 GuiFunc::~GuiFunc()
 {
+    delete volBox;
 }
 
 void GuiFunc::paint(Graphics& g)

@@ -24,9 +24,9 @@ class bigTime : public Component,
                 public AudioProcessorValueTreeState::Listener
 {
 public:
-	bigTime(AudioProcessorValueTreeState& _valueStateTree);
+	bigTime(AudioProcessorValueTreeState& _valueTreeState);
 	~bigTime();
-
+    AudioProcessorValueTreeState& valueTreeState;
 	void paint(Graphics&) override;
 	void resized() override;
 

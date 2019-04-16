@@ -87,7 +87,7 @@ public:
     will be deleted in this method, so don't use it again afterwards.</b>
     */
     static void restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
-        XmlElement* xml);
+        std::unique_ptr<XmlElement>& xml);
 
     /**
      * Exports the entire Soundshape time domain to an audio file whose format is specified by the extension.
