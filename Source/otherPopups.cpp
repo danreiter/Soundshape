@@ -14,7 +14,7 @@ LWindow::LWindow(const String& name, Colour backgroundColour, int buttonsNeeded,
 	: DocumentWindow (name, backgroundColour, buttonsNeeded)
 {
 	
-	this->bgColour = backgroundColour;
+
 	this->vis = vis;
 	setTitleBarTextCentred(false);
 	setUsingNativeTitleBar(false);
