@@ -181,15 +181,15 @@ void MainComponent::showLic()
 		DialogWindow::LaunchOptions options;
 		auto* label = new Label();
 		label->setText(m, dontSendNotification);
-		label->setColour(Label::textColourId, Colours::whitesmoke);
+		label->setColour(Label::textColourId, laf->findColour(SoundshapeLAFs::base1textID));
 		options.content.setOwned(label);
 
 		Rectangle<int> area(0, 0, 300, 200);
 
 		options.content->setSize(area.getWidth(), area.getHeight());
 
-		options.dialogTitle = "Dialog Window";
-		options.dialogBackgroundColour = Colour(0xff0e345a);
+		options.dialogTitle = "License";
+		options.dialogBackgroundColour = laf->findColour(SoundshapeLAFs::background2ID);
 		options.escapeKeyTriggersCloseButton = true;
 		options.useNativeTitleBar = false;
 		options.resizable = true;
