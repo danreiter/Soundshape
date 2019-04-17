@@ -914,6 +914,7 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 			_result.setInfo("Golden Bear", "Sets theme to Golden Bear", "Themes", 0);
 			_result.setTicked(currentTheme == CommandIDs::SchoolTheme);
 			_result.addDefaultKeypress('g', ModifierKeys::commandModifier);
+			break;
 		case CommandIDs::ToolTips:
 			_result.setInfo("Tool Tips", "Turns on and off tool tips", "Help", 0);
 			_result.setTicked(tips);
