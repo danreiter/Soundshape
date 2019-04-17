@@ -77,6 +77,7 @@ public:
 		menuPositionBurgerMenu,
 		DefaultTheme,
 		TestTheme,
+		SchoolTheme,
 		Keyboard,
 		PresetPath,
 		ToolTips,
@@ -121,6 +122,7 @@ public:
 	void exportFile();
 	void showKey(bool vis);
 	void showLic();
+	void showDevs();
 
 	
 

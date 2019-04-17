@@ -194,7 +194,7 @@ void freqDomainWin::setProfileControl()
 		tb->setClickingTogglesState(false);
 		tb->setVisible(false);
 		//tb->setLookAndFeel(laf);
-		tb->setColour(TextButton::buttonColourId, Colours::white);
+		tb->setColour(TextButton::buttonColourId, Colours::red);
 		if (buttonParent != NULL)
 		{
 			tb->addListener(buttonParent);

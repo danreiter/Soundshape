@@ -216,32 +216,34 @@ void MainComponent::showLic()
 
 		options.launchAsync();
 
+}
 
-		////LWindow * LWin = new LWindow("License", laf->findColour(SoundshapeLAFs::background2ID), 7, &showLicense);
+void MainComponent::showDevs()
+{
 
-		////LWin->addToDesktop(ComponentPeer::windowIsTemporary);
-		//licenseWindow = LWin;
-
-		//Rectangle<int> area(0, 0, 600, 600);
-
-		//RectanglePlacement placement(RectanglePlacement::xLeft
-		//	| RectanglePlacement::yTop
-		//	| RectanglePlacement::doNotResize);
-
-		//auto result = placement.appliedTo(area, Desktop::getInstance().getDisplays()
-		//	.getMainDisplay().userArea.reduced(20));
-		//LWin->setBounds(result);
-
-		//LWin->setVisible(true);
-	//}
-	//else
+	//if(vis)
 	//{
-	//	for (auto& license : licenseWindow)
-	//		license.deleteAndZero();
+	String m = "Soundshape. Spectral synthesis applicaiton / audio plugin.";
 
-	//	licenseWindow.clear();
 
-	//}
+	DialogWindow::LaunchOptions options;
+	auto* label = new Label();
+
+	label->setText(m, dontSendNotification);
+	label->setColour(Label::textColourId, laf->findColour(SoundshapeLAFs::base1textID));
+	options.content.setOwned(label);
+
+	Rectangle<int> area(0, 0, 600, 300);
+
+	options.content->setSize(area.getWidth(), area.getHeight());
+
+	options.dialogTitle = "Developers";
+	options.dialogBackgroundColour = laf->findColour(SoundshapeLAFs::background2ID);
+	options.escapeKeyTriggersCloseButton = true;
+	options.useNativeTitleBar = false;
+	options.resizable = false;
+
+	options.launchAsync();
 
 }
 
@@ -836,6 +838,7 @@ PopupMenu MainComponent::getMenuForIndex(int menuIndex, const String &)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::DefaultTheme);
 		menu.addCommandItem(&commandManager, CommandIDs::TestTheme);
+		menu.addCommandItem(&commandManager, CommandIDs::SchoolTheme);
 	}
 	else if (menuIndex == 3)
 	{
@@ -898,15 +901,19 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 			_result.addDefaultKeypress('p', ModifierKeys::shiftModifier);
 			break;
 		case CommandIDs::DefaultTheme:
-			_result.setInfo("Default Theme", "Sets theme to default theme", "Themes", 0);
+			_result.setInfo("Default Theme", "Sets theme to Default Theme", "Themes", 0);
 			_result.setTicked(currentTheme == CommandIDs::DefaultTheme);
 			_result.addDefaultKeypress('r', ModifierKeys::commandModifier);
 			break;
 		case CommandIDs::TestTheme:
-			_result.setInfo("Test Theme", "Sets theme to test theme", "Themes", 0);
+			_result.setInfo("Is it Purple?", "Sets theme to Is it Purple?", "Themes", 0);
 			_result.setTicked(currentTheme == CommandIDs::TestTheme);
 			_result.addDefaultKeypress('h', ModifierKeys::commandModifier);
 			break;
+		case CommandIDs::SchoolTheme:
+			_result.setInfo("Golden Bear", "Sets theme to Golden Bear", "Themes", 0);
+			_result.setTicked(currentTheme == CommandIDs::SchoolTheme);
+			_result.addDefaultKeypress('g', ModifierKeys::commandModifier);
 		case CommandIDs::ToolTips:
 			_result.setInfo("Tool Tips", "Turns on and off tool tips", "Help", 0);
 			_result.setTicked(tips);
@@ -943,6 +950,7 @@ void MainComponent::getAllCommands(Array<CommandID>& c)
 						CommandIDs::PresetPath,
 						CommandIDs::DefaultTheme,
 						CommandIDs::TestTheme,
+						CommandIDs::SchoolTheme,
 						CommandIDs::ToolTips,
 						CommandIDs::Tutorial,
 						CommandIDs::Developers,
@@ -979,7 +987,13 @@ bool MainComponent::perform(const InvocationInfo & info)
 		break;
 	case CommandIDs::TestTheme:
 		setTheme(CommandIDs::TestTheme);
-		laf->initColors(Colour(0xff40005b), Colours::white, Colours::darkred, Colours::white, Colour(0xff202020), Colours::violet, Colours::deeppink);
+		laf->initColors(Colour(0xff40005b), Colours::white, Colour(0xffdd0000), Colours::black, Colour(0xff202020), Colour(0xffd57fed), Colours::darkred);
+		laf->setColors();
+		setAllLookAndFeels(laf, this);
+		break;
+	case CommandIDs::SchoolTheme:
+		setTheme(CommandIDs::SchoolTheme);
+		laf->initColors(Colour(0xff002855), Colours::white, Colour(0xffeaaa00), Colours::black, Colour(0xff333f48), Colour(0xff9abeaa), Colour(0xfffdda24));
 		laf->setColors();
 		setAllLookAndFeels(laf, this);
 		break;
@@ -993,15 +1007,16 @@ bool MainComponent::perform(const InvocationInfo & info)
 	case CommandIDs::Tutorial:
 		break;	
 	case CommandIDs::Developers:
+		showDevs();
 		break;	
 	case CommandIDs::Licence:
-		if (!showLicense)
-		{
+		//if (!showLicense)
+		//{
 
 
 			showLic();
 
-		}
+		//}
 		break;
 	default:
 		return false;

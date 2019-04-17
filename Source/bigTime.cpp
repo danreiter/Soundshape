@@ -85,7 +85,7 @@ void bigTime::paint(Graphics& g)
 
 
 	// Fills background color of selected time domain
-	g.setColour(findColour(SoundshapeLAFs::background2ID));
+	g.setColour(findColour(SoundshapeLAFs::background3ID));
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
 	
