@@ -14,6 +14,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "timeDomainWin.h"
+#include "laf.h"
 
 #define PROFILE_SELECT_BUTTON 5001
 
@@ -30,12 +31,13 @@ public:
 	void resized() override;
 
 	// Function passes references from parent
-	void setTimeDomain(int * _start, int * _profile, int * _time, Button::Listener* _parent, AudioThumbnail * _tn);
+	void setTimeDomain(int * _start, int * _profile, int * _currentProfile, int * _time, Button::Listener* _parent, Converter * _cp);
 
 
 private:
 	int * xStart;			  //   Start time of the second to shown in the viewport 
 	int * xProfile;			  //   Currently selected frequency profile
+	int * currentProfile;
 	timeDomainWin tdTest;     //   Time Domain 
 	Viewport view;			  //   Viewport
 	int * time;				  //   Number subsections of a second is split into for frequency profiles

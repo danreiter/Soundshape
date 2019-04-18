@@ -12,16 +12,18 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "bigTime.h"
 
+
+
 //==============================================================================
 //  Constructor
 //==============================================================================
-bigTime::bigTime()
+bigTime::bigTime(AudioProcessorValueTreeState& _valueTreeState):valueTreeState(_valueTreeState)
 {
 	
 	xPoint = new int;
-	xProfile = new int;
+
 	time = new int;
-	*xProfile = -1;
+
 	*xPoint = 0;
 	*time = 10;
 	// In your constructor, you should add any child components, and
@@ -36,32 +38,36 @@ bigTime::bigTime()
 	//  Play time slider 
     playTime = new Slider();
     addAndMakeVisible(playTime);
-    playTime->setRange(0, 600, 12);
+	playTime->setComponentID((String)PLAYTIME_SLIDER);
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
-    playTime->setColour(Slider::trackColourId, Colours::red);
-    playTime->setColour(Slider::thumbColourId, Colours::red);
+	playTime->setRange(0, 50, 1);
+	//playTime->setMinAndMaxValues(0, 50);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	playTime->setTooltip("Controls how much of the sound is played when the Play Button is pressed");
+
+    // hook up as a listener for changes to the play slider
+    _valueTreeState.addParameterListener("beginningChunk", this);
+    _valueTreeState.addParameterListener("endingChunk", this);
+    int lowerPosition = _valueTreeState.getParameter("beginningChunk")->getValue();
+    int upperPosition = _valueTreeState.getParameter("endingChunk")->getValue();
+    playTime->setMinAndMaxValues(lowerPosition, upperPosition);
+
 
 	// Create buttons
 	for (int i = 0; i < *time; ++i)
 	{
 		auto* tb = addToList(new TextButton("Sec " + String(i + 1)));
+		tb->setRadioGroupId(TIME_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xPoint = focused->getComponentID().getIntValue();
-		};
 	}
 }
 
 bigTime::~bigTime()
 {
+    valueTreeState.removeParameterListener("beginningChunk",this);
+    valueTreeState.removeParameterListener("endingChunk",this);
+    delete playTime;
 }
 //==============================================================================
 
@@ -70,64 +76,19 @@ bigTime::~bigTime()
 //==============================================================================
 void bigTime::paint(Graphics& g)
 {
-	//g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+
 	int btnWidth = (int)(getWidth() / (*time));
-	Rectangle<float> backGround(0.0f, 0.0f, getWidth() - (getWidth() - ((*time) * btnWidth)), getHeight());
-	g.setColour(Colours::white);
-	g.fillRect(backGround);
-	g.setColour (Colours::black);
-	g.drawRect (backGround, 1);   // draw an outline around the component
-	g.setFont (14.0f);
-	g.drawText("bigTime", getLocalBounds(),
-	            Justification::centred, true);   // draw some placeholder text
 
-
-	// paints background
-	float pixel = (getWidth() - (getWidth() - ((int)(getWidth() / (*time))*(*time)))) * .01f;
-	int n = (getWidth() - (getWidth()-((int)(getWidth()/(*time))*(*time)))) * 10;
-	float xMark = 0.0f;
-	int colourMod = 0;
-	bool flag = true;
-	Colour c1;
-	while(xMark + pixel  <= (n/10))
-	{
-		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-		xMark += pixel;
-		if (flag)
-		{
-				c1 = Colour(255, (170 + colourMod), 0);
-		}
-		else
-		{
-			c1 = Colour(255, (200 - colourMod), 0);
-		}
-		g.setColour(c1);
-		g.fillRect(rec5);
-
-		colourMod = (++colourMod % 31);
-		if (colourMod == 0)
-		{
-			flag = !flag;
-		}
-
-	}
-
-	
+	Rectangle<float> BackGround(0, 0, 10 * btnWidth, getHeight());
+	g.setColour(findColour(SoundshapeLAFs::base1ID));
+	g.fillRect(BackGround);
 
 
 	// Fills background color of selected time domain
-	g.setColour(Colours::lightgreen);
+	g.setColour(findColour(SoundshapeLAFs::background3ID));
 	Rectangle<float> selected(*xPoint * btnWidth, 0.0f, getWidth()/(*time), getHeight() * .80f );
 	g.fillRect(selected);
-
-	// Fills background color of selected frequnecy domain
-	int profileWidth = btnWidth / 5;
-	if (*xProfile >= 0)
-	{
-		Rectangle<float> profileMarkArea(((int)(getWidth() / (*time)) / 5) * (*xProfile), 0.0f, ((int)(getWidth() / (*time)) / 5), getHeight()* .8f);
-		g.setColour(Colours::red);
-		g.fillRect(profileMarkArea);
-	}
+	
 
 	for (int i = 0; i < components.size(); i++)
 	{
@@ -137,8 +98,8 @@ void bigTime::paint(Graphics& g)
 	}
 
 	// Set bounds and location for the play time slider
-    g.setColour(Colours::black);
-    playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .15f) / 2.0f), getWidth() + ((getHeight() * .15f) / 2.0f), getHeight() * .15f);
+	//g.setColour(Colour(SoundshapeLAFs::background1ID));
+    playTime->setBounds(timeBase.getX() - ((getHeight() * .15f) / 2.0f), (timeBase.getHeight() / 2.0f) - ((getHeight() * .1f) / 2.0f), (getWidth() + ((getHeight() * .15f) / 2.0f)), getHeight() * .1f);
 
 }
 //==============================================================================
@@ -164,15 +125,35 @@ void bigTime::resized()
 //==============================================================================
 //  Function passes references from the parent to varibles in bigTime
 //==============================================================================
-void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent)
+void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Slider::Listener* _sliderParent, Converter* _cp)
 {
 	xProfile = _profile;
 	xPoint = _Xpoint;
 	time = _time;
-	parent = _parent;		
+	parent = _parent;	
+	sliderParent = _sliderParent;
+
+	playTime->addListener(sliderParent);
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->addListener(parent);
 	}
+	timeBase.setConverter(_cp);
+	timeBase.setCurrentProfile(xProfile);
+	timeBase.repaint();
 }
 //==============================================================================
+
+
+
+void bigTime::parameterChanged(const String & parameterID, float newValue)
+{
+    // needs to repsond if the backend changes the position of the double-sided play range selector
+    // (this can happen if the range is changed by the DAW or when a preset is loaded)
+    if (parameterID == "beginningChunk") {
+        playTime->setMinValue((int)newValue);
+    }
+    if (parameterID == "endingChunk") {
+        playTime->setMaxValue((int)newValue);
+    }
+}

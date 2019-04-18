@@ -2,9 +2,24 @@
 
 <JUCERPROJECT id="OEfazO" name="Soundshape_plugin" projectType="audioplug"
               jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
-              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              companyName="Soundshape" pluginName="Soundshape" pluginDesc="Spectral synthesizer"
+              pluginManufacturerCode="Soun" pluginCode="Shap" pluginVST3Category="Instrument,Stereo,Synth">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
+      <FILE id="NAoZqV" name="SoundshapeFilterWindow.h" compile="0" resource="0"
+            file="Source/SoundshapeFilterWindow.h"/>
+      <FILE id="GFr78o" name="SoundshapeFilterWindow.cpp" compile="1" resource="0"
+            file="Source/SoundshapeFilterWindow.cpp"/>
+      <FILE id="ESgxQA" name="otherPopups.cpp" compile="1" resource="0" file="Source/otherPopups.cpp"/>
+      <FILE id="j009mq" name="otherPopups.h" compile="0" resource="0" file="Source/otherPopups.h"/>
+      <FILE id="fIo6yp" name="keyboardPopup.cpp" compile="1" resource="0"
+            file="Source/keyboardPopup.cpp"/>
+      <FILE id="Y4yQ6g" name="keyboardPopup.h" compile="0" resource="0" file="Source/keyboardPopup.h"/>
+      <FILE id="AIsYT7" name="IOHandler.cpp" compile="1" resource="0" file="Source/IOHandler.cpp"/>
+      <FILE id="nCCqrK" name="IOHandler.h" compile="0" resource="0" file="Source/IOHandler.h"/>
+      <FILE id="vpX8ve" name="laf.cpp" compile="1" resource="0" file="Source/laf.cpp"/>
+      <FILE id="Ty2pJM" name="laf.h" compile="0" resource="0" file="Source/laf.h"/>
       <GROUP id="{8C251B4E-3C59-D64A-3236-C68731CC14F3}" name="kissfft">
         <GROUP id="{69F1FDCC-8941-BD9C-FBB3-803151807BC7}" name="LICENSES">
           <FILE id="n02fw2" name="BSD-3-Clause" compile="0" resource="1" file="Source/kissfft/LICENSES/BSD-3-Clause"/>
@@ -35,8 +50,8 @@
       <FILE id="etZr21" name="Converter.cpp" compile="1" resource="0" file="Source/Converter.cpp"/>
       <FILE id="QrlAE3" name="bigTime.cpp" compile="1" resource="0" file="Source/bigTime.cpp"/>
       <FILE id="kKoBzi" name="bigTime.h" compile="0" resource="0" file="Source/bigTime.h"/>
-      <FILE id="iK7uQS" name="envelope.cpp" compile="1" resource="0" file="Source/envelope.cpp"/>
       <FILE id="AAai59" name="envelope.h" compile="0" resource="0" file="Source/envelope.h"/>
+      <FILE id="iK7uQS" name="envelope.cpp" compile="1" resource="0" file="Source/envelope.cpp"/>
       <FILE id="ydFNB3" name="FeqWindow.cpp" compile="1" resource="0" file="Source/FeqWindow.cpp"/>
       <FILE id="Am3ZHw" name="FeqWindow.h" compile="0" resource="0" file="Source/FeqWindow.h"/>
       <FILE id="X4oxT5" name="freqDomainWin.cpp" compile="1" resource="0"
@@ -62,11 +77,13 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;"
+            extraDefs="JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1" isDebug="1"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="../../FFTW_Windows" libraryPath="../../FFTW_Windows"
-                       defines="SOUNDSHAPE_RUN_TESTS = 0"/>
+        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1&#10;" isDebug="1"
+                       enableIncrementalLinking="1"/>
+        <CONFIGURATION isDebug="0" name="Release" defines="SOUNDSHAPE_RUN_TESTS = 0"
+                       targetName="Soundshape" enableIncrementalLinking="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
@@ -87,10 +104,10 @@
         <MODULEPATH id="juce_dsp" path="../JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraDefs="JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
-        <CONFIGURATION isDebug="0" name="Release"/>
+        <CONFIGURATION isDebug="1" name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1&#10;"/>
+        <CONFIGURATION isDebug="0" name="Release" defines="SOUNDSHAPE_RUN_TESTS = 0&#10;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
@@ -152,8 +169,9 @@
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <LIVE_SETTINGS>
-    <WINDOWS/>
+    <WINDOWS buildEnabled="0"/>
     <LINUX/>
   </LIVE_SETTINGS>
-  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"
+               JUCE_JACK="1"/>
 </JUCERPROJECT>

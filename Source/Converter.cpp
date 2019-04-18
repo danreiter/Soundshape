@@ -1,47 +1,50 @@
 #include "Converter.h"
 
-Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState(_valueTreeState), envelope(), thumbnailCache(2), thumbnail(2, formatManager, thumbnailCache),
+Converter::Converter(AudioProcessorValueTreeState& _valueTreeState) :
+    valueTreeState(_valueTreeState),
     profile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
-    tempProfile(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     shiftedProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
     tempChunk(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previousDFT(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
     previewChunks(SOUNDSHAPE_PROFILE_ROWS * SOUNDSHAPE_PREVIEW_CHUNK_SIZE),
-    tempRenderbuffer(2*SOUNDSHAPE_CHUNK_SIZE),
-    noteVelocities({{0}}),
-    sustainedNoteVelocities({{0}})
+    tempRenderbuffer(2 * SOUNDSHAPE_CHUNK_SIZE, 0),
+    tempRenderProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 }),
+    tempImportExportProfile(2 * SOUNDSHAPE_CHUNK_SIZE, { 0,0 })
 {
-
-    thumbnail.reset(1, 44100,44100);
-    
-    // set up inverse FFT config object
+    // set up inverse FFT config objects
     // This needs manually freed (use destructor)
-    inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
-    envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
+    inverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL); // for real-time use. Manual memory allocation.
+    previewInverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
+    exportInverseFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 1, NULL, NULL);
+
+    // set up forward FFT config for importing and analyzing audio
+    importFFT = kiss_fftr_alloc(SOUNDSHAPE_CHUNK_SIZE, 0, NULL, NULL);
+
+    //envelope.adsrEnvelope.setParameters({ 0.5f, 0.1f, 1.0f, 0.25f }); // DEFUALT VALUES HERE?
 }
 
 Converter::~Converter() {
+    // free FFT and iFFT configs
     kiss_fftr_free(inverseFFT);
+    kiss_fftr_free(previewInverseFFT);
+    kiss_fftr_free(exportInverseFFT);
+    kiss_fftr_free(importFFT);
 }
 
-void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKeyboardState& keyState)
+void Converter::synthesize(AudioBuffer<float>& buffer)
 {
-    // TODO : CHANGE THIS TO INTERPOLATE BETWEEN CHUNKS WHEN IT'S TIME
-
     // fill the buffer with the transformed and processed data derived from row profileChunk of the profile
     // First make local copy so profile bins used in this method won't change during synthesis
     // copy the appropriate chunk from the converter object's profile matrix
     // Then, duplicate it according to each downed MIDI note.
 
-    // clear the current shifted profile data, then shift profile to match pressed keys (writes to shiftedProfile)
-    //for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
-    //    shiftedProfile[i].r = 0.0f;
-    //}
-    kiss_fft_cpx zeroCpx = { 0,0 };
-    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx);
-    addShiftedProfiles(profileChunk);
+    int numSamples = buffer.getNumSamples();
 
-    // TODO : change this to only be computed when it NEEDS to be.
+    kiss_fft_cpx zeroCpx = { 0,0 };
+    std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx); // clear the shifted profile data
+    addShiftedProfiles(currentChunk, numSamples); //re-shift
+
+    // perform an inverse FFT on the shifted profile. This scales according to each key's envelope state
     kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
 
     for (int i = 0; i < buffer.getNumSamples(); i++) {
@@ -54,52 +57,160 @@ void Converter::synthesize(int profileChunk, AudioBuffer<float>& buffer, MidiKey
         }
     }
 
-    buffer.copyFrom(0,0, tempChunk.data(), buffer.getNumSamples()); // left channel
-    // apply envelope
-    envelope.adsrEnvelope.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
+    buffer.copyFrom(0,0, tempChunk.data(), numSamples); // left channel
+
+    samplesWritten += numSamples;
+    if (samplesWritten > SOUNDSHAPE_CHUNK_SIZE) {
+        samplesWritten = 0;
+        currentChunk += 1;
+
+       if (currentChunk >= endingChunk || currentChunk > SOUNDSHAPE_PROFILE_ROWS) {
+            currentChunk = beginningChunk;
+       }
+    }
+
+    // reset play to beginning of section
+
     // apply gain
     buffer.applyGain(gain);
-    buffer.copyFrom(1, 0, buffer, 0, 0, buffer.getNumSamples()); // copy to Right channel
-    
+    if (buffer.getNumChannels() == 2) {
+        // stereo, just copy to the other channel
+        buffer.copyFrom(1, 0, buffer, 0, 0, numSamples); // copy to Right channel
+    }   
 }
 
-// *******************
-// TODO : instead of building the shifted profile while synthesizing each chunk, should it be gradually built as
-// each MIDI messaage is received?
-// *******************
-void Converter::addShiftedProfiles(int chunk)
-{
-    // cycles through active notes (noteVelocities), adding a shifted profile to a temporary "profile structure" for each.
-    for (int i = 0; i < noteVelocities.size(); i++) {
-        if (noteVelocities[i] != 0 || sustainedNoteVelocities[i] != 0) { // expensive operation, so should only be done when absolutely necessary
-            
-            // Calculate as a percentage of max value. This can be changed to something more appropriate if needed (exponential?)
-            // It probably also needs to be considered how a change in velocity would change the frequency domain
 
-            float velocityScale = noteVelocities[i] / 127; // TODO : or get velocity form sustained note
+void Converter::addShiftedProfiles(int chunk, int numSamples)
+{
+
+    // cycles through active notes, adding a shifted profile to a temporary "profile structure" for each.
+    for (int i = 0; i < noteStates.size(); i++) {
+        if (noteStates[i].adsrEnvelope.isActive()) { // expensive operation, so should only be done when absolutely necessary
+            
+            // Scale the shifted profile by the current strnength of the note it's being shifted too.
+            
+            float currentEnvelopeSample = noteStates[i].adsrEnvelope.getNextSample();
+
             float noteFreq = (float)MidiMessage::getMidiNoteInHertz(i);
             float ratio = noteFreq / referenceFrequency;
-            
+
             for (int j = 0; j < SOUNDSHAPE_CHUNK_SIZE; j++) {
-                if (profile[j].r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
-                    float targetFreq = binToFreq(j, sampleRate) * ratio;
+                if ( getProfileRawPoint(chunk,j).r != 0) { // MOST PROFILE BINS WILL BE ZERO, SO THIS CAN BE OPTIMIZED
+                    float targetFreq = j* ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
                         int bin = freqToBin(targetFreq, sampleRate);
-                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r;// *velocityScale;
+                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r * currentEnvelopeSample;
                     }
                 }
             }
+
+            // since we could only use 1 sample of this envelope, fast forward
+            for (int sample = 0; sample < numSamples - 1; sample++) {
+                noteStates[i].adsrEnvelope.getNextSample();
+            }
+
         }
     }
 }
 
+// The sample rate is set when the plugin becomes ready-to-play
+void Converter::setSampleRate(double _sampleRate)
+{
+    // we also need to inform the envelopes for each note
+    for (int i = 0; i < 128; i++) {
+        noteStates[i].adsrEnvelope.setSampleRate(_sampleRate);
+    }
+    exportRenderEnvelope.adsrEnvelope.setSampleRate(_sampleRate);
+    //double oldSampleRate = sampleRate;
+    sampleRate = _sampleRate; // new value for sample rate
+}
+
 void Converter::renderPreview(int chunk)
 {
-    // do an IFFT 
-    kiss_fftri(inverseFFT, profile.data(), tempRenderbuffer.data());
+    // do an IFFT on the chunk by copying the profile points into
+    // a temporary buffer, do the IFFT into tempRenderBuffer, then copy
+    // that output back into previewChunks
+
+    for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++) {
+        tempRenderProfile[i] = getProfileRawPoint(chunk, i);
+    }
+    kiss_fftri(previewInverseFFT, tempRenderProfile.data(), tempRenderbuffer.data());
     // write some samples to the structure that the GUI can use for drawing
     for (int i = 0; i < SOUNDSHAPE_PREVIEW_CHUNK_SIZE; i++) {
-        previewChunks[chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE + i] = tempRenderbuffer[i]/SOUNDSHAPE_CHUNK_SIZE;
+        size_t renderIndex = chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE + i;
+        const int crossfadeSize = 10;
+        previewChunks[renderIndex] = tempRenderbuffer[i] / SOUNDSHAPE_CHUNK_SIZE;
+        if (chunk > 0) {
+            float thisRowWeight = ((float)i) / crossfadeSize;
+            thisRowWeight = thisRowWeight < 1.0f ? thisRowWeight : 1.0f;
+            size_t lastRowIndex = chunk * SOUNDSHAPE_PREVIEW_CHUNK_SIZE - 1;
+            previewChunks[renderIndex] =  (thisRowWeight * previewChunks[renderIndex]) + ((1.0f - thisRowWeight) * previewChunks[lastRowIndex]);
+        }
+    }
+}
+
+void Converter::renderExportChunkToBuffer(int chunk, AudioBuffer<float> &buffer, double exportSampleRate) {
+    if(chunk == 0){
+        exportRenderEnvelope.adsrEnvelope.reset();
+        exportRenderEnvelope.adsrEnvelope.noteOn();
+    }
+    kiss_fft_cpx zeroCpx = { 0,0 };
+    std::fill(tempImportExportProfile.begin(), tempImportExportProfile.end(), zeroCpx);
+    for (int i = 0; i < SOUNDSHAPE_CHUNK_SIZE; i++){
+        int targetBin = freqToBin(i,exportSampleRate);
+        if( binToFreq(i,sampleRate) < exportSampleRate / 2) {
+            tempImportExportProfile[targetBin] = getProfileRawPoint(chunk, i);
+        }
+    }
+    kiss_fftri(exportInverseFFT, tempImportExportProfile.data(),buffer.getWritePointer(0));
+    buffer.applyGain(0,0,buffer.getNumSamples(), 1.0f/tempImportExportProfile.size());
+    exportRenderEnvelope.adsrEnvelope.applyEnvelopeToBuffer(buffer,0,buffer.getNumSamples());
+}
+
+void Converter::analyzeChunkIntoProfile(int chunk, AudioBuffer<float> &buffer, double importSampleRate) {
+    // the buffer represents one chunk at a specified sampling rate
+    // First, perform an FFT to convert to the frequency domain.
+    int numSamples = buffer.getNumSamples();
+    kiss_fft_cpx zeroCpx = {0,0};
+    std::fill(tempImportExportProfile.begin(), tempImportExportProfile.end(), zeroCpx);
+    // apply windowing function because of leakage
+    dsp::WindowingFunction<float> window(buffer.getNumSamples(), dsp::WindowingFunction<float>::hamming);
+    window.multiplyWithWindowingTable(buffer.getWritePointer(0),buffer.getNumSamples());
+    kiss_fftr(importFFT, buffer.getReadPointer(0),tempImportExportProfile.data()); // channel 0
+
+    clearChunk(chunk); // clear this part of the profile
+
+    // fill up the profile with the magnitude of each frequency spike
+    for(int i = 2; i < std::min((double)4000, importSampleRate); i+=2){
+        // Iterate through each point in the profile we want to fill.
+        // For each one, find the bin of the input FFT buffer that
+        // corresponds to this profile frequency point.
+        
+        int sourceBin1 = freqToBin(i, importSampleRate);
+        int sourceBin2 = freqToBin(i + 1, importSampleRate);
+
+
+        // magnitude is length of vector to the complex point from the origin
+        auto magnitude =
+            (float)sqrt(
+                pow(tempImportExportProfile[sourceBin1].r, 2) +
+                pow(tempImportExportProfile[sourceBin1].i, 2)) +
+            (float)sqrt(
+                pow(tempImportExportProfile[sourceBin2].r, 2) +
+                pow(tempImportExportProfile[sourceBin2].i, 2)
+        );
+
+        if( magnitude > 5){
+            setProfileRawPoint(chunk, i, magnitude);
+        }
+        
+    }
+}
+
+void Converter::clearChunk(int chunk){
+    kiss_fft_cpx zeroCpx{0,0};
+    for(int i =0; i < SOUNDSHAPE_CHUNK_SIZE; i++){
+        profile[SOUNDSHAPE_CHUNK_SIZE * chunk + i] = zeroCpx;
     }
 }
 
@@ -111,26 +222,22 @@ float Converter::getPreviewSample(int chunk, int index)
 
 void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
-    // Possibly change this in the future to only work for user-specified MIDI channels?
-    noteVelocities[midiNoteNumber] = velocity;
-    envelope.adsrEnvelope.noteOn();
+
+    // When a note is played on the keyboard, we need to enter the attack state of
+    // that note's associated ADSR envelope.
+
+    noteStates[midiNoteNumber].adsrEnvelope.noteOn();
+    noteStates[midiNoteNumber].sustained = false;
+
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
 {
-    if (sustainPressed == true) {
-        sustainedNoteVelocities[midiNoteNumber] = noteVelocities[midiNoteNumber];
+    if (sustainPressed == false) {
+        noteStates[midiNoteNumber].adsrEnvelope.noteOff();
     }
-    noteVelocities[midiNoteNumber] = 0;
-    // if no notes being sustained, go into release phase
-    bool isTimeForRelease = true;
-    for (int i = 0; i < 128; i++) {
-        if (sustainedNoteVelocities[i] != 0) {
-            isTimeForRelease = false;
-        }
-    }
-    if (isTimeForRelease) {
-        envelope.adsrEnvelope.noteOff();
+    else {
+        noteStates[midiNoteNumber].sustained = true;
     }
 }
 
@@ -138,36 +245,40 @@ void Converter::setSustain(bool sustainState)
 {
     sustainPressed = sustainState;
     if (sustainState == false) {
-        // turn off all notes that arent currently pressed,
+        // turn off all notes that aren't currently pressed,
         // and check if any notes are still pressed.
-        bool isTimeForRelease = true;
         for (int i = 0; i < 128; i++) {
-            sustainedNoteVelocities[i] = 0.0f;
-            if (noteVelocities[i] != 0) {
-                isTimeForRelease = false;
+            if (noteStates[i].sustained == true) {
+                noteStates[i].sustained = false;
+                noteStates[i].adsrEnvelope.noteOff();
             }
         }
-        if (isTimeForRelease) {
-            envelope.adsrEnvelope.noteOff();
-        }
     }
 }
 
-void Converter::midiPanic() {
-    for (int i = 0; i < 128; i++) {
-        noteVelocities[i] = 0.0f;
-    }
-}
-
-
-void Converter::UpdateThumbnail()
+void Converter::envelopeListenTo(String paramName, AudioProcessorValueTreeState & valueTreeState)
 {
-    // TODO
+    // make each key's envelope listen to parameter changes.
+    for (int i = 0; i < 128; i++) {
+        valueTreeState.addParameterListener(paramName, &noteStates[i]);
+    }
+    // make our extra envelope for rendering also listen
+    valueTreeState.addParameterListener(paramName, &exportRenderEnvelope);
+
 }
 
+void Converter::panic()
+{
+    sustainPressed = false;
+    for (int i = 0; i < 128; i++) {
+        noteStates[i].adsrEnvelope.noteOff();
+    }
+}
 
 int Converter::freqToBin(int freq, double rate) {
-    return (int)std::round(SOUNDSHAPE_CHUNK_SIZE * freq / rate);
+    double ratio = (double)(SOUNDSHAPE_CHUNK_SIZE * freq) / rate;
+    int result = (int)std::round(ratio);
+    return result;
 }
 
 float Converter::binToFreq(int bin, double rate) {
@@ -177,7 +288,8 @@ float Converter::binToFreq(int bin, double rate) {
 
 
 kiss_fft_cpx Converter::getProfileRawPoint(int chunk, int i) {
-    return profile[chunk * SOUNDSHAPE_CHUNK_SIZE + i];
+    size_t index = chunk * SOUNDSHAPE_CHUNK_SIZE + i;
+    return profile[index];
 }
 
 
@@ -188,48 +300,24 @@ void Converter::setProfileRawPoint(int chunk, int i, float value) {
 }
 
 
-EnvelopeParams & Converter::getEnvelope()
-{
-    return envelope;
-}
 
 void Converter::parameterChanged(const String & parameterID, float newValue)
 {
     if (parameterID == "gain") {
         gain = newValue;
     }
+    if (parameterID == "beginningChunk") {
+        beginningChunk = (int)newValue;
+    }
+    if (parameterID == "endingChunk") {
+        endingChunk = (int)newValue;
+    }
 }
 
 
-// The sample rate is set when the plugin becomes ready-to-play
-void Converter::setSampleRate(double _sampleRate)
+double Converter::getSampleRate()
 {
-    double oldSampleRate = sampleRate;
-    sampleRate = _sampleRate; // new value for sample rate
-
-    // the internal profile data structure needs to be completely remade when
-    // the sample rate changes.
-    // The current profile data structure needs to be zero'd out, and
-    // replaced with a new version of its old self with spikes' locations shifted.
-
-    for (int i = 0; i < profile.size(); i++) {
-        tempProfile[i] = profile[i];
-        profile[i] = { 0,0 };
-    }
-    for (int sourceBin = 0; sourceBin < tempProfile.size(); sourceBin++) {
-        // recopy frequency spikes from the old profile, putting them in the correct bins (by using the old sample rate)
-        int destinationBin = freqToBin(binToFreq(sourceBin, oldSampleRate), sampleRate);
-        if (destinationBin < tempProfile.size() / 2) {
-            profile[destinationBin] = tempProfile[sourceBin];
-        }
-
-        // cleanup temporary structure for future use
-        tempProfile[sourceBin] = { 0,0 };
-    }
-
-    // we also need to inform the envelope
-    envelope.adsrEnvelope.setSampleRate(_sampleRate);
-
+    return sampleRate;
 }
 
 
@@ -238,22 +326,17 @@ void Converter::setSampleRate(double _sampleRate)
 // the frequency freq
 void Converter::updateFrequencyValue(int chunk, int freq, float value)
 {
-    DBG(freq);
-    // TODO : We probably need to check for index out-of-bounds here
-    setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
+    //DBG(""<<chunk<<" "<<freq<<" "<<value);
+
+    if (freq > sampleRate / 2 - 1) {
+        return; // do nothing
+    }
+    // OLD : setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
+    setProfileRawPoint(chunk, freq, value);
 }
-
-
 
 float Converter::getFrequencyValue(int chunk, int freq) {
-
-    return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
-}
-
-
-
-AudioThumbnail * Converter::getThumbnail()
-{
-    return &thumbnail;
+    // OLD: return getProfileRawPoint(chunk, freqToBin(freq,sampleRate)).r;
+    return getProfileRawPoint(chunk, freq).r;
 }
 

@@ -34,12 +34,25 @@ FeqWindow::~FeqWindow()
 //==============================================================================
 // Function set zoom to a reference from the parent and passes refences to the frequency domain component
 //==============================================================================
-void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  Converter * _profile, int _size, int* _chunk)
+void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent,Button::Listener* _bParent,  Converter * _profile, int _size, int* _chunk, CustomLookAndFeel * _laf)
+//void FeqWindow::setZoom(double * _zoom, int* _harm, int * _add, Slider::Listener * _parent, Button::Listener* _bParent, float * _profile, int _size, int* _chunk)
 {
+	view.getHorizontalScrollBar().setLookAndFeel(_laf);
 	zoom = _zoom;                                                   // pass reference to zoom
-	base.setBase(_harm, _add, _parent, _bParent, _profile, _size, _chunk);  // passes referneces to frequency domain component
+	base.setBase(_harm, _add, _parent, _bParent, _profile, _size, _chunk, _laf);
+	view.getHorizontalScrollBar().setLookAndFeel(_laf); // passes referneces to frequency domain component
 }
 //==============================================================================
+
+//==============================================================================
+// Function set zoom to a reference from the parent and passes refences to the frequency domain component
+//==============================================================================
+void FeqWindow::setProfile()
+{
+	base.setProfile();
+}
+//==============================================================================
+
 
 void FeqWindow::paint(Graphics& g)
 {
@@ -49,8 +62,8 @@ void FeqWindow::paint(Graphics& g)
 	   You should replace everything in this method with your own
 	   drawing code..
 	*/
-	// default widow settings
-	g.setColour(Colours::white);
+	// default window settings
+	g.setColour(findColour(SoundshapeLAFs::base2textID));
 	g.setFont(14.0f);
 	g.drawText("viewWindow", getLocalBounds(),
 		Justification::centred, true);   // draw some placeholder text
@@ -60,7 +73,7 @@ void FeqWindow::paint(Graphics& g)
 	view.setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 	
 	// draw outline around window
-	g.setColour(Colours::black);
+	g.setColour(findColour(SoundshapeLAFs::base1textID));
 	g.drawLine(0.0f, getHeight() - view.getScrollBarThickness(), getWidth(), getHeight() - view.getScrollBarThickness());
 	g.drawRect(getLocalBounds(), 1);
 
@@ -71,6 +84,4 @@ void FeqWindow::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
-
-
 }

@@ -24,9 +24,11 @@ smallTime::smallTime()
 	xStart = new int;
 	xProfile = new int;
 	time = new int;
+	currentProfile = new int;
 	*time = 10;
 	*xStart = 0;
-	*xProfile = -1;
+	*xProfile = 0;
+	*currentProfile = 0;
 
 	// Viewport settings
 	view.setViewedComponent(&tdTest, false);
@@ -41,16 +43,7 @@ smallTime::smallTime()
 		tb->setRadioGroupId(PROFILE_SELECT_BUTTON);
 		tb->setClickingTogglesState(false);
 		tb->setComponentID(String(i));
-		tb->setColour(TextButton::textColourOffId, Colours::black);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::orange);
-		tb->setColour(TextButton::buttonOnColourId, Colours::red);
-		tb->onClick = [this]
-		{
-			auto * focused = Component::getCurrentlyFocusedComponent();
-			*xProfile = focused->getComponentID().getIntValue() + (*xStart * 5);
-			repaint();
-		};
+
 	}
 }
 
@@ -72,58 +65,19 @@ void smallTime::paint(Graphics& g)
 	*/
 
 	int btnWidth = (int)(getWidth() / 5);
-	int width = getWidth() - (getWidth() - (5 * btnWidth));
-	Rectangle<float> backGround(0.0f, 0.0f, width, getHeight() * .8f);
-	g.setColour(Colours::white);
-	g.fillRect(backGround);
-	g.setColour (Colours::black);
-	g.drawRect (backGround, 1);   // draw an outline around the component
-	g.setFont (14.0f);
-	g.drawText ("smallTime", getLocalBounds(),
-	            Justification::centred, true);   // draw some placeholder text
+	//g.setColour(findColour(SoundshapeLAFs::base2textID));
+	//g.setColour (findColour(SoundshapeLAFs::base1textID));
 
 	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
 
 	//  Draws background color
-	float pixel = (getWidth() - (getWidth() - (5 * btnWidth))) * .01f;
-	int n = (getWidth() - (getWidth() - (5 * btnWidth))) * 10;
-	float xMark = 0.0f;
-	int colourMod = 0;
-	bool flag = true;
-	Colour c1;
-	while (xMark + pixel  <= (n / 10))
-	{
+	Rectangle<float> background(0, 0, btnWidth * 5, getHeight());
+	g.setColour(findColour(SoundshapeLAFs::base1ID));
+	g.fillRect(background);
 
 
-		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-		xMark += pixel;
-		if (flag)
-		{
-			c1 = Colour(255, (170 + colourMod), 0);
 
-		}
-		else
-		{
-			c1 = Colour(255, (200 - colourMod), 0);
-		}
-		g.setColour(c1);
-		g.fillRect(rec5);
-		colourMod = (++colourMod % 31);
-		if (colourMod == 0)
-		{
-			flag = !flag;
-		}
-	}
-
-	// Draws red mark over currently selected frequnecy profile section 
-	int profileMark = *xProfile - (*xStart*5);
-	if (profileMark >= 0 && profileMark < 5)
-	{
-		Rectangle<float> profileArea(profileMark * btnWidth, 0.0f, btnWidth, getHeight() * .8f);
-		g.setColour(Colours::red);
-		g.fillRect(profileArea);
-	}
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->setBounds(btnWidth * i, getHeight() - (getHeight() * .20f), btnWidth, getHeight() * .20f);
@@ -153,19 +107,22 @@ void smallTime::resized()
 //==============================================================================
 //  Function pass references from parent
 //==============================================================================
-void smallTime::setTimeDomain(int * _start, int * _profile, int* _time, Button::Listener* _parent, AudioThumbnail * _tn)
+void smallTime::setTimeDomain(int * _start, int * _profile, int * _currentProfile, int* _time, Button::Listener* _parent, Converter * _cp)
 {
 
 	xStart = _start;
 	xProfile = _profile;
 	time = _time;
+	currentProfile = _currentProfile;
 	parent = _parent;
-	tdTest.setTumbnail(_tn);
-
+	tdTest.setConverter(_cp);
+	tdTest.setCurrentProfile(currentProfile);
+	tdTest.repaint();
 	for (int i = 0; i < components.size(); i++)
 	{
 		components[i]->addListener(parent);
 	}
+
 }
 //==============================================================================
 

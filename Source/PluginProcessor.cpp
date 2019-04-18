@@ -1,9 +1,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
-#define CATCH_CONFIG_RUNNER
-#include "catch.h"
+#include "IOHandler.h"
 
 //==============================================================================
 Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
@@ -22,17 +20,17 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     "Gain",
                                     0.00f,
                                     0.99f,
-                                    0.80f),
+                                    0.40f),
                                 std::make_unique<AudioParameterFloat>(
                                     "attack",
                                     "Attack",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterFloat>(
                                     "decay",
                                     "Decay",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
                                     0.25f),
                                 std::make_unique<AudioParameterFloat>(
@@ -44,28 +42,56 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                 std::make_unique<AudioParameterFloat>(
                                     "release",
                                     "Release",
-                                    0.00f,
+                                    0.01f,
                                     2.50f,
-                                    0.25f)
+                                    0.25f),
+                                std::make_unique<AudioParameterInt>(
+                                    "beginningChunk",
+                                    "Beginning Section",
+                                    0,
+                                    50,
+                                    0),
+                                std::make_unique<AudioParameterInt>(
+                                    "endingChunk",
+                                    "Ending Section",
+                                    0,
+                                    50,
+                                    2)
                                 }
     ),
     converter(valueTreeState)
 #endif
 {
+    // The converter sets up its listeners for simplicity. (It has a listener for these params on every MIDI key)
+    converter.envelopeListenTo("attack", valueTreeState);
+    converter.envelopeListenTo("decay", valueTreeState);
+    converter.envelopeListenTo("sustain", valueTreeState);
+    converter.envelopeListenTo("release", valueTreeState);
 
-    // TODO register the rest of the parameters here, like this.
-
-    valueTreeState.addParameterListener("attack", &converter.getEnvelope());
-    valueTreeState.addParameterListener("decay", &converter.getEnvelope());
-    valueTreeState.addParameterListener("sustain", &converter.getEnvelope());
-    valueTreeState.addParameterListener("release", &converter.getEnvelope());
     valueTreeState.addParameterListener("gain", &converter);
+
+    // the beginningChunk and endingChunk parameters need 2 listeners : the converter and also the GUI.
+    // Here, we set the converter as a listener to these. The GUI will set itself up to listen
+    valueTreeState.addParameterListener("beginningChunk", &converter);
+    valueTreeState.addParameterListener("endingChunk", &converter);
 
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);
 
+
+    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
+    converter.setSampleRate(44100.0f);
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converter.updateFrequencyValue(i, 1 * 440, 500.0f);
+        converter.updateFrequencyValue(i, 2 * 440, 300.0f);
+        converter.updateFrequencyValue(i, 4 * 440, 200.0f);
+        converter.updateFrequencyValue(i, 6 * 440, 100.0f);
+        converter.updateFrequencyValue(i, 8 * 440, 50.0f);
+        converter.renderPreview(i);
+    }
+
     if (SOUNDSHAPE_RUN_TESTS) {
-        int result = Catch::Session().run();
+        // we can run unit tests here. These are only run in Debug mode
     }
 
 }
@@ -131,9 +157,7 @@ void Soundshape_pluginAudioProcessor::changeProgramName (int index, const String
 
 void Soundshape_pluginAudioProcessor::panic()
 {
-    for (int i = 0; i < 16; i++) {
-        keyState.allNotesOff(i);
-    }
+    converter.panic();
 }
 
 void Soundshape_pluginAudioProcessor::playFreq(float freq)
@@ -153,22 +177,8 @@ void Soundshape_pluginAudioProcessor::prepareToPlay (double sampleRate, int samp
 {
     // The Converter needs to know about the sample rate in order to convert
     // between frequency values and indexes for its internal structure
-    
-    // BUG HERE : When the converter's sample rate gets reset, the converter needs
-    // to reorganize its internal data structure!
     converter.setSampleRate(sampleRate);
-    DBG(sampleRate);
 
-    // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
-    converter.updateFrequencyValue(0, 1  * 440, 500.0f);
-    converter.updateFrequencyValue(0, 2  * 440, 300.0f);
-    converter.updateFrequencyValue(0, 4  * 440, 200.0f);
-    converter.updateFrequencyValue(0, 6  * 440, 100.0f);
-    converter.updateFrequencyValue(0, 8  * 440,  50.0f);
-    converter.updateFrequencyValue(0, 10 * 440,  25.0f);
-    converter.updateFrequencyValue(0, 12 * 440,  12.0f);
-
-    converter.renderPreview(0);
 }
 
 void Soundshape_pluginAudioProcessor::releaseResources()
@@ -230,37 +240,33 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         buffer.clear(i, 0, buffer.getNumSamples());
     }
-    // To determine the index of the appropriate chunk, we keep track of the
-    // beginning of the UI chunk range and the end of it. Once notes start being pressed,
-    // we start keeping track of how many samples we process. Once this number exceeds
-    // the number of samples that each chunk represents, we increment the index (accounting
-    // for things like looping). If there are no notes down at the moment, then
-    // we should reset the index to the beginning of the range in the UI slider.
-    // We should also skip all DSP if there are no notes down or the number of samples to process
-    // happens to be 0.
-    converter.synthesize(currentChunk, buffer, keyState);
-    
 
+    converter.synthesize(buffer);
 }
 
 
 AudioProcessorEditor* Soundshape_pluginAudioProcessor::createEditor()
 {
-    return new Soundshape_pluginAudioProcessorEditor (*this, valueTreeState);
+    Soundshape_pluginAudioProcessorEditor* editor = new Soundshape_pluginAudioProcessorEditor(*this, valueTreeState);
+    return editor;
 }
 
 //==============================================================================
 void Soundshape_pluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // save the state, called by the host
+    std::unique_ptr<XmlElement> stateXML = IOHandler::createStateXML(converter, valueTreeState);
+    copyXmlToBinary(*stateXML, destData);
 }
 
 void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    // reading a preset from the host
+    std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    if (xmlState != nullptr) {
+        // this method handles deleting the xmlState for us.
+        IOHandler::restoreStateFromXml(valueTreeState, converter, xmlState);
+    }
 }
 
 //==============================================================================

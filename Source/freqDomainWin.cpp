@@ -23,18 +23,16 @@ freqDomainWin::freqDomainWin()
 	parent = NULL;
 	buttonParent = NULL;
 	size = 0;
-	//profile = new float[4000];
-	//for (int i = 0; i < 4000; i++)
-	//{
-	//	profile[i] = -1.0f;
-
-	//}
-	//setProfileControl(&profile[0], 4000);
-
 	first = -1;           
 	int temp = -1;		  
 	add = &temp;
 	harm = &temp;
+	laf = new CustomLookAndFeel();
+	laf->initColors(Colour(SoundshapeLAFs::base1ID), Colour(SoundshapeLAFs::base1textID),
+		Colour(SoundshapeLAFs::base2ID), Colour(SoundshapeLAFs::base2textID),
+		Colour(SoundshapeLAFs::background1ID), Colour(SoundshapeLAFs::background2ID),
+		Colour(SoundshapeLAFs::background3ID));
+	resetColors();
 
 }
 
@@ -44,56 +42,29 @@ freqDomainWin::~freqDomainWin()
 }
 //==============================================================================
 
+void freqDomainWin::resetColors()
+{
+
+	laf->setColors();
+
+}
+
 //==============================================================================
 //  Paint Funciton
 //==============================================================================
 void freqDomainWin::paint (Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
-
-       You should replace everything in this method with your own
-       drawing code..
-    */
 
 	float pixel = getWidth() * .01f;
 	int n = getWidth() * 10;
-	float xMark = 0.0f;
-	int colourMod = 0;
-	bool flag = true;
-	Colour c1;
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 
-	// draw color of background
-	for (int i = 0; i <= n; i++)
-	{
+	g.fillAll(laf->findColour(SoundshapeLAFs::background2ID));
 
-
-		Rectangle<float> rec5(xMark, 0.0f, pixel + (pixel * .1f), getHeight());
-		xMark += pixel;
-		if (flag)
-		{
-			c1 = Colour(255, (170 + colourMod), 0);
-		}
-		else
-		{
-			c1 = Colour(255, (200 - colourMod), 0);
-		}
-		g.setColour(c1);
-		g.fillRect(rec5);
-		colourMod = (++colourMod % 31);
-		if (colourMod == 0)
-		{
-			flag = !flag;
-		}
-	}
-
-	g.setColour(Colours::grey);
+	g.setColour(laf->findColour(SoundshapeLAFs::background2ID));
 	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-	g.setColour(Colours::black);
+	g.setColour(Colours::black); // freq-domain scale/axes
 	g.setFont(14.0f);
-	g.drawText("Base Window", getLocalBounds(),
-		Justification::centred, true);   // draw some placeholder text
 	float margin = getHeight() *.10f;
 	Line<float> vLine(margin, margin, margin, getHeight() - margin);
 	Line<float> hLine(margin, getHeight() - margin, getWidth() - margin, getHeight() - margin);
@@ -130,10 +101,14 @@ void freqDomainWin::paint (Graphics& g)
 		}
 
 		Line<float> tLine(smallArea.getBottomLeft(), smallArea.getTopLeft());
+		if (i % 2 == 0)
+		{
+			components[(int)(i/2)]->setBounds(smallArea.getX() - (margin / 6), smallArea.getCentreY() - (margin / 6), margin / 3, margin / 3);
+			sliders[(int)(i/2)]->setBounds(smallArea.getX() - (margin / 16), margin, margin / 4, getHeight() - (2 * margin));
+			
+		}
 		g.drawLine(tLine);
 		testPrint.removeFromLeft(smallTick);
-		int t1 = (int)profile->getFrequencyValue(*chunk, i);
-		String temp2 = std::to_string(t1);
 	}
 
 	margin = getHeight() *.10f;
@@ -141,37 +116,28 @@ void freqDomainWin::paint (Graphics& g)
 	float tick = btnArea.getWidth() / 1024;
 
 	// loop sets location, bounds, and visiblity of sliders and buttons
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size/2; i++)
 	{
 
-		Path btnPath;
 		DrawablePath normal, down, over;
 		btnArea.removeFromLeft(tick);
 
-		if (profile->getFrequencyValue(*chunk, i) <= 0)
+		if (sliders[i]->getValue() <= 0)
 		{
 			// set laction and bounds for each slider and button
-			components[i]->setBounds(btnArea.getX() - (margin / 2), btnArea.getY() - (margin / 4), margin, margin);
-			sliders[i]->setBounds(btnArea.getX() - (margin / 8), margin, margin / 2, getHeight() - (2 * margin));
+
 			
 			// If add button is on - set add buttons visilbe to true
-			if (*add > 0)
+			if (*add > 0 && !sliders[i]->isVisible())
 			{
-				// harmonic correctness case 
-				if (harm && first > 0 && (i % first == 0))
+				if ((*harm > 0 && (2*i) % 440 != 0) || i == 0)
 				{
-
-				}
-				else if (harm && first > 0)
-				{
-
+					components[i]->setVisible(false);
 				}
 				// no harmonic correctness case
 				else
 				{
-
 					components[i]->setVisible(true);
-
 				}
 			}
 			// hide add buttons
@@ -181,13 +147,6 @@ void freqDomainWin::paint (Graphics& g)
 				components[i]->setVisible(false);
 			}
 		}
-		// show slider that are being used
-		else
-		{
-			sliders[i]->setVisible(true);
-		}
-
-
 	}
 }
 //==============================================================================
@@ -204,7 +163,7 @@ void freqDomainWin::resized()
 //==============================================================================
 //  setBase passes need references to freqDomainWin
 //==============================================================================
-void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk)
+void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, Converter* _profile, int _size, int *_chunk, CustomLookAndFeel * _laf)
 {
 	harm = _harm;                // flag for harmonic correctness is on/off
 	add = _add;                  // flag for add buttons visiblity on/off
@@ -212,16 +171,9 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 	profile = _profile;          // set frequency profile values
 	buttonParent = _bParent;	 // button listener
 	chunk = _chunk;
-
-	setProfileControl(_profile, _size, _chunk);
-
-	// set button and slider listeners to parent
-	for (int i = 0; i < components.size(); i++)
-	{
-		components[i]->addListener(buttonParent);
-		sliders[i]->addListener(parent);
-	}
-
+	size = _size;
+	setProfileControl();
+	laf = _laf;
 
 }
 //==============================================================================
@@ -230,42 +182,90 @@ void freqDomainWin::setBase(int * _harm, int * _add, Slider::Listener* _parent, 
 //  setProfileControl Funciton sets values of a frequency profile to a list of 
 //  sliders, declares and instaniates a list of sliders and a list of buttons
 //==============================================================================
-void freqDomainWin::setProfileControl(Converter * _profile, int _size, int * _chunk)
+void freqDomainWin::setProfileControl()
 {
 	// sets list to empty
 	emptyList();
-	size = _size;
-	// declares and instaniates a list of sliders and a list of buttons
-	for (int i = 0; i < _size; i++)
+
+	for (int i = 0; i < size; i = i+2)
 	{
 		auto * tb = addToList(new TextButton(""));
 		tb->setComponentID(String(i));
-		tb->setClickingTogglesState(true);
-		tb->setColour(TextButton::textColourOnId, Colours::black);
-		tb->setColour(TextButton::buttonColourId, Colours::white);
-		tb->setColour(TextButton::buttonOnColourId, Colours::blueviolet.brighter());
-		tb->setColour(TextButton::textColourOffId, Colours::black);
+		tb->setClickingTogglesState(false);
 		tb->setVisible(false);
+		//tb->setLookAndFeel(laf);
+		tb->setColour(TextButton::buttonColourId, Colours::red);
 		if (buttonParent != NULL)
 		{
 			tb->addListener(buttonParent);
 		}
 
-
 		auto * sb = createSlider();
-		sb->setRange(0.0, 100.0, 0.1);
+		sb->setRange(0.0, 600.0, 0.1);
 		sb->setSliderStyle(Slider::LinearBarVertical);
 		sb->setComponentID(String(i));
-		sb->setValue((double)(profile->getFrequencyValue(*_chunk, i)), sendNotificationAsync);
-		sb->setColour(Slider::trackColourId, Colours::red);
+		double test = (double)(profile->getFrequencyValue(*chunk, i));
+		sb->setValue(test);
+		if (i % 440 == 0 && i != 0)
+		{
+			sb->setColour(Slider::trackColourId, Colours::red);
+		}
+		else
+		{
+			sb->setColour(Slider::trackColourId, Colours::blue);
+		}
 		sb->setTextBoxIsEditable(false);
 		sb->setPopupDisplayEnabled(true, true, this);
-		sb->setVisible(false);
+		if (i == 440)
+		{
+			sb->setVisible(true);
+		}
+		else if (sb->getValue() > 0)
+		{
+			sb->setVisible(true);
+		}
+		else
+		{
+			sb->setVisible(false);
+
+		}
 		if (parent != NULL)
 		{
 			sb->addListener(parent);
 		}
 	}
 
+}
+//==============================================================================
+
+//==============================================================================
+//  setProfileControl Funciton sets values of a frequency profile to a list of 
+//  sliders, declares and instaniates a list of sliders and a list of buttons
+//==============================================================================
+void freqDomainWin::setProfile()
+{
+
+	// declares and instaniates a list of sliders and a list of buttons
+	for (int i = 0; i < size/2; i++)
+	{
+		sliders[i]->removeListener(parent);
+		double test = (double)(profile->getFrequencyValue(*chunk, (2*i)));
+		sliders[i]->setValue(test);
+		sliders[i]->addListener(parent);
+		if (i == 440)
+		{
+			sliders[i]->setVisible(true);
+		}
+		else if(sliders[i]->getValue() > 0)
+		{
+			sliders[i]->setVisible(true);
+		}
+		else
+		{
+			sliders[i]->setVisible(false);
+
+		}
+	}
+	
 }
 //==============================================================================

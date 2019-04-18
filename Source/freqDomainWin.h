@@ -14,6 +14,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Converter.h"
+#include "laf.h"
 
 #define FREQ_DOMAIN 3000
 
@@ -28,8 +29,12 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk);
-	void setProfileControl(Converter * _profile, int _size, int *_chunk);
+	void setBase(int * _harm, int * _add, Slider::Listener* _parent,Button::Listener* _bParent, Converter* _profile, int _size, int * _chunk, CustomLookAndFeel * _laf);
+	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
+	void setProfileControl();
+	void setProfile();
+	void resetColors();
+
 
 private:
 	int first;                          // Variable to track for first harmonic value 
@@ -38,8 +43,10 @@ private:
 	int *add;							// flag add button is on/off
 	int *chunk;
 	Converter * profile;				// reference to current frequency profile's values
+	double currentProfile[4000];
 	Slider::Listener* parent;			// reference to parent as a slider listener
 	Button::Listener* buttonParent;     // reference to parent as a button listener
+	CustomLookAndFeel * laf;
 
 	// list of buttons to add frquency spikes
 	OwnedArray<TextButton> components;		
@@ -50,14 +57,13 @@ private:
 		newComp->onClick = [this] {
 			auto * focused = Component::getCurrentlyFocusedComponent();
 			float margin = this->getHeight() *.10f;
-			profile->updateFrequencyValue(*this->chunk,focused->getComponentID().getIntValue(), 0.0f);
 			if (this->first < 0)
 			{
-				this->first = this->getComponentID().getIntValue();
+				this->first = focused->getComponentID().getIntValue();
 			}
 			focused->setVisible(false);
 
-			sliders[this->getComponentID().getIntValue()]->setVisible(true);
+			sliders[(int)(focused->getComponentID().getIntValue()/2)]->setVisible(true);
 		};
 		return newComp;
 	}
@@ -69,7 +75,7 @@ private:
 		Slider * s = new Slider();
 		sliders.add(s);
 		addAndMakeVisible(s);
-		return s;
+	    return s;
 	}
 
 	// clears both slider and button lists
