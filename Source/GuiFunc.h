@@ -64,7 +64,7 @@ public:
 	void paint(Graphics&) override;
 	void resized() override;
 	void setListeners(Slider::Listener* _sliderListener, Button::Listener* _buttonListener);
-
+    bool getSustainedPlayBtnToggled();
 
 private:
     AudioProcessorValueTreeState& valueTreeState;

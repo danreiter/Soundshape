@@ -463,7 +463,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 //-------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------
-// Function listensfor buttons to gget hovered, pressed, or released
+// Function listensfor buttons to get hovered, pressed, or released
 //------------------------------------------------------------------------------------
 void MainComponent::buttonStateChanged(Button * button)
 {
@@ -473,7 +473,7 @@ void MainComponent::buttonStateChanged(Button * button)
         if (button->getState() == Button::buttonDown) {
             processor.playFreq(16.0f * notes[fund.getNote()]);
         }
-        else{
+        else if( ! volComp.getSustainedPlayBtnToggled()){
             processor.panic();
         }
     }
