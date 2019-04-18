@@ -56,9 +56,11 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
                                     "Ending Section",
                                     0,
                                     50,
-                                    2)
+                                    1)
                                 }
     ),
+    // copy the default parameter states into an XML object to restore it later if need be
+    newSoundParamState(IOHandler::createParamsXML(valueTreeState)),
     converter(valueTreeState)
 #endif
 {
@@ -78,17 +80,11 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
     // add the converter as a listener to the midi keyboard state
     keyState.addListener(&converter);
 
+    restoreDefaultProfile();
 
     // TODO : SHOULD THIS BE THE DEFAULT PROFILE?
     converter.setSampleRate(44100.0f);
-    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
-        converter.updateFrequencyValue(i, 1 * 440, 500.0f);
-        converter.updateFrequencyValue(i, 2 * 440, 300.0f);
-        converter.updateFrequencyValue(i, 4 * 440, 200.0f);
-        converter.updateFrequencyValue(i, 6 * 440, 100.0f);
-        converter.updateFrequencyValue(i, 8 * 440, 50.0f);
-        converter.renderPreview(i);
-    }
+
 
     if (SOUNDSHAPE_RUN_TESTS) {
         // we can run unit tests here. These are only run in Debug mode
@@ -98,6 +94,16 @@ Soundshape_pluginAudioProcessor::Soundshape_pluginAudioProcessor()
 
 Soundshape_pluginAudioProcessor::~Soundshape_pluginAudioProcessor()
 {
+}
+
+void Soundshape_pluginAudioProcessor::restoreDefaultProfile() {
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converter.clearChunk(i);
+    }
+    converter.updateFrequencyValue(0, 1 * 440, 500.0f);
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converter.renderPreview(i);
+    }
 }
 
 //==============================================================================
@@ -268,7 +274,7 @@ void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int
         IOHandler::restoreStateFromXml(valueTreeState, converter, xmlState);
     }
     if (editor != nullptr) {
-        editor->mainComp.drawProfile();
+        editor->mainComp.drawSound();
     }
 }
 
@@ -287,6 +293,11 @@ Converter& Soundshape_pluginAudioProcessor::getConverter() {
 AudioProcessorValueTreeState & Soundshape_pluginAudioProcessor::getTreeState()
 {
     return valueTreeState;
+}
+
+void Soundshape_pluginAudioProcessor::restoreNewSoundParams()
+{
+    IOHandler::restoreParamsFromXml(valueTreeState, newSoundParamState.get());
 }
 
 int Soundshape_pluginAudioProcessor::freqToMidiNote(float freq, float freqOfA)

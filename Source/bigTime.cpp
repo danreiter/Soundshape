@@ -150,10 +150,29 @@ void bigTime::parameterChanged(const String & parameterID, float newValue)
 {
     // needs to repsond if the backend changes the position of the double-sided play range selector
     // (this can happen if the range is changed by the DAW or when a preset is loaded)
-    if (parameterID == "beginningChunk") {
-        playTime->setMinValue((int)newValue);
-    }
+
+    // sliders shouldnt listen to a change they make to themselves
+    
+    valueTreeState.removeParameterListener("beginningChunk", this);
+    valueTreeState.removeParameterListener("endingChunk", this);
+
     if (parameterID == "endingChunk") {
+        // we we can't make maxvalue go below minvalue directly, so manually puill it down
+        if ((int)newValue <= (int)playTime->getMinValue()) {
+            playTime->setMinValue((int)newValue);
+        }
         playTime->setMaxValue((int)newValue);
     }
+
+    if (parameterID == "beginningChunk") {
+        // we we can't make minvalue exceed maxvalue directly, so manually push maxvalue of necessary
+        if ((int)newValue >= (int)playTime->getMaxValue()) {
+            playTime->setMaxValue((int)newValue);
+        }
+        playTime->setMinValue((int)newValue);
+    }
+
+
+    valueTreeState.addParameterListener("beginningChunk", this);
+    valueTreeState.addParameterListener("endingChunk", this);
 }

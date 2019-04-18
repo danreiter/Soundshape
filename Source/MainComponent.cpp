@@ -443,11 +443,11 @@ void MainComponent::sliderValueChanged(Slider * slider)
         float maxParamValue = beginningParam->getNormalisableRange().end;
         int bottomValue = (int)slider->getMinValue();
         int upperValue = (int)slider->getMaxValue();
+
         beginningParam->setValueNotifyingHost(bottomValue/maxParamValue);
         beginningParam->sendValueChangedMessageToListeners(bottomValue/maxParamValue);
         endingParam->setValueNotifyingHost(upperValue/maxParamValue);
         endingParam->sendValueChangedMessageToListeners(upperValue/maxParamValue);
-
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
@@ -481,8 +481,11 @@ void MainComponent::buttonStateChanged(Button * button)
 //-------------------------------------------------------------------------------------
 
 
-void MainComponent::drawProfile() {
+void MainComponent::drawSound() {
     fWindow.setProfile();
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converterPtr->renderPreview(i);
+    }
     repaint();
 }
 
@@ -600,6 +603,7 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 				selectedFile = File(presetPath.getChildFile(fileName));
 			}
 			loadFile();
+            drawSound();
 		}
 
 	};
@@ -704,6 +708,12 @@ void MainComponent::loadFile()
 		pushedWriteBtn = true;
 		cb.setSelectedItemIndex(0);
 		selectedFile = newFile;
+
+        // clear out all the profile bins and reset
+        processor.restoreNewSoundParams();
+        processor.restoreDefaultProfile();
+        repaint();
+
 	}
 	
 	//do After file load

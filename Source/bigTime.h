@@ -26,6 +26,7 @@ class bigTime : public Component,
 public:
 	bigTime(AudioProcessorValueTreeState& _valueTreeState);
 	~bigTime();
+    Slider* playTime;		  // Slide to pick the section of time domian to to play
     AudioProcessorValueTreeState& valueTreeState;
 	void paint(Graphics&) override;
 	void resized() override;
@@ -48,7 +49,6 @@ private:
 	int *time;				// Size of the time domain
 	Button::Listener* parent; // Referense to the parent
 	Slider::Listener* sliderParent;
-	Slider* playTime;		  // Slide to pick the section of time domian to to play
 
 	// list of components
 	OwnedArray<TextButton> components;

@@ -31,13 +31,18 @@ XmlElement * IOHandler::createProfileXML(Converter & converter)
     return result;
 }
 
-std::unique_ptr<XmlElement> IOHandler::createStateXML(Converter & converter, AudioProcessorValueTreeState & valueTreeState)
-{
+XmlElement * IOHandler::createParamsXML(AudioProcessorValueTreeState & valueTreeState) {
     auto state = valueTreeState.copyState();
     // see the header file for the structure of a soundshape XML file
-    std::unique_ptr<XmlElement> xml(new XmlElement("Soundshape")); // gives it the "Soundshape" tag at the top
     XmlElement* paramsXml(state.createXml());
     paramsXml->setTagName("Parameters");
+    return paramsXml;
+}
+
+std::unique_ptr<XmlElement> IOHandler::createStateXML(Converter & converter, AudioProcessorValueTreeState & valueTreeState)
+{
+    std::unique_ptr<XmlElement> xml(new XmlElement("Soundshape")); // gives it the "Soundshape" tag at the top
+    auto paramsXml = IOHandler::createParamsXML(valueTreeState);
     xml->addChildElement(paramsXml);
     XmlElement *profileXML = IOHandler::createProfileXML(converter); // stores profile frequency data
     xml->addChildElement(profileXML);
@@ -59,19 +64,25 @@ void IOHandler::writeStateXMLFile(File f, String content)
     }
 }
 
+
+void IOHandler::restoreParamsFromXml(AudioProcessorValueTreeState& valueTreeState,
+        XmlElement* xml) {
+
+    auto x = xml->createDocument("");
+    valueTreeState.replaceState(ValueTree::fromXml(*xml));
+}
+
 void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
-    std::unique_ptr<XmlElement>&  xml)
+        std::unique_ptr<XmlElement>&  xml)
 {
     
     if (xml->hasTagName("Soundshape")) {
         // This is a soundshape preset, hopefully not corrupt
         // Get its parameters and reset the current AudioProcessorValueTreeState's state with it.
-
+        
         XmlElement* paramsXml = xml->getChildByName("Parameters");
         XmlElement* profileXml = xml->getChildByName("Profile");
-
-        valueTreeState.replaceState(ValueTree::fromXml(*paramsXml));
-
+        IOHandler::restoreParamsFromXml(valueTreeState, paramsXml);
         // iterate through the profile chunks
         XmlElement* chunkXml = profileXml->getFirstChildElement();
         for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {

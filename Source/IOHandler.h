@@ -51,6 +51,13 @@ public:
     static XmlElement* createProfileXML(Converter & converter);
 
     /**
+    Makes an XML element from just the value Tree state passed in.
+
+    Make sure the result gets deleted (recommended to put it in a unique_ptr
+    */
+    static XmlElement* createParamsXML(AudioProcessorValueTreeState & valueTreeState);
+
+    /**
     Create a XML element that represents the whole state (audio parameters and the profile data).
 
     This isn't a whole Xml file, but it can be easily made into one with XmlElement::createDocument()
@@ -79,12 +86,18 @@ public:
 
 
     /**
+    Restores the data in a AudioProcessorValueTreeState with
+    a serialized tree state in XML.
+    */
+    static void restoreParamsFromXml(AudioProcessorValueTreeState& valueTreeState,
+        XmlElement* xml);
+
+    /**
     Restores an AudioProcessorValueTreeState and profile data to the values in a Soundshape parameters XmlElement.
 
     This can be used for either restoring from a DAW preset or from restoring from a XML file thats saved manually.
     @param valueTreeState The processor's AudioProcessorValueTreeState whose parameters this method should restore to match the XML parameters.
-    @param paramsXML The XML data that contains serialized parameters. <b>MAKE SURE THIS IS NOT NULL BEFORE CALLING THIS METHOD. paramsXML
-    will be deleted in this method, so don't use it again afterwards.</b>
+    @param paramsXML The XML data that contains serialized parameters. <b>MAKE SURE THIS IS NOT NULL BEFORE CALLING THIS METHOD.</b>
     */
     static void restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
         std::unique_ptr<XmlElement>& xml);
