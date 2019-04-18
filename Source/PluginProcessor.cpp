@@ -247,7 +247,7 @@ void Soundshape_pluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
 AudioProcessorEditor* Soundshape_pluginAudioProcessor::createEditor()
 {
-    Soundshape_pluginAudioProcessorEditor* editor = new Soundshape_pluginAudioProcessorEditor(*this, valueTreeState);
+    editor = new Soundshape_pluginAudioProcessorEditor(*this, valueTreeState);
     return editor;
 }
 
@@ -266,6 +266,9 @@ void Soundshape_pluginAudioProcessor::setStateInformation (const void* data, int
     if (xmlState != nullptr) {
         // this method handles deleting the xmlState for us.
         IOHandler::restoreStateFromXml(valueTreeState, converter, xmlState);
+    }
+    if (editor != nullptr) {
+        editor->mainComp.drawProfile();
     }
 }
 

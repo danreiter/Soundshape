@@ -97,6 +97,7 @@ public:
 	void resized() override;
 	void sliderValueChanged(Slider* slider) override;
     void buttonStateChanged(Button* button) override;
+    void drawProfile();
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
 	void loadSound();

@@ -14,14 +14,14 @@
 //==============================================================================
 Soundshape_pluginAudioProcessorEditor::Soundshape_pluginAudioProcessorEditor(Soundshape_pluginAudioProcessor& p,
     AudioProcessorValueTreeState& _valueTreeState)
-    : AudioProcessorEditor(&p), processor(p), mainComponent(p, _valueTreeState)
+    : AudioProcessorEditor(&p), processor(p), mainComp(p, _valueTreeState)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setResizable(true, true);
     setResizeLimits(300, 300, 1920, 1080);
     setSize(700, 600);
-    addAndMakeVisible(&mainComponent);
+    addAndMakeVisible(&mainComp);
 
 }
 
@@ -45,5 +45,5 @@ void Soundshape_pluginAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
-    mainComponent.setSize(getWidth(), getHeight());
+    mainComp.setSize(getWidth(), getHeight());
 }

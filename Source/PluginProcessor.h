@@ -3,6 +3,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Converter.h"
 
+class Soundshape_pluginAudioProcessorEditor;
 /**
 The AudioProcessor for Soundshape. This is where the host's audio buffers are filled in a real-time callback.
 
@@ -70,6 +71,7 @@ private:
     MidiKeyboardState keyState; // tracks which MIDI keys are down
     Converter converter; // performs DSP tasks, manages some parameters.
     AudioProcessorValueTreeState valueTreeState;
+    Soundshape_pluginAudioProcessorEditor* editor;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Soundshape_pluginAudioProcessor)
 };

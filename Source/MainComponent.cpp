@@ -481,6 +481,10 @@ void MainComponent::buttonStateChanged(Button * button)
 //-------------------------------------------------------------------------------------
 
 
+void MainComponent::drawProfile() {
+    fWindow.setProfile();
+    repaint();
+}
 
 //-------------------------------------------------------------------------------------
 // Function listens to buttons of child components
@@ -493,10 +497,6 @@ void MainComponent::buttonClicked(Button* button)
 		selectedProfile = (int)button->getComponentID().getIntValue();
         currentProfile = (int)(timeBlock * 5) + selectedProfile;
 
-		DBG(timeBlock);
-		DBG((int)(timeBlock * 5));
-		DBG(selectedProfile);
-		DBG(currentProfile);
 		fWindow.setProfile();
 		repaint();
 	}
