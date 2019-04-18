@@ -7,6 +7,10 @@
               pluginManufacturerCode="Soun" pluginCode="Shap" pluginVST3Category="Instrument,Stereo,Synth">
   <MAINGROUP id="A0aUYB" name="Soundshape_plugin">
     <GROUP id="{EBE42BF8-063C-7B7A-772E-EDF23098CEEB}" name="Source">
+      <FILE id="NAoZqV" name="SoundshapeFilterWindow.h" compile="0" resource="0"
+            file="Source/SoundshapeFilterWindow.h"/>
+      <FILE id="GFr78o" name="SoundshapeFilterWindow.cpp" compile="1" resource="0"
+            file="Source/SoundshapeFilterWindow.cpp"/>
       <FILE id="ESgxQA" name="otherPopups.cpp" compile="1" resource="0" file="Source/otherPopups.cpp"/>
       <FILE id="j009mq" name="otherPopups.h" compile="0" resource="0" file="Source/otherPopups.h"/>
       <FILE id="fIo6yp" name="keyboardPopup.cpp" compile="1" resource="0"
@@ -73,9 +77,11 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="&#10;"
+            extraDefs="JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1&#10;">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1" isDebug="1" enableIncrementalLinking="1"/>
+        <CONFIGURATION name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1&#10;" isDebug="1"
+                       enableIncrementalLinking="1"/>
         <CONFIGURATION isDebug="0" name="Release" defines="SOUNDSHAPE_RUN_TESTS = 0"
                        targetName="Soundshape" enableIncrementalLinking="0"/>
       </CONFIGURATIONS>
@@ -98,7 +104,7 @@
         <MODULEPATH id="juce_dsp" path="../JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraDefs="JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1&#10;">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1&#10;"/>
         <CONFIGURATION isDebug="0" name="Release" defines="SOUNDSHAPE_RUN_TESTS = 0&#10;"/>
