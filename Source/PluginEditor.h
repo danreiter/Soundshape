@@ -26,13 +26,13 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    MainComponent mainComp;
+
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     Soundshape_pluginAudioProcessor& processor;
 
-    MainComponent mainComponent;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Soundshape_pluginAudioProcessorEditor)
+JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Soundshape_pluginAudioProcessorEditor)
 };

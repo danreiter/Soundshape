@@ -308,6 +308,7 @@ void Converter::parameterChanged(const String & parameterID, float newValue)
     }
     if (parameterID == "beginningChunk") {
         beginningChunk = (int)newValue;
+        currentChunk = beginningChunk;
     }
     if (parameterID == "endingChunk") {
         endingChunk = (int)newValue;
@@ -328,9 +329,6 @@ void Converter::updateFrequencyValue(int chunk, int freq, float value)
 {
     //DBG(""<<chunk<<" "<<freq<<" "<<value);
 
-    if (freq > sampleRate / 2 - 1) {
-        return; // do nothing
-    }
     // OLD : setProfileRawPoint(chunk, freqToBin(freq,sampleRate), value);
     setProfileRawPoint(chunk, freq, value);
 }

@@ -176,6 +176,13 @@ void GuiFunc::setListeners(Slider::Listener* _sliderListener, Button::Listener* 
 //==============================================================================
 
 
+//==============================================================================
+// accessor for whether the sustain play button is pressed
+//==============================================================================
+bool GuiFunc::getSustainedPlayBtnToggled() {
+    return sustainPlyBtn->getToggleState();
+}
+
 
 //==============================================================================
 // Functions for drawing and controling the fundumental frequency

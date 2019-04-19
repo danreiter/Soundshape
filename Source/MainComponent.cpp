@@ -443,11 +443,11 @@ void MainComponent::sliderValueChanged(Slider * slider)
         float maxParamValue = beginningParam->getNormalisableRange().end;
         int bottomValue = (int)slider->getMinValue();
         int upperValue = (int)slider->getMaxValue();
+
         beginningParam->setValueNotifyingHost(bottomValue/maxParamValue);
         beginningParam->sendValueChangedMessageToListeners(bottomValue/maxParamValue);
         endingParam->setValueNotifyingHost(upperValue/maxParamValue);
         endingParam->sendValueChangedMessageToListeners(upperValue/maxParamValue);
-
 	}
 	// on change of zoom slider updates zoom for frequency domain view
 	if(slider == zoomSlider)
@@ -463,7 +463,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 //-------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------
-// Function listensfor buttons to gget hovered, pressed, or released
+// Function listensfor buttons to get hovered, pressed, or released
 //------------------------------------------------------------------------------------
 void MainComponent::buttonStateChanged(Button * button)
 {
@@ -473,7 +473,7 @@ void MainComponent::buttonStateChanged(Button * button)
         if (button->getState() == Button::buttonDown) {
             processor.playFreq(16.0f * notes[fund.getNote()]);
         }
-        else{
+        else if( ! volComp.getSustainedPlayBtnToggled()){
             processor.panic();
         }
     }
@@ -481,6 +481,13 @@ void MainComponent::buttonStateChanged(Button * button)
 //-------------------------------------------------------------------------------------
 
 
+void MainComponent::drawSound() {
+    fWindow.setProfile();
+    for (int i = 0; i < SOUNDSHAPE_PROFILE_ROWS; i++) {
+        converterPtr->renderPreview(i);
+    }
+    repaint();
+}
 
 //-------------------------------------------------------------------------------------
 // Function listens to buttons of child components
@@ -493,10 +500,6 @@ void MainComponent::buttonClicked(Button* button)
 		selectedProfile = (int)button->getComponentID().getIntValue();
         currentProfile = (int)(timeBlock * 5) + selectedProfile;
 
-		DBG(timeBlock);
-		DBG((int)(timeBlock * 5));
-		DBG(selectedProfile);
-		DBG(currentProfile);
 		fWindow.setProfile();
 		repaint();
 	}
@@ -600,6 +603,7 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 				selectedFile = File(presetPath.getChildFile(fileName));
 			}
 			loadFile();
+            drawSound();
 		}
 
 	};
@@ -704,6 +708,12 @@ void MainComponent::loadFile()
 		pushedWriteBtn = true;
 		cb.setSelectedItemIndex(0);
 		selectedFile = newFile;
+
+        // clear out all the profile bins and reset
+        processor.restoreNewSoundParams();
+        processor.restoreDefaultProfile();
+        repaint();
+
 	}
 	
 	//do After file load

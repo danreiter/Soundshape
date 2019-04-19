@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['acceptsmidi',['acceptsMidi',['../class_soundshape__plugin_audio_processor.html#ad2b6f60fff3c0c4239e8b1ca5bc24ac2',1,'Soundshape_pluginAudioProcessor']]],
+  ['add',['add',['../classfreq_domain_win.html#a6eea9f487b56747f0df4d737e2b76846',1,'freqDomainWin::add()'],['../class_main_component.html#a8a79fed64a6bf82b84f70dfac11f5117',1,'MainComponent::add()']]],
+  ['addbutton',['addButton',['../class_main_component.html#a5a121551acdc562def1c858b0039f5bc',1,'MainComponent']]],
+  ['addshiftedprofiles',['addShiftedProfiles',['../class_converter.html#a44d99a1d55ab5bcce6488aeae0fff1f1',1,'Converter']]],
+  ['addtolist',['addToList',['../classbig_time.html#afc72b2fd19d12de1bc57c0ed00abca17',1,'bigTime::addToList()'],['../classfreq_domain_win.html#a38b301ed0df65980f9565e1ef5359fa8',1,'freqDomainWin::addToList()'],['../classsmall_time.html#a780f7898decfcbf631708b4f1b87ff93',1,'smallTime::addToList()']]],
+  ['adsrenvelope',['adsrEnvelope',['../class_envelope_params.html#a53ad8d168b3130b665a268a93070031d',1,'EnvelopeParams']]],
+  ['amp',['amp',['../class_main_component.html#a85b89e667cf02bd331cc2acac17b3942',1,'MainComponent']]],
+  ['analyzechunkintoprofile',['analyzeChunkIntoProfile',['../class_converter.html#a2d8daaed7294b4436aa19c582edebfac',1,'Converter']]],
+  ['anotherinstancestarted',['anotherInstanceStarted',['../class_take3_application.html#af1777820143501f0290fecdfc166c3e6',1,'Take3Application::anotherInstanceStarted()'],['../class_soundshape_filter_app.html#ab016165428b65c49854742cf2df53f28',1,'SoundshapeFilterApp::anotherInstanceStarted()']]],
+  ['appproperties',['appProperties',['../class_soundshape_filter_app.html#a76b0edf9c8b2cc43f5c1422257ea0323',1,'SoundshapeFilterApp']]],
+  ['askusertoloadstate',['askUserToLoadState',['../classjuce_1_1_soundshape_plugin_holder.html#ad9c843d36e3e9bc1dfb4c1b5f58eff05',1,'juce::SoundshapePluginHolder']]],
+  ['askusertosavestate',['askUserToSaveState',['../classjuce_1_1_soundshape_plugin_holder.html#a95b5ea0ac1be5064988ed3a6942a0d56',1,'juce::SoundshapePluginHolder']]],
+  ['attack',['Attack',['../classenvelope.html#a8665b0c8224c04eb3b83010c6d0d54fb',1,'envelope']]],
+  ['attackattachment',['attackAttachment',['../classenvelope.html#aa97f1f6270860aaa65593a5ed768441d',1,'envelope']]],
+  ['audiodeviceabouttostart',['audioDeviceAboutToStart',['../classjuce_1_1_soundshape_plugin_holder.html#a9f3c91f24b12c8492e93cd8de1a1393b',1,'juce::SoundshapePluginHolder']]],
+  ['audiodeviceiocallback',['audioDeviceIOCallback',['../classjuce_1_1_soundshape_plugin_holder.html#a1a91c248daa4dc10ace339322c12b2ac',1,'juce::SoundshapePluginHolder']]],
+  ['audiodevicestopped',['audioDeviceStopped',['../classjuce_1_1_soundshape_plugin_holder.html#a8196b9346bf90a427096816b79ea37d4',1,'juce::SoundshapePluginHolder']]],
+  ['autoopenmididevices',['autoOpenMidiDevices',['../classjuce_1_1_soundshape_plugin_holder.html#a3431020fa8be29a627e6e4b74455fa4b',1,'juce::SoundshapePluginHolder']]]
+];
