@@ -5,7 +5,6 @@ var searchData=
   ['view',['view',['../classbig_time.html#a8ff42322834dea1cc22b9550d3b85d24',1,'bigTime::view()'],['../class_feq_window.html#a623edb3b9a542ff2e810c079113ecfc4',1,'FeqWindow::view()'],['../classsmall_time.html#a9e98db21472d4fe4f4969dcad75a5523',1,'smallTime::view()']]],
   ['vis',['vis',['../class_l_window.html#a56edeba3b6b29fe5d90a6de515d937fd',1,'LWindow']]],
   ['volbox',['volBox',['../class_gui_func.html#aed76e32c4361a079e6e95bc763db4490',1,'GuiFunc']]],
-  ['volcolourids',['volColourIds',['../classvolume_box.html#a928fec71dd99efa16892a485f2ee34daa28fa140002e4a1ce7de61f284b2ddd9b',1,'volumeBox']]],
   ['volcomp',['volComp',['../class_main_component.html#a5eaf50e68ac0171232e23272a7334e2c',1,'MainComponent']]],
   ['volume',['volume',['../classvolume_box.html#a2bbec15d003fe6bbe00104163735ba21',1,'volumeBox']]],
   ['volume_5fslider',['VOLUME_SLIDER',['../_gui_func_8h.html#a23df8c9c81763568abc0226e0f5103bd',1,'GuiFunc.h']]],

@@ -22,6 +22,6 @@ var searchData=
   ['sustain',['Sustain',['../classenvelope.html#a8bc62b428075bbb5bcf33feebc4d0ab5',1,'envelope']]],
   ['sustainattachment',['sustainAttachment',['../classenvelope.html#ac70a7103dfcee83b69d9a2273aea2885',1,'envelope']]],
   ['sustained',['sustained',['../class_envelope_params.html#a23bcf0726729488f6dfa6eb8e57f391e',1,'EnvelopeParams']]],
-  ['sustainplybtn',['sustainPlyBtn',['../class_gui_func.html#a3db96bb847fbe4f85e1211a8611f87dd',1,'GuiFunc']]],
+  ['sustainplybtn',['sustainPlyBtn',['../class_gui_func.html#a2995eaf8fa8021f6eb1b5f40c3e3fe59',1,'GuiFunc']]],
   ['sustainpressed',['sustainPressed',['../class_converter.html#a56aaf853ce473fdcad53da118062c423',1,'Converter']]]
 ];

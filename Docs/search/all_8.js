@@ -1,7 +1,7 @@
 var searchData=
 [
   ['import_5fbutton',['IMPORT_BUTTON',['../_gui_func_8h.html#a7717431b627e67f2ce40759c33cbbaf2',1,'GuiFunc.h']]],
-  ['importbtn',['importBtn',['../class_gui_func.html#ae82853e5bd33a142c8114dd6f6a0c4ea',1,'GuiFunc']]],
+  ['importbtn',['importBtn',['../class_gui_func.html#a3b4a72254781d23fa1ba105a8ba4dd78',1,'GuiFunc']]],
   ['importconverteraudio',['importConverterAudio',['../class_i_o_handler.html#a87c3ff1beb96a88ce1b5872056baa927',1,'IOHandler']]],
   ['importfft',['importFFT',['../class_converter.html#a6c87f44283e07fc2ca6f20092e76e05f',1,'Converter']]],
   ['importfile',['importFile',['../class_main_component.html#acf1eaa47652c11072b1af391c9a2c807',1,'MainComponent']]],

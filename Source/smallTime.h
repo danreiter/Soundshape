@@ -19,7 +19,7 @@
 #define PROFILE_SELECT_BUTTON 5001
 
 //==============================================================================
-/*
+/**
 */
 class smallTime : public Component
 {

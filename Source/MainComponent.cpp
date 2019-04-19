@@ -46,21 +46,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(cb);
 
 	//-----Setting testing values for the combo box-------------
-
-	/*cb.addItem("New Sound", 1);
-	cb.addItem("Gregory's game tune", 2);
-	cb.addItem("Daniel's groovy sound", 3);
-	cb.addItem("Mardigon's math sound", 4);
-	cb.addItem("My rad sound", 5);
-	cb.addItem("The sound of angry paper", 6);
-	cb.addItem("Love sound", 7);
-	cb.addItem("The sound of not silence", 8);*/
 	loadPresetPath();
 	cb.setSelectedItemIndex(0);
     cb.setTooltip("Contains all the current presets");
 	cb.addListener(this);
-
-
 	//------------------------------------------------------------
 
 	//------------Setting Button Values---------------------------
@@ -137,7 +126,11 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	//------------------------------------------------------------
 	setSize(600, 400);
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function showKey
+//------------------------------------------------------------------------------------
 void MainComponent::showKey(bool vis)
 {
 	if (vis)
@@ -163,12 +156,13 @@ void MainComponent::showKey(bool vis)
 		midiKeyboard.deleteAndZero();
 	}
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function showLic
+//------------------------------------------------------------------------------------
 void MainComponent::showLic()
 {
-
-	//if(vis)
-	//{
 		String m = "Soundshape. Spectral synthesis applicaiton / audio plugin. \n"
             "Copyright(C) 2019 by Mardigon Toler, Daniel Reiter, Gregory Hughes \n"
             "\n"
@@ -214,12 +208,13 @@ void MainComponent::showLic()
 		options.launchAsync();
 
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function showDev
+//------------------------------------------------------------------------------------
 void MainComponent::showDevs()
 {
-
-	//if(vis)
-	//{
 	String m = "Soundshape. Spectral synthesis applicaiton / audio plugin.";
 
 
@@ -250,18 +245,24 @@ MainComponent::~MainComponent()
         showKey(false);
         showKeyboard = false;
     }
-}
-//==============================================================================
 
-// a method for changing from one lookandfeel to the other
+	delete harmonicButton;
+	delete addButton;
+	delete zoomSlider;
+	delete writeButton;
+	delete laf;
+
+}
+//------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------
+// Function for changing from one lookandfeel to the other
+//------------------------------------------------------------------------------------
 void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 {
 	for (auto* child : comp->getChildren())
 	{
 		child->setLookAndFeel(laf); // this will change everything in Soundshape to the current colors of laf
-		//String temp = child->getComponentID();
-		//DBG("id is " << temp);
-		//if (child->getComponentID().getIntValue() == PANIC_BUTTON)
 		if(child == &volComp) // to change specific buttons from non-this components, we need to specifically loop through those components
 		{
 			for (auto * subChild : child->getChildren()) {
@@ -282,33 +283,15 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 				}
 			}
 		}
-		/*else if (child == &bTWindow)
-		{
-
-			for (auto * subChild : child->getChildren())
-			{
-
-				if (subChild->getComponentID().getIntValue() == PLAYTIME_SLIDER)
-				{
-
-					subChild->setColour(Slider::thumbColourId, laf->findColour(SoundshapeLAFs::background3ID));
-					subChild->setColour(Slider::trackColourId, laf->findColour(SoundshapeLAFs::background3ID));
-
-				}
-
-			}
-
-		}*/
 		else if (child->getComponentID().getIntValue() == WRITE_BUTTON)
 		{
 			child->setColour(TextButton::buttonColourId, laf->findColour(TextButton::buttonOnColourId));
 			child->setColour(TextButton::textColourOffId, laf->findColour(TextButton::textColourOnId));
 		}
-		// put one for the play slider (5003) later
 		
 
 	}
-	//zoomSlider->setLookAndFeel(laf);
+
 }
 
 //------------------------------------------------------------------------------------
@@ -420,7 +403,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		converterPtr->updateFrequencyValue(currentProfile, slider->getComponentID().getIntValue(), slider->getValue());
 		converterPtr->renderPreview(currentProfile);
-		repaint();
+
 	}
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getComponentID().getIntValue() == PLAYTIME_SLIDER)
@@ -441,7 +424,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	if(slider == zoomSlider)
 	{
 		zoom = slider->getValue();
-		repaint();
+
 	}
 
 
@@ -489,7 +472,7 @@ void MainComponent::buttonClicked(Button* button)
         currentProfile = (int)(timeBlock * 5) + selectedProfile;
 
 		fWindow.setProfile();
-		repaint();
+
 	}
 
 	// On frequnecy profile selection updates new frequency profile 
@@ -501,13 +484,13 @@ void MainComponent::buttonClicked(Button* button)
 	// On Time domain selection repaint GUI
 	if (button->getParentComponent() == &bTWindow)
 	{
-		repaint();
+
 	}
 
 	// add Button hides and shows buttons to add frequency spikes 
 	if (button->getComponentID() == addButton->getComponentID())
 	{
-		repaint();
+
 	}
 
 	// add Button hides and shows buttons to add frequency spikes 
@@ -522,7 +505,7 @@ void MainComponent::buttonClicked(Button* button)
 		{
 			promptSaveOptions();
 		}
-		repaint();
+
 	}
 
 	// Sustained Play button
@@ -561,8 +544,9 @@ void MainComponent::buttonClicked(Button* button)
 	if (button == harmonicButton)
 	{
 		harm = harm * -1;
-		repaint();
+
 	}
+	repaint();
 }
 //-------------------------------------------------------------------------------------
 
@@ -1202,6 +1186,9 @@ void MainComponent::promptSaveOptions()
 	}
 }
 //-------------------------------------------------------------------------------------
+//==============================================================================
+// end mainComponent
+//==============================================================================
 
 
 //==============================================================================

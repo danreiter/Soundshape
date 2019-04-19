@@ -7,7 +7,6 @@ var searchData=
   ['chunk_5fsize',['chunk_size',['../classtime_domain_win.html#a6b67f2a2eb6e84dd07f19ee21ee89900',1,'timeDomainWin']]],
   ['clearchunk',['clearChunk',['../class_converter.html#ac392e475808059f8ccd5a12f54f58e78',1,'Converter']]],
   ['closebuttonpressed',['closeButtonPressed',['../class_take3_application_1_1_main_window.html#afe34ba385c27d88856f42bb82835b90d',1,'Take3Application::MainWindow::closeButtonPressed()'],['../class_l_window.html#aaca99f40fe3f6f2811dc82d3659f28de',1,'LWindow::closeButtonPressed()'],['../classjuce_1_1_soundshape_filter_window.html#a13fcada69bbbddc38337ca0d547553af',1,'juce::SoundshapeFilterWindow::closeButtonPressed()']]],
-  ['colourids',['ColourIds',['../classvolume_box.html#a928fec71dd99efa16892a485f2ee34da',1,'volumeBox']]],
   ['comboboxchanged',['comboBoxChanged',['../class_main_component.html#a1de489a846a01b6499f6e2cd2f0f65d9',1,'MainComponent']]],
   ['commandids',['CommandIDs',['../class_main_component.html#a9d7ddc68ebc8f05ba8c6004bd2b538f7',1,'MainComponent']]],
   ['commandmanager',['commandManager',['../class_main_component.html#af4dd6572c04b3326c9f7b4ecd02b4e6e',1,'MainComponent']]],

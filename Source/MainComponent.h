@@ -26,22 +26,27 @@
 #define WRITE_BUTTON 2008  ///< Component ID number for the write button
 
 //==============================================================================
-/*
-	Struct for burger Menu component
+/**
+Struct for burger Menu component.
+
+@see
+JUCE documentation: BurgerMenu
 */
 //==============================================================================
 struct BurgerMenuHeader : public Component
 {
 	BurgerMenuHeader(SidePanel& sp);
-
 	~BurgerMenuHeader();
 
 private:
+	/**
+	
+	*/
 	void paint(Graphics& g) override;
 	void resized() override;
 	void showOrHide();
 
-	SidePanel& sidePanel;
+	SidePanel& sidePanel; 
 	Label titleLabel{ "titleLabel", "JUCE Demo" };
 	ShapeButton burgerButton{ "burgerButton", Colours::lightgrey, Colours::lightgrey, Colours::white };
 
