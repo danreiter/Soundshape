@@ -63,12 +63,12 @@ private:
 	Slider *Release; ///< Slider to change value for the release value in the ADSR envelope  
 
     
-    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment; ///> Attachments components to the back-end parameters.
-    std::unique_ptr<SliderAttachment> attackAttachment;						 ///> Attachments attack component to the back-end parameters
-    std::unique_ptr<SliderAttachment> decayAttachment;						 ///> Attachments decay component to the back-end parameters
-    std::unique_ptr<SliderAttachment> sustainAttachment;					 ///> Attachments sustain component to the back-end parameters
-    std::unique_ptr<SliderAttachment> releaseAttachment;					 ///> Attachments release component to the back-end parameters
-    AudioProcessorValueTreeState& valueTreeState;							 ///> Handles component event linked to the back-end parameters
+    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment; ///< Attachments components to the back-end parameters.
+    std::unique_ptr<SliderAttachment> attackAttachment;						 ///< Attachments attack component to the back-end parameters
+    std::unique_ptr<SliderAttachment> decayAttachment;						 ///< Attachments decay component to the back-end parameters
+    std::unique_ptr<SliderAttachment> sustainAttachment;					 ///< Attachments sustain component to the back-end parameters
+    std::unique_ptr<SliderAttachment> releaseAttachment;					 ///< Attachments release component to the back-end parameters
+    AudioProcessorValueTreeState& valueTreeState;							 ///< Handles component event linked to the back-end parameters
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (envelope)
 };
