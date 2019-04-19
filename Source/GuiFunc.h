@@ -27,7 +27,7 @@
 Volume Box is a slider component drawn in a box with volume symbols.
 
 Componet is used to change Soundshapes volume settings.
-@param _valueTreeState Used update the back-end of Soundshape on setting changes for volume.
+@param _valueTreeState Used to update the back-end of Soundshape on setting changes for volume.
 */
 //==============================================================================
 class volumeBox : public Component

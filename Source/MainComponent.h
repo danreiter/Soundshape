@@ -39,9 +39,6 @@ struct BurgerMenuHeader : public Component
 	~BurgerMenuHeader();
 
 private:
-	/**
-	
-	*/
 	void paint(Graphics& g) override;
 	void resized() override;
 	void showOrHide();
