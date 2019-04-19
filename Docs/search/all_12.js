@@ -77,7 +77,7 @@ var searchData=
   ['startplaying',['startPlaying',['../classjuce_1_1_soundshape_plugin_holder.html#a4bd457aba22980a08672fb5aa2df9dc7',1,'juce::SoundshapePluginHolder']]],
   ['stopplaying',['stopPlaying',['../classjuce_1_1_soundshape_plugin_holder.html#ae5b2a56ed11b0d4cae7178399c81109b',1,'juce::SoundshapePluginHolder']]],
   ['stwindow',['sTWindow',['../class_main_component.html#a740fcb259b954fd6551cf9842e17edd4',1,'MainComponent']]],
-  ['sustain',['Sustain',['../classenvelope.html#a8bc62b428075bbb5bcf33feebc4d0ab5',1,'envelope']]],
+  ['sustain',['Sustain',['../classenvelope.html#a119c039936fd2cd2316ae8a994a57450',1,'envelope']]],
   ['sustain_5fplay_5fbutton',['SUSTAIN_PLAY_BUTTON',['../_gui_func_8h.html#af8e15def64d369aac64525c0a5fae653',1,'GuiFunc.h']]],
   ['sustainattachment',['sustainAttachment',['../classenvelope.html#ac70a7103dfcee83b69d9a2273aea2885',1,'envelope']]],
   ['sustained',['sustained',['../class_envelope_params.html#a23bcf0726729488f6dfa6eb8e57f391e',1,'EnvelopeParams']]],

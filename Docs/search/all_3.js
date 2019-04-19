@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['decay',['Decay',['../classenvelope.html#a45c752e2fc55825e9d2051e072f4a996',1,'envelope']]],
+  ['decay',['Decay',['../classenvelope.html#a2708778ad4dba0b313ff7e946de4ace0',1,'envelope']]],
   ['decayattachment',['decayAttachment',['../classenvelope.html#a08478bf245432ed8faac3d5c255a93f7',1,'envelope']]],
   ['defaulttheme',['DefaultTheme',['../class_main_component.html#a9d7ddc68ebc8f05ba8c6004bd2b538f7a195d424793c745af7e1399eaf5f99986',1,'MainComponent']]],
   ['deleteplugin',['deletePlugin',['../classjuce_1_1_soundshape_plugin_holder.html#a6ff6546e95f73dfe41bd2b1f99d4bf05',1,'juce::SoundshapePluginHolder']]],

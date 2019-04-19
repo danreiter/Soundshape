@@ -91,13 +91,24 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ae6c0f6e29cec9cf877e45790a9020009"><td class="memItemLeft" align="right" valign="top">MidiKeyboardState&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkeyboard_popup.html#ae6c0f6e29cec9cf877e45790a9020009">keyboardState</a></td></tr>
+<tr class="memdesc:ae6c0f6e29cec9cf877e45790a9020009"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to the keyboard's MIDI state.  <a href="#ae6c0f6e29cec9cf877e45790a9020009">More...</a><br /></td></tr>
 <tr class="separator:ae6c0f6e29cec9cf877e45790a9020009"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b3f7b204a69e1099f3a88abc191211f"><td class="memItemLeft" align="right" valign="top">MidiKeyboardComponent&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkeyboard_popup.html#a3b3f7b204a69e1099f3a88abc191211f">keyboardComponent</a></td></tr>
+<tr class="memdesc:a3b3f7b204a69e1099f3a88abc191211f"><td class="mdescLeft">&#160;</td><td class="mdescRight">MIDI keyboard.  <a href="#a3b3f7b204a69e1099f3a88abc191211f">More...</a><br /></td></tr>
 <tr class="separator:a3b3f7b204a69e1099f3a88abc191211f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a989361c16d67a508335099d02c8a103e"><td class="memItemLeft" align="right" valign="top">ComponentDragger&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkeyboard_popup.html#a989361c16d67a508335099d02c8a103e">dragger</a></td></tr>
+<tr class="memdesc:a989361c16d67a508335099d02c8a103e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to handle dragging the window.  <a href="#a989361c16d67a508335099d02c8a103e">More...</a><br /></td></tr>
 <tr class="separator:a989361c16d67a508335099d02c8a103e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div class="dynheader">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Displays a playable MIDI keyboard.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_converter</td><td>Instiates the keyboard state to send message to the back-end via a converter pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><div class="dynheader">
 Inheritance diagram for keyboardPopup:</div>
 <div class="dyncontent">
 <div class="center"><img src="classkeyboard_popup__inherit__graph.png" border="0" usemap="#keyboard_popup_inherit__map" alt="Inheritance graph"/></div>
@@ -175,6 +186,14 @@ Collaboration diagram for keyboardPopup:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Used to start dragging the popup window on mouse down event.</p>
+<dl class="section see"><dt>See also</dt><dd>JUCE documentation: MouseEvent::mouseDown(). </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">e</td><td>Register a mouse down event. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -201,6 +220,14 @@ Collaboration diagram for keyboardPopup:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Used to dragging the popup window while the mouse button is down.</p>
+<dl class="section see"><dt>See also</dt><dd>JUCE documentation: MouseEvent::mouseDrag(). </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">e</td><td>Register a mouse drag event. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -227,6 +254,8 @@ Collaboration diagram for keyboardPopup:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Paints the keyboard and backgraound above the keyboard.</p>
+<p>Function is called using the repaint() function. </p><dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::paint(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -251,6 +280,8 @@ Collaboration diagram for keyboardPopup:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Used to handle dragging the window. </p>
+
 </div>
 </div>
 <a id="a3b3f7b204a69e1099f3a88abc191211f"></a>
@@ -273,6 +304,8 @@ Collaboration diagram for keyboardPopup:</div>
 </table>
 </div><div class="memdoc">
 
+<p>MIDI keyboard. </p>
+
 </div>
 </div>
 <a id="ae6c0f6e29cec9cf877e45790a9020009"></a>
@@ -294,6 +327,8 @@ Collaboration diagram for keyboardPopup:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reference to the keyboard's MIDI state. </p>
 
 </div>
 </div>

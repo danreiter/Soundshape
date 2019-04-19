@@ -51,7 +51,7 @@ public:
 	/**
 	Set an event listeners on each of the adsr envelope's sliders.
 
-	Used to call repaint on for mainComponent on updates.
+	Used to call repaint in mainComponent on updates.
 	@param _listener Is adds an event listener to each of the adsr envelope's sliders.
 	*/
 	void setListener(Slider::Listener *_listener);

@@ -54,7 +54,7 @@ public:
 	/**
 	Set an event listener on the volume slider.
 
-	Used to call repaint on for mainComponent on updates.
+	Used to call repaint() in mainComponent on updates.
 	@param _listener Is adds an event listener to the volume slider.
 	*/
 	void setVolumeListener(Slider::Listener * _listener);

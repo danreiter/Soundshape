@@ -19,7 +19,7 @@ var searchData=
   ['slisten',['sListen',['../class_gui_func.html#a7e7aa9bee6da926dfb2955c0aa75c982',1,'GuiFunc']]],
   ['slistener',['sListener',['../classfund_freq.html#a1d8a9fea8866838cbb4775dec8a7636b',1,'fundFreq']]],
   ['stwindow',['sTWindow',['../class_main_component.html#a740fcb259b954fd6551cf9842e17edd4',1,'MainComponent']]],
-  ['sustain',['Sustain',['../classenvelope.html#a8bc62b428075bbb5bcf33feebc4d0ab5',1,'envelope']]],
+  ['sustain',['Sustain',['../classenvelope.html#a119c039936fd2cd2316ae8a994a57450',1,'envelope']]],
   ['sustainattachment',['sustainAttachment',['../classenvelope.html#ac70a7103dfcee83b69d9a2273aea2885',1,'envelope']]],
   ['sustained',['sustained',['../class_envelope_params.html#a23bcf0726729488f6dfa6eb8e57f391e',1,'EnvelopeParams']]],
   ['sustainplybtn',['sustainPlyBtn',['../class_gui_func.html#a2995eaf8fa8021f6eb1b5f40c3e3fe59',1,'GuiFunc']]],
