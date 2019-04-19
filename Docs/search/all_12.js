@@ -45,7 +45,6 @@ var searchData=
   ['showkey',['showKey',['../class_main_component.html#af1d1343f27be46920fef75db853426c1',1,'MainComponent']]],
   ['showkeyboard',['showKeyboard',['../class_main_component.html#a49c1dd47ed8ab86d948e7e8e93f18592',1,'MainComponent']]],
   ['showlic',['showLic',['../class_main_component.html#a7e28f4f20e81c003a4727ac67f7a07c6',1,'MainComponent']]],
-  ['showlicense',['showLicense',['../class_main_component.html#a2ba91a93af7e816947ae0a9d11ffd14b',1,'MainComponent']]],
   ['showorhide',['showOrHide',['../struct_burger_menu_header.html#abbe323f65d8cadf6b64dba203b21b10c',1,'BurgerMenuHeader']]],
   ['shutdown',['shutdown',['../class_take3_application.html#ae3b6aba38ebd8d1b3d5028b4a4fbcf08',1,'Take3Application::shutdown()'],['../class_soundshape_filter_app.html#ac295190ed51944f541f02f56e5f7bfe4',1,'SoundshapeFilterApp::shutdown()']]],
   ['shutdownaudiodevices',['shutDownAudioDevices',['../classjuce_1_1_soundshape_plugin_holder.html#a33ffd2937f00aedc6c0f7faa4ec786b0',1,'juce::SoundshapePluginHolder']]],

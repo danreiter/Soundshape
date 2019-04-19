@@ -12,7 +12,6 @@ var searchData=
   ['shouldmutelabel',['shouldMuteLabel',['../classjuce_1_1_soundshape_plugin_holder_1_1_settings_component.html#afca2a44d9d584cfd39fd45c20cd92970',1,'juce::SoundshapePluginHolder::SettingsComponent']]],
   ['shouldshownotification',['shouldShowNotification',['../classjuce_1_1_soundshape_filter_window_1_1_main_content_component.html#a9f0ad788f7d85f7576736f01b6d83997',1,'juce::SoundshapeFilterWindow::MainContentComponent']]],
   ['showkeyboard',['showKeyboard',['../class_main_component.html#a49c1dd47ed8ab86d948e7e8e93f18592',1,'MainComponent']]],
-  ['showlicense',['showLicense',['../class_main_component.html#a2ba91a93af7e816947ae0a9d11ffd14b',1,'MainComponent']]],
   ['sidepanel',['sidePanel',['../struct_burger_menu_header.html#ad74fa82ab0875187df07016ec327c43d',1,'BurgerMenuHeader::sidePanel()'],['../class_main_component.html#a0e7c7bfada22ffdff6e376d3d3c38492',1,'MainComponent::sidePanel()']]],
   ['size',['size',['../classfreq_domain_win.html#afa38462858df8c213cec9425fee9c1e4',1,'freqDomainWin']]],
   ['sliderparent',['sliderParent',['../classbig_time.html#aed1f74dfbeda089192e7c8e0c2519c98',1,'bigTime']]],

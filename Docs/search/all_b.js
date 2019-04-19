@@ -5,7 +5,6 @@ var searchData=
   ['laf_2eh',['laf.h',['../laf_8h.html',1,'']]],
   ['lastmididevices',['lastMidiDevices',['../classjuce_1_1_soundshape_plugin_holder.html#ac6ec1ce618765e20c8ea24c50b04eace',1,'juce::SoundshapePluginHolder']]],
   ['licence',['Licence',['../class_main_component.html#a9d7ddc68ebc8f05ba8c6004bd2b538f7a4ec47d786280cb325ebe1c612a743c4a',1,'MainComponent']]],
-  ['licensewindow',['licenseWindow',['../class_main_component.html#ad633a1aafbf97d7e28a3cde19de6e64e',1,'MainComponent']]],
   ['loadfile',['loadFile',['../class_main_component.html#a873e63a40eed80f6a33fcdfeb9e56618',1,'MainComponent']]],
   ['loadpresetpath',['loadPresetPath',['../class_main_component.html#ab605d3412c543cbb4af5fbb30280e3d3',1,'MainComponent']]],
   ['loadsound',['loadSound',['../class_main_component.html#a3f075951aa73cd56b3d6fe0ec433acb1',1,'MainComponent']]],

@@ -10,16 +10,13 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	enve(_valueTreeState),
 	valueTreeState(_valueTreeState),
 	volComp(_valueTreeState),
-    bTWindow(_valueTreeState)//,
-	//keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    bTWindow(_valueTreeState)
 {
 	//----------Setting reference to the converter----------------------------------
     setConverter(&(processor.getConverter()));
 	//------------------------------------------------------------
 
     //----------Default settings----------------------------------
-	amp = 0.0f;
-	freq = 0;
 	add = -1;
 	harm = -1;
 	zoom = 4.0;
@@ -249,15 +246,6 @@ void MainComponent::showDevs()
 
 MainComponent::~MainComponent()
 {
-	if (showLicense)
-	{
-
-		for (auto& license : licenseWindow)
-			license.deleteAndZero();
-
-		licenseWindow.clear();
-	}
-
     if (showKeyboard) {
         showKey(false);
         showKeyboard = false;
@@ -695,8 +683,6 @@ void MainComponent::loadFile()
 	harm = -1;
 	zoom = 1.0;
 
-	// load file from selectedFile
-	// call load sound or other function to up
 	
 	//file handling here
 	std::unique_ptr<XmlElement> stateXml(XmlDocument::parse(selectedFile));
@@ -735,6 +721,11 @@ void MainComponent::importFile()
 		    IOHandler::importConverterAudio(inFile, converterPtr);
             AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "Success",
                                         "Imported " + inFile.getFileName());
+			if (presetPath == inFile.getParentDirectory())
+			{
+				pushedWriteBtn = true;
+				cb.addItem(inFile.getFileNameWithoutExtension(), cb.getNumItems() + 1);
+			}
 		}
 		catch (SoundshapeAudioImportException&){
             AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, "Error",

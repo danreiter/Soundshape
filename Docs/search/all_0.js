@@ -6,7 +6,6 @@ var searchData=
   ['addshiftedprofiles',['addShiftedProfiles',['../class_converter.html#a44d99a1d55ab5bcce6488aeae0fff1f1',1,'Converter']]],
   ['addtolist',['addToList',['../classbig_time.html#afc72b2fd19d12de1bc57c0ed00abca17',1,'bigTime::addToList()'],['../classfreq_domain_win.html#a38b301ed0df65980f9565e1ef5359fa8',1,'freqDomainWin::addToList()'],['../classsmall_time.html#a780f7898decfcbf631708b4f1b87ff93',1,'smallTime::addToList()']]],
   ['adsrenvelope',['adsrEnvelope',['../class_envelope_params.html#a53ad8d168b3130b665a268a93070031d',1,'EnvelopeParams']]],
-  ['amp',['amp',['../class_main_component.html#a85b89e667cf02bd331cc2acac17b3942',1,'MainComponent']]],
   ['analyzechunkintoprofile',['analyzeChunkIntoProfile',['../class_converter.html#a2d8daaed7294b4436aa19c582edebfac',1,'Converter']]],
   ['anotherinstancestarted',['anotherInstanceStarted',['../class_take3_application.html#af1777820143501f0290fecdfc166c3e6',1,'Take3Application::anotherInstanceStarted()'],['../class_soundshape_filter_app.html#ab016165428b65c49854742cf2df53f28',1,'SoundshapeFilterApp::anotherInstanceStarted()']]],
   ['appproperties',['appProperties',['../class_soundshape_filter_app.html#a76b0edf9c8b2cc43f5c1422257ea0323',1,'SoundshapeFilterApp']]],
