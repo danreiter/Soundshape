@@ -394,21 +394,21 @@ private:
 
 	CustomLookAndFeel * laf;  ///< Set and changes Soundshape's themes.
 
-	ApplicationCommandManager commandManager;					///> Handles commands for the menu options.
-	std::unique_ptr<MenuBarComponent> menuBar;					///> Menu bar drop down component.
-	MenuBarPosition menuBarPosition = MenuBarPosition::burger;	///> Stores Soundshape's current menu style.
-	SidePanel sidePanel{ "Menu", 300, true };                   ///> Panel used for Soundshape's burger menu slide out.
-	BurgerMenuComponent burgerMenu;								///> Burger menu component.
-	BurgerMenuHeader menuHeader{ sidePanel };					///> Sets the burger menu button to show the sidePanel.
-	CommandID currentTheme = CommandIDs::DefaultTheme;			///> Stores Soundshape's current theme.
-	bool tips = true;											///> Boolean stores whether tool tips show or not.
-	bool showKeyboard = false;									///> Boolean stores whether the popup MIDI keyboard is in use or not.
+	ApplicationCommandManager commandManager;					///< Handles commands for the menu options.
+	std::unique_ptr<MenuBarComponent> menuBar;					///< Menu bar drop down component.
+	MenuBarPosition menuBarPosition = MenuBarPosition::burger;	///< Stores Soundshape's current menu style.
+	SidePanel sidePanel{ "Menu", 300, true };                   ///< Panel used for Soundshape's burger menu slide out.
+	BurgerMenuComponent burgerMenu;								///< Burger menu component.
+	BurgerMenuHeader menuHeader{ sidePanel };					///< Sets the burger menu button to show the sidePanel.
+	CommandID currentTheme = CommandIDs::DefaultTheme;			///< Stores Soundshape's current theme.
+	bool tips = true;											///< Boolean stores whether tool tips show or not.
+	bool showKeyboard = false;									///< Boolean stores whether the popup MIDI keyboard is in use or not.
 
 	//-----------File handling-----------------------------------------------
-	File presetPath;											///> Stores the path of directory for the currently selected presets.
-	File selectedFile;									        ///> Stores the file name of the currently selected preset file.
-	const File newFile = File();								///> Null pointer file to compare with selectedFile to see if file is empty.
-	bool pushedWriteBtn = true, newSave = false;				///> Boolen to single the state under which a save is being requested.
+	File presetPath;											///< Stores the path of directory for the currently selected presets.
+	File selectedFile;									        ///< Stores the file name of the currently selected preset file.
+	const File newFile = File();								///< Null pointer file to compare with selectedFile to see if file is empty.
+	bool pushedWriteBtn = true, newSave = false;				///< Boolen to single the state under which a save is being requested.
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

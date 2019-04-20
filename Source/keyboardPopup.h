@@ -4,7 +4,7 @@
     keyboarPopup.h
     Created: 9 Apr 2019 9:55:25pm
     Author:  Daniel Reiter
-	Description:
+	Description:Program creates an instance of a MID keyboard in a popup window.  
 
   ==============================================================================
 */

@@ -22,12 +22,10 @@ smallTime::smallTime()
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
 	xStart = new int;
-	xProfile = new int;
 	time = new int;
 	currentProfile = new int;
 	*time = 10;
 	*xStart = 0;
-	*xProfile = 0;
 	*currentProfile = 0;
 
 	// Viewport settings
@@ -49,6 +47,10 @@ smallTime::smallTime()
 
 smallTime::~smallTime()
 {
+	delete xStart;
+	delete currentProfile;
+	delete time;
+	delete parent;
 }
 //==============================================================================
 
@@ -65,8 +67,7 @@ void smallTime::paint(Graphics& g)
 	*/
 
 	int btnWidth = (int)(getWidth() / 5);
-	//g.setColour(findColour(SoundshapeLAFs::base2textID));
-	//g.setColour (findColour(SoundshapeLAFs::base1textID));
+
 
 	//  Sets viewport focus on time domain
 	view.setViewPosition(*xStart*(tdTest.getWidth() / (*time)), 0);
@@ -107,11 +108,10 @@ void smallTime::resized()
 //==============================================================================
 //  Function pass references from parent
 //==============================================================================
-void smallTime::setTimeDomain(int * _start, int * _profile, int * _currentProfile, int* _time, Button::Listener* _parent, Converter * _cp)
+void smallTime::setTimeDomain(int * _start, int * _currentProfile, int* _time, Button::Listener* _parent, Converter * _cp)
 {
 
 	xStart = _start;
-	xProfile = _profile;
 	time = _time;
 	currentProfile = _currentProfile;
 	parent = _parent;

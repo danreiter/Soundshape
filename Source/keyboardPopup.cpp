@@ -3,7 +3,8 @@
 
     keyboarPopup.cpp
     Created: 9 Apr 2019 9:55:25pm
-    Author:  danre
+    Author:  Daniel Reiter
+	Description: Program creates an instance of a MIDI keyboard in a popup window. 
 
   ==============================================================================
 */

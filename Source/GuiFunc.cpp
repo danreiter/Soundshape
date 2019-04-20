@@ -28,6 +28,7 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 }
 volumeBox::~volumeBox()
 {
+	free(volume);
 }
 
 void volumeBox::paint(Graphics& g)
@@ -38,7 +39,6 @@ void volumeBox::paint(Graphics& g)
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
-	//tri1.addTriangle(h, h, h, getHeight() - h, 3*h, getHeight()/2);
 	tri1.addTriangle(h, getHeight() / 2, 3*h, getHeight() - h,  3*h, h );
 	tri2.addTriangle(getWidth() - h, h, getWidth() - h, getHeight() - h, getWidth() - (3 * h), getHeight() / 2);
 	squ.addRectangle(getWidth() - (7 / 2 * h), (getHeight() / 2) - (h / 2), h, h);
@@ -114,12 +114,12 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 
 GuiFunc::~GuiFunc()
 {
-    delete volBox;
-	delete panicBtn;
-	delete exportBtn;
-	delete playBtn;
-	delete importBtn;
-	delete sustainPlyBtn;
+    free(volBox);
+	free(panicBtn);
+	free(exportBtn);
+	free(playBtn);
+	free(importBtn);
+	free(sustainPlyBtn);
 }
 
 void GuiFunc::paint(Graphics& g)
@@ -220,7 +220,9 @@ fundFreq::fundFreq()
 
 fundFreq::~fundFreq()
 {
-	deleteAllChildren();
+	free(txtBox);
+	free(fundFreqSlider);
+
 }
 
 void fundFreq::paint(Graphics & g)

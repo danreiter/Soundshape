@@ -41,8 +41,6 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 	//Attack->setRange(0, 100, 1.0);
 	Attack->setComponentID((String)ENVELOPE_ATTACK);
 	Attack->setSliderStyle(Slider::LinearVertical);
-	//Attack->setColour(Slider::trackColourId, Colours::orange);
-	//Attack->setColour(Slider::thumbColourId, Colours::orange);
 	Attack->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	Attack->setTextValueSuffix("Attack");
     Attack->setTooltip("Controls how fast the sound reaches its max volume");
@@ -73,10 +71,10 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 
 envelope::~envelope()
 {
-	delete Attack;
-	delete Decay;
-	delete Sustain;
-	delete Release;
+	free(Attack);
+	free(Decay);
+	free(Sustain);
+	free(Release);
 }
 
 void envelope::paint (Graphics& g)

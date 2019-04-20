@@ -49,8 +49,8 @@ public:
 	@see freqDomainWin::setBase()
 	@param _zoom Reference to the level of magnification the viewport renders the frequency domain at.
 	@param _harm Reference whether the harmic correctness filter is on.
-	@param _parent Reference to a slider listen to handle slider changes in mainComponent.
-	@param _bParent Reference to a button listen to handle button changes in the mainComponent.
+	@param _parent Reference to a slider listener to handle slider changes in mainComponent.
+	@param _bParent Reference to a button listener to handle button changes in the mainComponent.
 	@param _profile Reference to a Converter to get frequency values from the back-end.
 	@param _size Reference to the number of frequency spikes per frequency profile.
 	@param _chunk Reference to the index number of the currently selected frequency profile.

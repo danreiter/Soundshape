@@ -115,15 +115,15 @@ public:
     bool getSustainedPlayBtnToggled();
 
 private:
-    AudioProcessorValueTreeState& valueTreeState;		///> event listen to update setting of Soundshape directly to the back-end. 
-	Slider::Listener * sListen;							///> Reference to parent for slider listener.
-	Button::Listener * bListen;							///> Refernence to parent for button listener.
-	Button *panicBtn;                                   ///> Button for the panic function.
-	Button *exportBtn;									///> Button for the export function.
-	Button *playBtn;									///> Button for the play function.
-	Button *importBtn;									///> Button for the import function.
-	Button *sustainPlyBtn;                              ///> Button for the sustained play function.
-	volumeBox *volBox;									///> Component to control the volume.
+    AudioProcessorValueTreeState& valueTreeState;		///< event listen to update setting of Soundshape directly to the back-end. 
+	Slider::Listener * sListen;							///< Reference to parent for slider listener.
+	Button::Listener * bListen;							///< Refernence to parent for button listener.
+	Button *panicBtn;                                   ///< Button for the panic function.
+	Button *exportBtn;									///< Button for the export function.
+	Button *playBtn;									///< Button for the play function.
+	Button *importBtn;									///< Button for the import function.
+	Button *sustainPlyBtn;                              ///< Button for the sustained play function.
+	volumeBox *volBox;									///< Component to control the volume.
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GuiFunc)
 };

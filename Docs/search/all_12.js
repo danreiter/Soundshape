@@ -28,7 +28,7 @@ var searchData=
   ['setstateinformation',['setStateInformation',['../class_soundshape__plugin_audio_processor.html#a75e240cf732f2e54be49236dd620903d',1,'Soundshape_pluginAudioProcessor']]],
   ['setsustain',['setSustain',['../class_converter.html#ab934010c44d59564170fe1b775fd2a02',1,'Converter']]],
   ['settheme',['setTheme',['../class_main_component.html#a69ac2fcde4bde496efa2668b6a40c657',1,'MainComponent']]],
-  ['settimedomain',['setTimeDomain',['../classsmall_time.html#a3c4ad097b96e042b044328b6e3d74ab7',1,'smallTime']]],
+  ['settimedomain',['setTimeDomain',['../classsmall_time.html#a300ee515dd4c7c5993e9d2ba00e8d5ae',1,'smallTime']]],
   ['settings',['settings',['../classjuce_1_1_soundshape_plugin_holder.html#a5aae26788f1f37640edc0cd0a663ae35',1,'juce::SoundshapePluginHolder']]],
   ['settingsbutton',['settingsButton',['../classjuce_1_1_soundshape_filter_window_1_1_main_content_component_1_1_notification_area.html#a7e38ef9b28b9186e949f39e6bd9a7d4d',1,'juce::SoundshapeFilterWindow::MainContentComponent::NotificationArea']]],
   ['settingscomponent',['SettingsComponent',['../classjuce_1_1_soundshape_plugin_holder_1_1_settings_component.html',1,'juce::SoundshapePluginHolder::SettingsComponent'],['../classjuce_1_1_soundshape_plugin_holder_1_1_settings_component.html#a0f499567a12c8d6f7563fd9851d157db',1,'juce::SoundshapePluginHolder::SettingsComponent::SettingsComponent()']]],

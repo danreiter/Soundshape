@@ -25,6 +25,9 @@ timeDomainWin::timeDomainWin()
 
 timeDomainWin::~timeDomainWin()
 {
+	free(chunk_size);
+	free(currentProfile);
+	free(converterPtr);
 }
 //==============================================================================
 

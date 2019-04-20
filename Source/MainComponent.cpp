@@ -786,7 +786,7 @@ void MainComponent::loadSound()
 	currentProfile = 0;
 
 	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile, laf);
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
+	sTWindow.setTimeDomain(&timeBlock, &currentProfile, &timeSize, this, converterPtr);
 	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, this, converterPtr);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
