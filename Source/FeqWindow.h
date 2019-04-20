@@ -47,7 +47,7 @@ public:
 	base component.
 
 	@see freqDomainWin::setBase()
-	@param _zoom Reference to the level of magnification the viewport renders the frequency doamin at.
+	@param _zoom Reference to the level of magnification the viewport renders the frequency domain at.
 	@param _harm Reference whether the harmic correctness filter is on.
 	@param _parent Reference to a slider listen to handle slider changes in mainComponent.
 	@param _bParent Reference to a button listen to handle button changes in the mainComponent.
