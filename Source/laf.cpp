@@ -55,7 +55,7 @@ void CustomLookAndFeel::setColors() // there will be one of these for each theme
 	setColour(TextButton::buttonOnColourId, base2);
 	setColour(TextButton::textColourOnId, base2text);
 
-	setColour(ComboBox::backgroundColourId, background2); // change
+	setColour(ComboBox::backgroundColourId, background2);
 	setColour(ComboBox::textColourId, base1text);
 	setColour(ComboBox::arrowColourId, base1text);
 	setColour(ComboBox::buttonColourId, base2);
