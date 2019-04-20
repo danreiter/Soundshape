@@ -566,10 +566,13 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 			saveFilePrompt();
 			if (cb.getSelectedItemIndex() == 0)
 			{
+
 				selectedFile = newFile;
+				cb.setSelectedItemIndex(0);
 			}
 			else
 			{
+
 				String fileName = cb.getText();
 				fileName.append((String)".xml", 4);
 				selectedFile = File(presetPath.getChildFile(fileName));
@@ -675,7 +678,7 @@ void MainComponent::loadFile()
 	}
 	else
 	{
-		pushedWriteBtn = true;
+		//pushedWriteBtn = true;
 		cb.setSelectedItemIndex(0);
 		selectedFile = newFile;
 
@@ -1120,11 +1123,12 @@ void MainComponent::saveFilePrompt()
 	DBG(result);
 	if (result == 0)
 	{
+		DBG("result == 1");
 			pushedWriteBtn = false;
 	}
 	if (result == 1)
 	{
-		if (cb.getSelectedItemIndex() == 0)
+		if (selectedFile == newFile)
 		{
 			saveAs();
 		}
