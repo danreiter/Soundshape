@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="OEfazO" name="Soundshape_plugin" projectType="audioplug"
-              jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
+              jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST,buildVST3"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               companyName="Soundshape" pluginName="Soundshape" pluginDesc="Spectral synthesizer"
               pluginManufacturerCode="Soun" pluginCode="Shap" pluginVST3Category="Instrument,Stereo,Synth">
@@ -104,7 +104,8 @@
         <MODULEPATH id="juce_dsp" path="../JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraDefs="JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1&#10;">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraDefs="JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP=1&#10;"
+                extraCompilerFlags="-fPIC&#10;">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" defines="SOUNDSHAPE_RUN_TESTS = 1&#10;"/>
         <CONFIGURATION isDebug="0" name="Release" defines="SOUNDSHAPE_RUN_TESTS = 0&#10;"/>
