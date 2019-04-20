@@ -43,7 +43,7 @@ class keyboardPopup : public Component
 		*/
 		void mouseDrag(const MouseEvent& e) override;
 		/**
-		Paints the keyboard and backgraound above the keyboard.
+		Paints the keyboard and background above the keyboard.
 
 		Function is called using the repaint() function.
 		@see

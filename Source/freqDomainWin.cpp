@@ -22,8 +22,7 @@ freqDomainWin::freqDomainWin()
 	setComponentID((String)FREQ_DOMAIN);
 	parent = NULL;
 	buttonParent = NULL;
-	size = 0;
-	first = -1;           
+	size = 0;       
 	int temp = -1;		  
 	add = &temp;
 	harm = &temp;
@@ -39,6 +38,7 @@ freqDomainWin::freqDomainWin()
 
 freqDomainWin::~freqDomainWin()
 {
+	delete laf;
 }
 //==============================================================================
 
@@ -193,7 +193,6 @@ void freqDomainWin::setProfileControl()
 		tb->setComponentID(String(i));
 		tb->setClickingTogglesState(false);
 		tb->setVisible(false);
-		//tb->setLookAndFeel(laf);
 		tb->setColour(TextButton::buttonColourId, Colours::red);
 		if (buttonParent != NULL)
 		{
