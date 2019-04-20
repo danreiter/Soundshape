@@ -46,18 +46,19 @@ void Converter::synthesize(AudioBuffer<float>& buffer)
 
     // perform an inverse FFT on the shifted profile. This scales according to each key's envelope state
     kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
-
+    float* bufferData = buffer.getWritePointer(0,0);
     for (int i = 0; i < buffer.getNumSamples(); i++) {
         
         // copy the current DFT into the temporary chunk
-        tempChunk[i] = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE; // kissfft inverse real-only needs scaled by fft size
+        bufferData[i] = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE; // kissfft inverse real-only needs scaled by fft size
         currentIndex += 1;
         if (currentIndex == SOUNDSHAPE_CHUNK_SIZE) {
             currentIndex = 0;
         }
+	
     }
 
-    buffer.copyFrom(0,0, tempChunk.data(), numSamples); // left channel
+    //buffer.copyFrom(0,0, tempChunk.data(), numSamples); // left channel
 
     samplesWritten += numSamples;
     if (samplesWritten > SOUNDSHAPE_CHUNK_SIZE) {
