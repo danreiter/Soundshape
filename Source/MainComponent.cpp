@@ -1117,14 +1117,14 @@ void MainComponent::saveFilePrompt()
 	savePrompt.addItem(1, "save");
 	savePrompt.addItem(2, "Cancel");
 	const int result = savePrompt.show();
+	DBG(result);
 	if (result == 0)
 	{
-		// user dismissed the menu without picking anything
-		pushedWriteBtn = false;
+			pushedWriteBtn = false;
 	}
-	else if (result == 1)
+	if (result == 1)
 	{
-		if (selectedFile == newFile)
+		if (cb.getSelectedItemIndex() == 0)
 		{
 			saveAs();
 		}
@@ -1133,6 +1133,7 @@ void MainComponent::saveFilePrompt()
 			promptSaveOptions();
 
 		}
+
 		// user picked item 1
 	}
 	else if (result == 2)
@@ -1152,7 +1153,7 @@ void MainComponent::promptSaveOptions()
 	PopupMenu saveAsPrompt;
 	saveAsPrompt.addSectionHeader("Would you like to save as a new sound?");
 	saveAsPrompt.addItem(1, "Save");
-	saveAsPrompt.addItem(1, "Save as a new sound");
+	saveAsPrompt.addItem(2, "Save as a new sound");
 	saveAsPrompt.addItem(3, "Cancel");
 	const int result = saveAsPrompt.show();
 	if (result == 0)
