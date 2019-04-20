@@ -98,8 +98,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
 
-	if (menuBarPosition != MenuBarPosition::burger)
-		sidePanel.showOrHide(false);
+
 
 	
 
@@ -117,11 +116,11 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addChildComponent(menuHeader);
 	sidePanel.setLookAndFeel(laf);
 	addAndMakeVisible(sidePanel);
-	menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
-	burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
-	menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 	burgerMenu.setLookAndFeel(laf);
-	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
+	//menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
+	//burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
+	//menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
+	//sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
 	
 	//------------------------------------------------------------
 	setSize(600, 400);
@@ -307,7 +306,6 @@ void MainComponent::setConverter(Converter *_converter) {
 //------------------------------------------------------------------------------------
 void MainComponent::paint(Graphics& g) 
 {
-	menuItemsChanged();
 
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(laf->findColour(SoundshapeLAFs::background1ID));
@@ -375,11 +373,16 @@ void MainComponent::paint(Graphics& g)
 	if (menuBarPosition == MenuBarPosition::window)
 	{
 		menuBar->setBounds(getX(), getY(), getWidth(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
+		menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
+		menuBar->repaint();
 	}
 	else
 	{
 		menuHeader.setBounds(getX(), getY(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
 	}
+
+
+
 
 }
 //------------------------------------------------------------------------------------

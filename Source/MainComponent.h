@@ -396,7 +396,7 @@ private:
 
 	ApplicationCommandManager commandManager;					///< Handles commands for the menu options.
 	std::unique_ptr<MenuBarComponent> menuBar;					///< Menu bar drop down component.
-	MenuBarPosition menuBarPosition = MenuBarPosition::burger;	///< Stores Soundshape's current menu style.
+	MenuBarPosition menuBarPosition = MenuBarPosition::window;	///< Stores Soundshape's current menu style.
 	SidePanel sidePanel{ "Menu", 300, true };                   ///< Panel used for Soundshape's burger menu slide out.
 	BurgerMenuComponent burgerMenu;								///< Burger menu component.
 	BurgerMenuHeader menuHeader{ sidePanel };					///< Sets the burger menu button to show the sidePanel.
