@@ -98,10 +98,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
 
-
-
-	
-
 	loadSound();
 	addAndMakeVisible(fWindow);
 	setAllLookAndFeels(laf, this);
@@ -117,10 +113,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	sidePanel.setLookAndFeel(laf);
 	addAndMakeVisible(sidePanel);
 	burgerMenu.setLookAndFeel(laf);
-	//menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
-	//burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
-	//menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
-	//sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
+
+
+	// this is necessary to give the component focus so the menu isn't grayed out
+	Timer::callAfterDelay(250, [this](void) {this->grabKeyboardFocus();});
 	
 	//------------------------------------------------------------
 	setSize(600, 400);
@@ -228,7 +224,7 @@ void MainComponent::showDevs()
 
 	options.content->setSize(area.getWidth(), area.getHeight());
 
-	options.dialogTitle = "Developers";
+	options.dialogTitle = "About Soundshape";
 	options.dialogBackgroundColour = laf->findColour(SoundshapeLAFs::background2ID);
 	options.escapeKeyTriggersCloseButton = true;
 	options.useNativeTitleBar = false;
@@ -543,7 +539,6 @@ void MainComponent::buttonClicked(Button* button)
 		// need back end call for panic
         processor.panic();
 	}
-
 	if (button == harmonicButton)
 	{
 		harm = harm * -1;
@@ -606,6 +601,7 @@ bool MainComponent::save()
 bool MainComponent::saveAs()
 {
 	FileChooser chooser("Save As File Name", presetPath, "*.xml");
+	grabKeyboardFocus();
 	if (chooser.browseForFileToSave(true))
 	{
 		File tempFile = chooser.getResult();
@@ -805,7 +801,10 @@ void MainComponent::loadSound()
 //-------------------------------------------------------------------------------------
 StringArray MainComponent::getMenuBarNames()
 {
-	return { "Menu Position", "Settings", "Themes", "Help", "About" };
+	// For interface with both a drop down and burger menu
+	//return { "Menu Position", "Settings", "Themes", "Help", "About" };
+	// For interface with only a one menu type
+	return { "Settings", "Themes", "Help", "About" };
 }
 //-------------------------------------------------------------------------------------
 
@@ -814,29 +813,30 @@ StringArray MainComponent::getMenuBarNames()
 //-------------------------------------------------------------------------------------
 PopupMenu MainComponent::getMenuForIndex(int menuIndex, const String &)
 {
+	// for use with more than one menu option
 	PopupMenu menu;
+	//if (menuIndex == 0)
+	//{
+	//	menu.addCommandItem(&commandManager, CommandIDs::menuPositionInsideWindow);
+	//	menu.addCommandItem(&commandManager, CommandIDs::menuPositionBurgerMenu);
+	//}
 	if (menuIndex == 0)
-	{
-		menu.addCommandItem(&commandManager, CommandIDs::menuPositionInsideWindow);
-		menu.addCommandItem(&commandManager, CommandIDs::menuPositionBurgerMenu);
-	}
-	else if (menuIndex == 1)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::Keyboard);
 		menu.addCommandItem(&commandManager, CommandIDs::PresetPath);
 	}
-	else if (menuIndex == 2)
+	else if (menuIndex == 1)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::DefaultTheme);
 		menu.addCommandItem(&commandManager, CommandIDs::TestTheme);
 		menu.addCommandItem(&commandManager, CommandIDs::SchoolTheme);
 	}
-	else if (menuIndex == 3)
+	else if (menuIndex == 2)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::ToolTips);
 		menu.addCommandItem(&commandManager, CommandIDs::Tutorial);
 	}
-	else if (menuIndex == 4)
+	else if (menuIndex == 3)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::Developers);
 		menu.addCommandItem(&commandManager, CommandIDs::Licence);
@@ -916,9 +916,8 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 			_result.setTicked(false);
 			break;
 		case CommandIDs::Developers:
-			_result.setInfo("Developers", "About the Developers", "About", 0);
+			_result.setInfo("About Soundshape", "About Soundshape", "About", 0);
 			_result.setTicked(false);
-			_result.addDefaultKeypress('d', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 			break;
 		case CommandIDs::Licence:
 			_result.setInfo("Licence", "About Soundshape's Licence", "About", 0);
@@ -1002,13 +1001,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 		showDevs();
 		break;	
 	case CommandIDs::Licence:
-		//if (!showLicense)
-		//{
-
-
 			showLic();
-
-		//}
 		break;
 	default:
 		return false;
@@ -1074,8 +1067,8 @@ void MainComponent::setTheme(CommandID newTheme)
 //-------------------------------------------------------------------------------------
 void MainComponent::setPresetPath()
 {
-	FileChooser chooser("New Preset Path", presetPath, "", true);
 
+	FileChooser chooser("New Preset Path", presetPath, "", false);
 	if (chooser.browseForDirectory())
 	{
 		File tempDir = chooser.getResult();

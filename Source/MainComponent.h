@@ -23,7 +23,7 @@
 #include "keyboardPopup.h"
 #include "otherPopups.h"
 
-#define WRITE_BUTTON 2008  ///< Component ID number for the write button
+#define WRITE_BUTTON 2008  ///< Component ID number for the write button  
 
 //==============================================================================
 /**
