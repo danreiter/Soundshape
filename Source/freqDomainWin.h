@@ -33,6 +33,12 @@ public:
 	//void setBase(int * _harm, int * _add, Slider::Listener* _parent, Button::Listener* _bParent, float* _profile, int _size, int * _chunk);
 	void setProfileControl();
 	void setProfile();
+	/**
+	Calls the CustomLookAndFeel::setColors method
+
+	This class needed its own CustomLookAndFeel object to keep the frequency spikes
+	different colors.  resetColors just calls the setColors function of that object
+	*/
 	void resetColors();
 
 

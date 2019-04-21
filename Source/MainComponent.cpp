@@ -201,7 +201,7 @@ void MainComponent::showLic()
 		auto* label = new Label();
         
 		label->setText(m, dontSendNotification);
-		label->setColour(Label::textColourId, laf->findColour(SoundshapeLAFs::base1textID));
+		label->setColour(Label::textColourId, Colours::black);
 		options.content.setOwned(label);
 
 		Rectangle<int> area(0, 0, 600, 300);
@@ -931,11 +931,11 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 			_result.addDefaultKeypress('t', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 			break;
 		case CommandIDs::Tutorial:
-			_result.setInfo("Tutorial", "Tutorial about Soundshape", "Help", 0);
+			_result.setInfo("Tutorial", "How to use Soundshape", "Help", 0);
 			_result.setTicked(false);
 			break;
 		case CommandIDs::Developers:
-			_result.setInfo("Developers", "About the Developers", "About", 0);
+			_result.setInfo("About Soundshape", "Bonus info about Soundshape", "About", 0);
 			_result.setTicked(false);
 			_result.addDefaultKeypress('d', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 			break;

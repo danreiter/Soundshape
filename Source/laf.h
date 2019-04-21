@@ -31,14 +31,26 @@ public:
 	The default values do not matter. They will be overwritten when the initColors
 	function in the CustomLookAndFeel class is called. The IDs correspond to the 
 	following components:
+
+
 	base1ID - The sliders, the scrollbar, the play button, the off position of the
 	sustained play, add, and harmonic buttons, the time domain buttons, and the 
 	background of the time domain windows
+
+
 	base1textID - the text for every element colored with base1ID
+
+
 	base2ID - the background of the siders and scrollbar, the write, import, and export
 	buttons, the combo box, and the soundwave
+	
+	
 	base2textID - the text for every element colored with base2ID
+	
+	
 	background1ID - the entire background layer
+	
+	
 	background2ID - the background of the combo box, the frequency domain window and the
 	portions of the	time domain window that correspond to the frequency domain.
 	background3ID - the background of the portion of the big time domain window that

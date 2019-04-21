@@ -93,13 +93,13 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 	// add play button
 	playBtn = new TextButton("Play");
 	playBtn->setComponentID((String)PLAY_BUTTON);
-	playBtn->setTooltip("Plays the sound once"); // is this right?
+	playBtn->setTooltip("Plays the sound until button is released"); // is this right?
 
 	// add sustained play button
 	sustainPlyBtn = new TextButton("Sustained Play");
 	sustainPlyBtn->setComponentID((String)SUSTAIN_PLAY_BUTTON);
 	sustainPlyBtn->setClickingTogglesState(true);
-	sustainPlyBtn->setTooltip("Plays the sound on a loop"); // is this right?
+	sustainPlyBtn->setTooltip("Plays the sound until button is pressed again"); // is this right?
 
 	// add volume slider component
 	volBox = new volumeBox(valueTreeState);

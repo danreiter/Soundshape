@@ -101,6 +101,15 @@ public:
 	void buttonClicked(Button* button) override;
 	void setConverter(Converter* _converter);
 	void loadSound();
+
+	/**
+	Applies a LookAndFeel to a component and to all its children
+
+	This function loops through every child of the comp Component and set its LookAndFeel
+	to laf. The Panic, Import, Export, and Write Buttons are the exceptions. the Panic
+	button is always red regardless of laf's colors and the I/O buttons are assigned the
+	base2 colors as opposed to the base1 colors lik the other buttons
+	*/
 	void setAllLookAndFeels(LookAndFeel* laf, Component* comp);
 	StringArray getMenuBarNames() override;
 	PopupMenu getMenuForIndex(int menuIndex, const String& /*menuName*/) override;
@@ -122,7 +131,20 @@ public:
 	void importFile();
 	void exportFile();
 	void showKey(bool vis);
+	/**
+	Creates a Dialog Window about Soundshape's License
+
+	This function creates a default DialogWindow, sets the background color to
+	background2ID from the SSColours enum, and displays a String about the license
+	of Soundshape
+	*/
 	void showLic();
+	/**
+	Creates a Dialog Window about Soundshape
+
+	This function creates a default DialogWindow, sets the background color to
+	background2ID from the SSColours enum, and displays a String about Soundshape
+	*/
 	void showDevs();
 
 	
