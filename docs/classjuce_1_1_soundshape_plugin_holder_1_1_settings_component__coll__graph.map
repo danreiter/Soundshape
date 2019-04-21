@@ -1,7 +1,7 @@
 <map id="juce::SoundshapePluginHolder::SettingsComponent" name="juce::SoundshapePluginHolder::SettingsComponent">
-<area shape="rect" id="node1" title=" " alt="" coords="5,171,204,212"/>
-<area shape="rect" id="node2" title=" " alt="" coords="9,81,97,108"/>
-<area shape="rect" id="node3" href="$classjuce_1_1_soundshape_plugin_holder.html" title=" " alt="" coords="121,81,320,108"/>
-<area shape="rect" id="node4" title=" " alt="" coords="77,5,233,32"/>
-<area shape="rect" id="node5" title=" " alt="" coords="257,5,312,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,171,224,212"/>
+<area shape="rect" id="node2" title=" " alt="" coords="45,81,142,108"/>
+<area shape="rect" id="node3" href="$classjuce_1_1_soundshape_plugin_holder.html" title=" " alt="" coords="167,81,385,108"/>
+<area shape="rect" id="node4" title=" " alt="" coords="118,5,293,32"/>
+<area shape="rect" id="node5" title=" " alt="" coords="317,5,377,32"/>
 </map>

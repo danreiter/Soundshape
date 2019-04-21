@@ -8,6 +8,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Soundshape: CustomLookAndFeel Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -87,13 +91,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a345c71566e434f2c0887857abb3b9372"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_custom_look_and_feel.html#a345c71566e434f2c0887857abb3b9372">setColors</a> ()</td></tr>
 <tr class="separator:a345c71566e434f2c0887857abb3b9372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div class="dynheader">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class that controls the LookAndFeel of Soundshape. Inherits from LookAndFeel_V2.</p>
+<p>This class is used to not only have a LookAndFeel_V2 GUI but to also have the ability to change colors, give sliders two different track colors, and treat LinearBarSliders differently. </p>
+</div><div class="dynheader">
 Inheritance diagram for CustomLookAndFeel:</div>
 <div class="dyncontent">
 <div class="center"><img src="struct_custom_look_and_feel__inherit__graph.png" border="0" usemap="#_custom_look_and_feel_inherit__map" alt="Inheritance graph"/></div>
 <map name="_custom_look_and_feel_inherit__map" id="_custom_look_and_feel_inherit__map">
-<area shape="rect"  title=" " alt="" coords="5,80,148,107"/>
-<area shape="rect"  title=" " alt="" coords="16,5,137,32"/>
+<area shape="rect"  title=" " alt="" coords="5,80,161,107"/>
+<area shape="rect"  title=" " alt="" coords="18,5,149,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -101,8 +108,8 @@ Collaboration diagram for CustomLookAndFeel:</div>
 <div class="dyncontent">
 <div class="center"><img src="struct_custom_look_and_feel__coll__graph.png" border="0" usemap="#_custom_look_and_feel_coll__map" alt="Collaboration graph"/></div>
 <map name="_custom_look_and_feel_coll__map" id="_custom_look_and_feel_coll__map">
-<area shape="rect"  title=" " alt="" coords="5,80,148,107"/>
-<area shape="rect"  title=" " alt="" coords="16,5,137,32"/>
+<area shape="rect"  title=" " alt="" coords="5,80,161,107"/>
+<area shape="rect"  title=" " alt="" coords="18,5,149,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -187,6 +194,7 @@ Collaboration diagram for CustomLookAndFeel:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>This function is overridden in order to make sure the LinearBarSliders for the frequnecy spikes stay red and blue regardless of theme. Everything else is default LookAndFeel_V2 </p>
 
 </div>
 </div>
@@ -271,6 +279,7 @@ Collaboration diagram for CustomLookAndFeel:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>This function is overridden in order to color both sides of each slider. By default, LookAndFeel_V2 sliders only color the 'full' portion of the slider. With this <a class="el" href="struct_custom_look_and_feel.html">CustomLookAndFeel</a>, all the sliders Soundshape needs (except for LinearBarSliders) have both their 'full' and 'empty' halves colored in. </p>
 
 </div>
 </div>
@@ -359,6 +368,7 @@ Collaboration diagram for CustomLookAndFeel:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>This function is overridden because the override of drawLinearSlider would not build without a <a class="el" href="struct_custom_look_and_feel.html#a075a5786d7c6702122fcfda078cf20cd">CustomLookAndFeel::drawShinyButtonShape</a> </p>
 
 </div>
 </div>
@@ -417,6 +427,7 @@ Collaboration diagram for CustomLookAndFeel:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Initializes the colors for the themes. Each of the seven color parameters gets set to the corresponding ID in the <a class="el" href="class_soundshape_l_a_fs.html#a48da3cb6a84ae02b48c270f9073b932a">SoundshapeLAFs::SSColours</a> enum </p>
 
 </div>
 </div>
@@ -434,6 +445,7 @@ Collaboration diagram for CustomLookAndFeel:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Applies the colors initialized by initColors to every ColourID needed by Soundshape using the setColour function from LookAndFeel. Should be called after every initColors call. </p>
 
 </div>
 </div>

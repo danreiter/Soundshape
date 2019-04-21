@@ -1,11 +1,11 @@
 <map id="juce::SoundshapeFilterWindow::MainContentComponent" name="juce::SoundshapeFilterWindow::MainContentComponent">
-<area shape="rect" id="node1" title=" " alt="" coords="564,120,765,162"/>
-<area shape="rect" id="node2" title=" " alt="" coords="25,14,113,41"/>
-<area shape="rect" id="node9" href="$classjuce_1_1_soundshape_filter_window_1_1_main_content_component_1_1_notification_area.html" title=" " alt="" coords="181,36,449,78"/>
-<area shape="rect" id="node3" title=" " alt="" coords="261,102,370,129"/>
-<area shape="rect" id="node4" title=" " alt="" coords="281,153,349,180"/>
-<area shape="rect" id="node5" title=" " alt="" coords="248,204,383,230"/>
-<area shape="rect" id="node6" href="$classjuce_1_1_soundshape_filter_window.html" title=" " alt="" coords="215,254,416,281"/>
-<area shape="rect" id="node7" title=" " alt="" coords="5,229,132,256"/>
-<area shape="rect" id="node8" title=" " alt="" coords="11,280,126,306"/>
+<area shape="rect" id="node1" title=" " alt="" coords="625,121,848,162"/>
+<area shape="rect" id="node2" title=" " alt="" coords="27,15,125,41"/>
+<area shape="rect" id="node9" href="$classjuce_1_1_soundshape_filter_window_1_1_main_content_component_1_1_notification_area.html" title=" " alt="" coords="196,37,499,78"/>
+<area shape="rect" id="node3" title=" " alt="" coords="289,103,406,129"/>
+<area shape="rect" id="node4" title=" " alt="" coords="310,153,385,180"/>
+<area shape="rect" id="node5" title=" " alt="" coords="273,204,422,231"/>
+<area shape="rect" id="node6" href="$classjuce_1_1_soundshape_filter_window.html" title=" " alt="" coords="236,255,459,281"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,229,147,256"/>
+<area shape="rect" id="node8" title=" " alt="" coords="13,280,139,307"/>
 </map>

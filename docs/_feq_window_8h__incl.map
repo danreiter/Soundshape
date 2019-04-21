@@ -1,9 +1,9 @@
 <map id="Source/FeqWindow.h" name="Source/FeqWindow.h">
-<area shape="rect" id="node1" title=" " alt="" coords="60,5,207,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,304,136,345"/>
-<area shape="rect" id="node3" href="$freq_domain_win_8h.html" title=" " alt="" coords="73,80,194,107"/>
-<area shape="rect" id="node7" href="$laf_8h.html" title=" " alt="" coords="209,155,255,181"/>
-<area shape="rect" id="node4" href="$_converter_8h.html" title=" " alt="" coords="94,155,181,181"/>
-<area shape="rect" id="node5" href="$_envelope_params_8h.html" title=" " alt="" coords="108,229,239,256"/>
-<area shape="rect" id="node6" title=" " alt="" coords="263,229,379,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="65,5,221,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,304,144,345"/>
+<area shape="rect" id="node3" href="$freq_domain_win_8h.html" title=" " alt="" coords="75,80,211,107"/>
+<area shape="rect" id="node7" href="$laf_8h.html" title=" " alt="" coords="223,155,273,181"/>
+<area shape="rect" id="node4" href="$_converter_8h.html" title=" " alt="" coords="99,155,195,181"/>
+<area shape="rect" id="node5" href="$_envelope_params_8h.html" title=" " alt="" coords="113,229,255,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="280,229,411,256"/>
 </map>

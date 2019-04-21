@@ -8,6 +8,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Soundshape: SoundshapeLAFs Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -97,7 +101,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a02433b74b55a9c45cb97fcd0fd0f84d0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_soundshape_l_a_fs.html#a02433b74b55a9c45cb97fcd0fd0f84d0">~SoundshapeLAFs</a> ()</td></tr>
 <tr class="separator:a02433b74b55a9c45cb97fcd0fd0f84d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class that holds the enum for Soundshape's Colors</p>
+<p>This class has the SSColours enumeration that enables Soundshape to swap color themes. It could be incorporated into <a class="el" href="struct_custom_look_and_feel.html">CustomLookAndFeel</a> in the future </p>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a48da3cb6a84ae02b48c270f9073b932a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a48da3cb6a84ae02b48c270f9073b932a">&#9670;&nbsp;</a></span>SSColours</h2>
 
@@ -109,6 +116,13 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>A custom enumeration for all the colour IDs Soundshape needs The default values do not matter. They will be overwritten when the initColors function in the <a class="el" href="struct_custom_look_and_feel.html">CustomLookAndFeel</a> class is called. The IDs correspond to the following components:</p>
+<p>base1ID - The sliders, the scrollbar, the play button, the off position of the sustained play, add, and harmonic buttons, the time domain buttons, and the background of the time domain windows</p>
+<p>base1textID - the text for every element colored with base1ID</p>
+<p>base2ID - the background of the siders and scrollbar, the write, import, and export buttons, the combo box, and the soundwave</p>
+<p>base2textID - the text for every element colored with base2ID</p>
+<p>background1ID - the entire background layer</p>
+<p>background2ID - the background of the combo box, the frequency domain window and the portions of the time domain window that correspond to the frequency domain. background3ID - the background of the portion of the big time domain window that corresponds to the small time domain window </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a48da3cb6a84ae02b48c270f9073b932aac882540fef84b0a8b9088c7cda8f64f2"></a>base1ID&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a48da3cb6a84ae02b48c270f9073b932aa71e735a6ecb5428ba40249686cd2aa5f"></a>base1textID&#160;</td><td class="fielddoc"></td></tr>

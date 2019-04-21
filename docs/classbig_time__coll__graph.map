@@ -1,10 +1,10 @@
 <map id="bigTime" name="bigTime">
-<area shape="rect" id="node1" title=" " alt="" coords="176,364,243,391"/>
-<area shape="rect" id="node2" title=" " alt="" coords="71,171,159,197"/>
-<area shape="rect" id="node4" href="$classtime_domain_win.html" title=" " alt="" coords="152,267,267,294"/>
-<area shape="rect" id="node3" title=" " alt="" coords="291,260,493,301"/>
-<area shape="rect" id="node5" href="$class_converter.html" title=" " alt="" coords="183,171,259,197"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,81,184,108"/>
-<area shape="rect" id="node7" title=" " alt="" coords="219,5,287,32"/>
-<area shape="rect" id="node8" href="$class_envelope_params.html" title=" " alt="" coords="259,81,378,108"/>
+<area shape="rect" id="node1" title=" " alt="" coords="189,364,263,391"/>
+<area shape="rect" id="node2" title=" " alt="" coords="76,171,173,197"/>
+<area shape="rect" id="node4" href="$classtime_domain_win.html" title=" " alt="" coords="162,267,290,294"/>
+<area shape="rect" id="node3" title=" " alt="" coords="314,260,533,301"/>
+<area shape="rect" id="node5" href="$class_converter.html" title=" " alt="" coords="197,171,284,197"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,81,204,108"/>
+<area shape="rect" id="node7" title=" " alt="" coords="237,5,311,32"/>
+<area shape="rect" id="node8" href="$class_envelope_params.html" title=" " alt="" coords="278,81,409,108"/>
 </map>

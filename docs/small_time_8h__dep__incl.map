@@ -1,10 +1,10 @@
 <map id="Source/smallTime.h" name="Source/smallTime.h">
-<area shape="rect" id="node1" title=" " alt="" coords="266,5,403,32"/>
-<area shape="rect" id="node2" href="$_main_component_8h.html" title=" " alt="" coords="157,80,329,107"/>
-<area shape="rect" id="node8" href="$small_time_8cpp.html" title=" " alt="" coords="353,80,503,107"/>
-<area shape="rect" id="node3" href="$_main_8cpp.html" title=" " alt="" coords="5,155,125,181"/>
-<area shape="rect" id="node4" href="$_main_component_8cpp.html" title=" " alt="" coords="149,155,336,181"/>
-<area shape="rect" id="node5" href="$_plugin_editor_8h.html" title=" " alt="" coords="361,155,509,181"/>
-<area shape="rect" id="node6" href="$_plugin_editor_8cpp.html" title=" " alt="" coords="253,229,416,256"/>
-<area shape="rect" id="node7" href="$_plugin_processor_8cpp.html" title=" " alt="" coords="440,229,627,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="287,5,437,32"/>
+<area shape="rect" id="node2" href="$_main_component_8h.html" title=" " alt="" coords="166,80,355,107"/>
+<area shape="rect" id="node8" href="$small_time_8cpp.html" title=" " alt="" coords="380,80,547,107"/>
+<area shape="rect" id="node3" href="$_main_8cpp.html" title=" " alt="" coords="5,155,135,181"/>
+<area shape="rect" id="node4" href="$_main_component_8cpp.html" title=" " alt="" coords="159,155,363,181"/>
+<area shape="rect" id="node5" href="$_plugin_editor_8h.html" title=" " alt="" coords="387,155,545,181"/>
+<area shape="rect" id="node6" href="$_plugin_editor_8cpp.html" title=" " alt="" coords="274,229,447,256"/>
+<area shape="rect" id="node7" href="$_plugin_processor_8cpp.html" title=" " alt="" coords="472,229,671,256"/>
 </map>
