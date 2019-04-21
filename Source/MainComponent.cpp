@@ -123,6 +123,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	//sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
 	
 	//------------------------------------------------------------
+
+	// this is necessary to give the component focus so the menu isn't grayed out
+	Timer::callAfterDelay(250, [this](void){this->grabKeyboardFocus();});
+
 	setSize(600, 400);
 }
 //------------------------------------------------------------------------------------
