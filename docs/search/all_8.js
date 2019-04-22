@@ -9,7 +9,6 @@ var searchData=
   ['initcolors',['initColors',['../struct_custom_look_and_feel.html#a94567969ac4214ecb1d37d9f44e58ef8',1,'CustomLookAndFeel']]],
   ['initialise',['initialise',['../class_take3_application.html#aa0d7fbe3cfdb8e712775869488d865df',1,'Take3Application::initialise()'],['../class_soundshape_filter_app.html#a0cdc825cf04df111b22bfb41e531d427',1,'SoundshapeFilterApp::initialise()']]],
   ['inputmutedchanged',['inputMutedChanged',['../classjuce_1_1_soundshape_filter_window_1_1_main_content_component.html#a602a64f19160594567fdd60473d0428a',1,'juce::SoundshapeFilterWindow::MainContentComponent']]],
-  ['installation',['Installation',['../_installation.html',1,'']]],
   ['installation_2emd',['Installation.md',['../_installation_8md.html',1,'']]],
   ['inversefft',['inverseFFT',['../class_converter.html#a4bfafa10c635e32e1398fbdc09e3cae1',1,'Converter']]],
   ['iohandler',['IOHandler',['../class_i_o_handler.html',1,'']]],

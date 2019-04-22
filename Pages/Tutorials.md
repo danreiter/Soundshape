@@ -1,4 +1,4 @@
-Tutorials     {#Tutorials}
+.     {#Tutorials}
 ===============
 # Tutorials
 

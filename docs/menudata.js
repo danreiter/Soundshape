@@ -24,6 +24,7 @@ for the JavaScript code in this file
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
 {text:"Installation",url:"_installation.html"},
+{text:"Manual",url:"_user_manual.html"},
 {text:"Programmer's Manual",url:"_programmer_manual.html"},
 {text:"Tutorials",url:"_tutorials.html"},
 {text:"Namespaces",url:"namespaces.html",children:[

@@ -1,4 +1,4 @@
-Programmer's Manual {#ProgrammerManual}
+. {#ProgrammerManual}
 ======================
 
 # Soundshape Programmer's Manual

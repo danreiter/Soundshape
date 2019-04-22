@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['soundshape',['Soundshape',['../index.html',1,'']]],
   ['samplerate',['sampleRate',['../class_converter.html#a1706634f3215e5f3e598eb758966b435',1,'Converter']]],
   ['sampleswritten',['samplesWritten',['../class_converter.html#a574aa586c5692b72b428966b569c9b58',1,'Converter']]],
   ['save',['save',['../class_main_component.html#a0b31021b4e002fabfa3e1ed9090defb8',1,'MainComponent']]],

@@ -1,4 +1,4 @@
-Soundshape {#mainpage}
+. {#mainpage}
 ======================
 
 # Welcome to Soundshape  
@@ -49,10 +49,17 @@ Download the correct version for your operating system.
 ##  Tutorial
 [Soundshape has video tutorials here.](@ref Tutorials)
 
+### License
+Soundshape is released under the [GNU General Public License Version 3]
+( https://www.gnu.org/licenses/gpl-3.0.txt ).
+The source code and application comes with a copy of this license.
+
+
+### Information
+
 Copyright (C) 2019. Mardigon Toler, Daneil Reiter, Gregory Hughes.
 
-Contact:
-<mmtoler@mix.wvu.edu>
+Contact: <mmtoler@mix.wvu.edu>, <ddreiter@miux.wvu.edu>, <gshughes@mix.wvu.edu>
 
 ![](VST_Compatible.png)
 

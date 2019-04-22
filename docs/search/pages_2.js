@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['soundshape',['Soundshape',['../index.html',1,'']]]
+  ['tutorials',['Tutorials',['../_tutorials.html',1,'']]]
 ];

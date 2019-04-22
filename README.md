@@ -5,7 +5,7 @@ Soundshape is a free software synthesizer that creates sound from an easy-to-use
 
 Licensed under the GNU GPLv3.
 
-[Find more information here.]( http://danreiter.github.io/Soundshape )
+[Read the full documentation with installation guide and user manual here.]( http://danreiter.github.io/Soundshape )
 
 ## Features
 - Cross platform (Windows, Linux)

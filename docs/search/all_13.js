@@ -21,7 +21,6 @@ var searchData=
   ['tooltips',['ToolTips',['../class_main_component.html#a9d7ddc68ebc8f05ba8c6004bd2b538f7acf31ab20d628d90d1c03fb634634d677',1,'MainComponent']]],
   ['ttp',['ttp',['../class_main_component.html#a3dc87c6172b236eaefc9319a5e036b2e',1,'MainComponent']]],
   ['tutorial',['Tutorial',['../class_main_component.html#a9d7ddc68ebc8f05ba8c6004bd2b538f7ac6da9824c33a22394115c79f020c27b5',1,'MainComponent']]],
-  ['tutorials',['Tutorials',['../_tutorials.html',1,'']]],
   ['tutorials_2emd',['Tutorials.md',['../_tutorials_8md.html',1,'']]],
   ['txtbox',['txtBox',['../classfund_freq.html#aed823494bfef569a5bb873c316f73ae8',1,'fundFreq']]]
 ];

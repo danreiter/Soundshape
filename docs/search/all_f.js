@@ -30,7 +30,6 @@ var searchData=
   ['producesmidi',['producesMidi',['../class_soundshape__plugin_audio_processor.html#a3175d39f136cf912fe0c9ddf5c8ea7f9',1,'Soundshape_pluginAudioProcessor']]],
   ['profile',['profile',['../class_converter.html#aa5c1dce895a443ee39b5489f95753f42',1,'Converter::profile()'],['../classfreq_domain_win.html#a478cc42683d7e2375e550a6b74d5636f',1,'freqDomainWin::profile()']]],
   ['profile_5fselect_5fbutton',['PROFILE_SELECT_BUTTON',['../small_time_8h.html#a07babac1d62803c8d1d08e77127ce4d1',1,'smallTime.h']]],
-  ['programmer_27s_20manual',['Programmer&apos;s Manual',['../_programmer_manual.html',1,'']]],
   ['programmermanual_2emd',['ProgrammerManual.md',['../_programmer_manual_8md.html',1,'']]],
   ['promptsaveoptions',['promptSaveOptions',['../class_main_component.html#a835984cad97fa57b60d22b8b1980da9a',1,'MainComponent']]],
   ['pushedwritebtn',['pushedWriteBtn',['../class_main_component.html#a83b1eb24c4e77aa0992c80fae697e472',1,'MainComponent']]]
