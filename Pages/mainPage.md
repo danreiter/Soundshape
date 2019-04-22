@@ -45,6 +45,8 @@ Download the correct version for your operating system.
 ## Installation
 [See the installation guide here.](@ref Installation)
 
+## User Manual
+[Get an overview of how to use Soundshape and its features here](@ref UserManual).
 
 ##  Tutorial
 [Soundshape has video tutorials here.](@ref Tutorials)
@@ -52,7 +54,7 @@ Download the correct version for your operating system.
 ### License
 Soundshape is released under the [GNU General Public License Version 3]
 ( https://www.gnu.org/licenses/gpl-3.0.txt ).
-The source code and application comes with a copy of this license.
+The source code and application come with a copy of this license.
 
 
 ### Information
