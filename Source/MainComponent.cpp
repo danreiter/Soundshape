@@ -959,6 +959,7 @@ void MainComponent::getAllCommands(Array<CommandID>& c)
 //-------------------------------------------------------------------------------------
 bool MainComponent::perform(const InvocationInfo & info)
 {
+    URL tutorialUrl("https://danreiter.github.io/Soundshape/_tutorials.html");
 	switch (info.commandID)
 	{
 	case CommandIDs::menuPositionInsideWindow:
@@ -1000,6 +1001,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 			ttp.setMillisecondsBeforeTipAppears(700);
 		break;
 	case CommandIDs::Tutorial:
+        tutorialUrl.launchInDefaultBrowser();
 		break;	
 	case CommandIDs::Developers:
 		showDevs();
