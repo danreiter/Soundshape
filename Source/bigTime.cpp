@@ -41,7 +41,6 @@ bigTime::bigTime(AudioProcessorValueTreeState& _valueTreeState):valueTreeState(_
 	playTime->setComponentID((String)PLAYTIME_SLIDER);
     playTime->setSliderStyle(Slider::TwoValueHorizontal);
 	playTime->setRange(0, 50, 1);
-	//playTime->setMinAndMaxValues(0, 50);
     playTime->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	playTime->setTooltip("Controls how much of the sound is played when the Play Button is pressed");
 
@@ -67,7 +66,12 @@ bigTime::~bigTime()
 {
     valueTreeState.removeParameterListener("beginningChunk",this);
     valueTreeState.removeParameterListener("endingChunk",this);
-    delete playTime;
+    free(playTime);
+	free(xPoint);
+	free(time);				
+	free(parent); 
+	free(sliderParent);
+	components.clear(true);
 }
 //==============================================================================
 
@@ -127,7 +131,6 @@ void bigTime::resized()
 //==============================================================================
 void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Listener * _parent, Slider::Listener* _sliderParent, Converter* _cp)
 {
-	xProfile = _profile;
 	xPoint = _Xpoint;
 	time = _time;
 	parent = _parent;	
@@ -139,7 +142,7 @@ void bigTime::setProfile(int * _Xpoint, int * _profile, int * _time, Button::Lis
 		components[i]->addListener(parent);
 	}
 	timeBase.setConverter(_cp);
-	timeBase.setCurrentProfile(xProfile);
+	timeBase.setCurrentProfile(_profile);
 	timeBase.repaint();
 }
 //==============================================================================

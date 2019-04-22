@@ -26,7 +26,10 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 	volume->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	volume->setTooltip("Controls the volume of the whole sound");
 }
-volumeBox::~volumeBox(){}
+volumeBox::~volumeBox()
+{
+	free(volume);
+}
 
 void volumeBox::paint(Graphics& g)
 {
@@ -36,7 +39,6 @@ void volumeBox::paint(Graphics& g)
 	g.drawRect(getLocalBounds(), 1);
 	Path tri1, tri2, squ, squ1;
 	float h = getHeight() * .25f;
-	//tri1.addTriangle(h, h, h, getHeight() - h, 3*h, getHeight()/2);
 	tri1.addTriangle(h, getHeight() / 2, 3*h, getHeight() - h,  3*h, h );
 	tri2.addTriangle(getWidth() - h, h, getWidth() - h, getHeight() - h, getWidth() - (3 * h), getHeight() / 2);
 	squ.addRectangle(getWidth() - (7 / 2 * h), (getHeight() / 2) - (h / 2), h, h);
@@ -47,8 +49,6 @@ void volumeBox::paint(Graphics& g)
 	g.fillPath(squ1);
 
 	// sets slider bounds
-	//volume->setColour(Slider::thumbColourId, Colours::orange);
-	//volume->setColour(Slider::trackColourId, Colours::orange);
 	volume->setBounds(3.5f * h, 0.0f, getWidth() - (h*6), getHeight());
 	
 
@@ -114,7 +114,12 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 
 GuiFunc::~GuiFunc()
 {
-    delete volBox;
+    free(volBox);
+	free(panicBtn);
+	free(exportBtn);
+	free(playBtn);
+	free(importBtn);
+	free(sustainPlyBtn);
 }
 
 void GuiFunc::paint(Graphics& g)
@@ -191,14 +196,12 @@ fundFreq::fundFreq()
 {
 	num = 0;       // variable tracks current index for a note
 
-		// text box to display current note in fundamental frequency
+	// text box to display current note in fundamental frequency
 	txtBox = new Label("fundFreq", "A");
-	//txtBox->setColour(Label::textColourId, findColour(SoundshapeLAFs::base2textID));
 	updateText();
 
 	fundFreqSlider = new Slider(Slider::IncDecButtons, Slider::NoTextBox);
 	fundFreqSlider->setComponentID((String)FUND_FREQ_SLIDER);
-	//fundFreqSlider->setColour(Slider::textBoxBackgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 	fundFreqSlider->setRange(0.0f, 12.0f, 1.0);
 	fundFreqSlider->setValue(num, sendNotificationAsync);
 	fundFreqSlider->setTooltip("Set the fundamental frequency.");
@@ -217,6 +220,9 @@ fundFreq::fundFreq()
 
 fundFreq::~fundFreq()
 {
+	free(txtBox);
+	free(fundFreqSlider);
+
 }
 
 void fundFreq::paint(Graphics & g)

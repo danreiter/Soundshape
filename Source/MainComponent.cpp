@@ -10,16 +10,13 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	enve(_valueTreeState),
 	valueTreeState(_valueTreeState),
 	volComp(_valueTreeState),
-    bTWindow(_valueTreeState)//,
-	//keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    bTWindow(_valueTreeState)
 {
 	//----------Setting reference to the converter----------------------------------
     setConverter(&(processor.getConverter()));
 	//------------------------------------------------------------
 
     //----------Default settings----------------------------------
-	amp = 0.0f;
-	freq = 0;
 	add = -1;
 	harm = -1;
 	zoom = 4.0;
@@ -49,21 +46,10 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(cb);
 
 	//-----Setting testing values for the combo box-------------
-
-	/*cb.addItem("New Sound", 1);
-	cb.addItem("Gregory's game tune", 2);
-	cb.addItem("Daniel's groovy sound", 3);
-	cb.addItem("Mardigon's math sound", 4);
-	cb.addItem("My rad sound", 5);
-	cb.addItem("The sound of angry paper", 6);
-	cb.addItem("Love sound", 7);
-	cb.addItem("The sound of not silence", 8);*/
 	loadPresetPath();
 	cb.setSelectedItemIndex(0);
     cb.setTooltip("Contains all the current presets");
 	cb.addListener(this);
-
-
 	//------------------------------------------------------------
 
 	//------------Setting Button Values---------------------------
@@ -112,11 +98,6 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addAndMakeVisible(addButton);
 	addAndMakeVisible(zoomSlider);
 
-	if (menuBarPosition != MenuBarPosition::burger)
-		sidePanel.showOrHide(false);
-
-	
-
 	loadSound();
 	addAndMakeVisible(fWindow);
 	setAllLookAndFeels(laf, this);
@@ -131,16 +112,24 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	addChildComponent(menuHeader);
 	sidePanel.setLookAndFeel(laf);
 	addAndMakeVisible(sidePanel);
-	menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
-	burgerMenu.setModel(menuBarPosition == MenuBarPosition::burger ? this : nullptr);
-	menuHeader.setVisible(menuBarPosition == MenuBarPosition::burger);
 	burgerMenu.setLookAndFeel(laf);
-	sidePanel.setContent(menuBarPosition == MenuBarPosition::burger ? &burgerMenu : nullptr, false);
+
+
+	// this is necessary to give the component focus so the menu isn't grayed out
+	Timer::callAfterDelay(250, [this](void) {this->grabKeyboardFocus();});
 	
 	//------------------------------------------------------------
+
+	// this is necessary to give the component focus so the menu isn't grayed out
+	Timer::callAfterDelay(250, [this](void){this->grabKeyboardFocus();});
+
 	setSize(600, 400);
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function showKey
+//------------------------------------------------------------------------------------
 void MainComponent::showKey(bool vis)
 {
 	if (vis)
@@ -166,12 +155,13 @@ void MainComponent::showKey(bool vis)
 		midiKeyboard.deleteAndZero();
 	}
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function showLic
+//------------------------------------------------------------------------------------
 void MainComponent::showLic()
 {
-
-	//if(vis)
-	//{
 		String m = "Soundshape. Spectral synthesis applicaiton / audio plugin. \n"
             "Copyright(C) 2019 by Mardigon Toler, Daniel Reiter, Gregory Hughes \n"
             "\n"
@@ -217,12 +207,13 @@ void MainComponent::showLic()
 		options.launchAsync();
 
 }
+//------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------
+// Function showDev
+//------------------------------------------------------------------------------------
 void MainComponent::showDevs()
 {
-
-	//if(vis)
-	//{
 	String m = "Soundshape. Spectral synthesis applicaiton / audio plugin.";
 
 
@@ -237,7 +228,7 @@ void MainComponent::showDevs()
 
 	options.content->setSize(area.getWidth(), area.getHeight());
 
-	options.dialogTitle = "Developers";
+	options.dialogTitle = "About Soundshape";
 	options.dialogBackgroundColour = laf->findColour(SoundshapeLAFs::background2ID);
 	options.escapeKeyTriggersCloseButton = true;
 	options.useNativeTitleBar = false;
@@ -249,31 +240,28 @@ void MainComponent::showDevs()
 
 MainComponent::~MainComponent()
 {
-	if (showLicense)
-	{
-
-		for (auto& license : licenseWindow)
-			license.deleteAndZero();
-
-		licenseWindow.clear();
-	}
-
     if (showKeyboard) {
         showKey(false);
         showKeyboard = false;
     }
-}
-//==============================================================================
 
-// a method for changing from one lookandfeel to the other
+	delete harmonicButton;
+	delete addButton;
+	delete zoomSlider;
+	delete writeButton;
+	delete laf;
+
+}
+//------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------
+// Function for changing from one lookandfeel to the other
+//------------------------------------------------------------------------------------
 void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 {
 	for (auto* child : comp->getChildren())
 	{
 		child->setLookAndFeel(laf); // this will change everything in Soundshape to the current colors of laf
-		//String temp = child->getComponentID();
-		//DBG("id is " << temp);
-		//if (child->getComponentID().getIntValue() == PANIC_BUTTON)
 		if(child == &volComp) // to change specific buttons from non-this components, we need to specifically loop through those components
 		{
 			for (auto * subChild : child->getChildren()) {
@@ -294,33 +282,15 @@ void MainComponent::setAllLookAndFeels(LookAndFeel* laf, Component* comp)
 				}
 			}
 		}
-		/*else if (child == &bTWindow)
-		{
-
-			for (auto * subChild : child->getChildren())
-			{
-
-				if (subChild->getComponentID().getIntValue() == PLAYTIME_SLIDER)
-				{
-
-					subChild->setColour(Slider::thumbColourId, laf->findColour(SoundshapeLAFs::background3ID));
-					subChild->setColour(Slider::trackColourId, laf->findColour(SoundshapeLAFs::background3ID));
-
-				}
-
-			}
-
-		}*/
 		else if (child->getComponentID().getIntValue() == WRITE_BUTTON)
 		{
 			child->setColour(TextButton::buttonColourId, laf->findColour(TextButton::buttonOnColourId));
 			child->setColour(TextButton::textColourOffId, laf->findColour(TextButton::textColourOnId));
 		}
-		// put one for the play slider (5003) later
 		
 
 	}
-	//zoomSlider->setLookAndFeel(laf);
+
 }
 
 //------------------------------------------------------------------------------------
@@ -336,7 +306,6 @@ void MainComponent::setConverter(Converter *_converter) {
 //------------------------------------------------------------------------------------
 void MainComponent::paint(Graphics& g) 
 {
-	menuItemsChanged();
 
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(laf->findColour(SoundshapeLAFs::background1ID));
@@ -404,11 +373,16 @@ void MainComponent::paint(Graphics& g)
 	if (menuBarPosition == MenuBarPosition::window)
 	{
 		menuBar->setBounds(getX(), getY(), getWidth(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
+		menuBar->setVisible(menuBarPosition == MenuBarPosition::window);
+		menuBar->repaint();
 	}
 	else
 	{
 		menuHeader.setBounds(getX(), getY(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight(), LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight());
 	}
+
+
+
 
 }
 //------------------------------------------------------------------------------------
@@ -432,7 +406,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	{
 		converterPtr->updateFrequencyValue(currentProfile, slider->getComponentID().getIntValue(), slider->getValue());
 		converterPtr->renderPreview(currentProfile);
-		repaint();
+
 	}
 	// on change of a frequency spike slider updates conveter with new value
 	if (slider->getComponentID().getIntValue() == PLAYTIME_SLIDER)
@@ -453,7 +427,7 @@ void MainComponent::sliderValueChanged(Slider * slider)
 	if(slider == zoomSlider)
 	{
 		zoom = slider->getValue();
-		repaint();
+
 	}
 
 
@@ -501,7 +475,7 @@ void MainComponent::buttonClicked(Button* button)
         currentProfile = (int)(timeBlock * 5) + selectedProfile;
 
 		fWindow.setProfile();
-		repaint();
+
 	}
 
 	// On frequnecy profile selection updates new frequency profile 
@@ -513,13 +487,13 @@ void MainComponent::buttonClicked(Button* button)
 	// On Time domain selection repaint GUI
 	if (button->getParentComponent() == &bTWindow)
 	{
-		repaint();
+
 	}
 
 	// add Button hides and shows buttons to add frequency spikes 
 	if (button->getComponentID() == addButton->getComponentID())
 	{
-		repaint();
+
 	}
 
 	// add Button hides and shows buttons to add frequency spikes 
@@ -534,7 +508,7 @@ void MainComponent::buttonClicked(Button* button)
 		{
 			promptSaveOptions();
 		}
-		repaint();
+
 	}
 
 	// Sustained Play button
@@ -569,12 +543,12 @@ void MainComponent::buttonClicked(Button* button)
 		// need back end call for panic
         processor.panic();
 	}
-
 	if (button == harmonicButton)
 	{
 		harm = harm * -1;
-		repaint();
+
 	}
+	repaint();
 }
 //-------------------------------------------------------------------------------------
 
@@ -594,10 +568,13 @@ void MainComponent::comboBoxChanged(ComboBox * comboBoxThatHasChanged)
 			saveFilePrompt();
 			if (cb.getSelectedItemIndex() == 0)
 			{
+
 				selectedFile = newFile;
+				cb.setSelectedItemIndex(0);
 			}
 			else
 			{
+
 				String fileName = cb.getText();
 				fileName.append((String)".xml", 4);
 				selectedFile = File(presetPath.getChildFile(fileName));
@@ -628,6 +605,7 @@ bool MainComponent::save()
 bool MainComponent::saveAs()
 {
 	FileChooser chooser("Save As File Name", presetPath, "*.xml");
+	grabKeyboardFocus();
 	if (chooser.browseForFileToSave(true))
 	{
 		File tempFile = chooser.getResult();
@@ -695,8 +673,6 @@ void MainComponent::loadFile()
 	harm = -1;
 	zoom = 1.0;
 
-	// load file from selectedFile
-	// call load sound or other function to up
 	
 	//file handling here
 	std::unique_ptr<XmlElement> stateXml(XmlDocument::parse(selectedFile));
@@ -705,7 +681,7 @@ void MainComponent::loadFile()
 	}
 	else
 	{
-		pushedWriteBtn = true;
+		//pushedWriteBtn = true;
 		cb.setSelectedItemIndex(0);
 		selectedFile = newFile;
 
@@ -735,6 +711,11 @@ void MainComponent::importFile()
 		    IOHandler::importConverterAudio(inFile, converterPtr);
             AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "Success",
                                         "Imported " + inFile.getFileName());
+			if (presetPath == inFile.getParentDirectory())
+			{
+				pushedWriteBtn = true;
+				cb.addItem(inFile.getFileNameWithoutExtension(), cb.getNumItems() + 1);
+			}
 		}
 		catch (SoundshapeAudioImportException&){
             AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, "Error",
@@ -811,7 +792,7 @@ void MainComponent::loadSound()
 	currentProfile = 0;
 
 	fWindow.setZoom(&zoom, &harm, &add, this, this, converterPtr, 4000, &currentProfile, laf);
-	sTWindow.setTimeDomain(&timeBlock, &selectedProfile, &currentProfile, &timeSize, this, converterPtr);
+	sTWindow.setTimeDomain(&timeBlock, &currentProfile, &timeSize, this, converterPtr);
 	bTWindow.setProfile(&timeBlock, &currentProfile, &timeSize, this, this, converterPtr);
 	volComp.setListeners(this, this);
 	fund.setListener(this);
@@ -824,7 +805,10 @@ void MainComponent::loadSound()
 //-------------------------------------------------------------------------------------
 StringArray MainComponent::getMenuBarNames()
 {
-	return { "Menu Position", "Settings", "Themes", "Help", "About" };
+	// For interface with both a drop down and burger menu
+	//return { "Menu Position", "Settings", "Themes", "Help", "About" };
+	// For interface with only a one menu type
+	return { "Settings", "Themes", "Help", "About" };
 }
 //-------------------------------------------------------------------------------------
 
@@ -833,29 +817,30 @@ StringArray MainComponent::getMenuBarNames()
 //-------------------------------------------------------------------------------------
 PopupMenu MainComponent::getMenuForIndex(int menuIndex, const String &)
 {
+	// for use with more than one menu option
 	PopupMenu menu;
+	//if (menuIndex == 0)
+	//{
+	//	menu.addCommandItem(&commandManager, CommandIDs::menuPositionInsideWindow);
+	//	menu.addCommandItem(&commandManager, CommandIDs::menuPositionBurgerMenu);
+	//}
 	if (menuIndex == 0)
-	{
-		menu.addCommandItem(&commandManager, CommandIDs::menuPositionInsideWindow);
-		menu.addCommandItem(&commandManager, CommandIDs::menuPositionBurgerMenu);
-	}
-	else if (menuIndex == 1)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::Keyboard);
 		menu.addCommandItem(&commandManager, CommandIDs::PresetPath);
 	}
-	else if (menuIndex == 2)
+	else if (menuIndex == 1)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::DefaultTheme);
 		menu.addCommandItem(&commandManager, CommandIDs::TestTheme);
 		menu.addCommandItem(&commandManager, CommandIDs::SchoolTheme);
 	}
-	else if (menuIndex == 3)
+	else if (menuIndex == 2)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::ToolTips);
 		menu.addCommandItem(&commandManager, CommandIDs::Tutorial);
 	}
-	else if (menuIndex == 4)
+	else if (menuIndex == 3)
 	{
 		menu.addCommandItem(&commandManager, CommandIDs::Developers);
 		menu.addCommandItem(&commandManager, CommandIDs::Licence);
@@ -935,9 +920,8 @@ void MainComponent::getCommandInfo(CommandID _commandID, ApplicationCommandInfo 
 			_result.setTicked(false);
 			break;
 		case CommandIDs::Developers:
-			_result.setInfo("About Soundshape", "Bonus info about Soundshape", "About", 0);
+			_result.setInfo("About Soundshape", "About Soundshape", "About", 0);
 			_result.setTicked(false);
-			_result.addDefaultKeypress('d', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 			break;
 		case CommandIDs::Licence:
 			_result.setInfo("Licence", "About Soundshape's Licence", "About", 0);
@@ -1021,13 +1005,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 		showDevs();
 		break;	
 	case CommandIDs::Licence:
-		//if (!showLicense)
-		//{
-
-
 			showLic();
-
-		//}
 		break;
 	default:
 		return false;
@@ -1093,8 +1071,8 @@ void MainComponent::setTheme(CommandID newTheme)
 //-------------------------------------------------------------------------------------
 void MainComponent::setPresetPath()
 {
-	FileChooser chooser("New Preset Path", presetPath, "", true);
 
+	FileChooser chooser("New Preset Path", presetPath, "", false);
 	if (chooser.browseForDirectory())
 	{
 		File tempDir = chooser.getResult();
@@ -1142,12 +1120,13 @@ void MainComponent::saveFilePrompt()
 	savePrompt.addItem(1, "save");
 	savePrompt.addItem(2, "Cancel");
 	const int result = savePrompt.show();
+	DBG(result);
 	if (result == 0)
 	{
-		// user dismissed the menu without picking anything
-		pushedWriteBtn = false;
+		DBG("result == 1");
+			pushedWriteBtn = false;
 	}
-	else if (result == 1)
+	if (result == 1)
 	{
 		if (selectedFile == newFile)
 		{
@@ -1158,6 +1137,7 @@ void MainComponent::saveFilePrompt()
 			promptSaveOptions();
 
 		}
+
 		// user picked item 1
 	}
 	else if (result == 2)
@@ -1177,7 +1157,7 @@ void MainComponent::promptSaveOptions()
 	PopupMenu saveAsPrompt;
 	saveAsPrompt.addSectionHeader("Would you like to save as a new sound?");
 	saveAsPrompt.addItem(1, "Save");
-	saveAsPrompt.addItem(1, "Save as a new sound");
+	saveAsPrompt.addItem(2, "Save as a new sound");
 	saveAsPrompt.addItem(3, "Cancel");
 	const int result = saveAsPrompt.show();
 	if (result == 0)
@@ -1211,6 +1191,9 @@ void MainComponent::promptSaveOptions()
 	}
 }
 //-------------------------------------------------------------------------------------
+//==============================================================================
+// end mainComponent
+//==============================================================================
 
 
 //==============================================================================
