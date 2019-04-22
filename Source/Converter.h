@@ -149,7 +149,7 @@ private:
     This tries to scale each shifted profile by an envelope sample of the key, so those envelopes need to know
     how many samples this is going to make.
     **/
-    void addShiftedProfiles(int chunk, int numSamples);
+    void addShiftedProfiles(int chunk, int numSamples, float gain);
 
     AudioProcessorValueTreeState& valueTreeState;
     // updated whenever the actual audioparameter changes
@@ -253,13 +253,6 @@ private:
     */
     int currentExportIndex = 0;
 
-    /**
-    Keep track of how many samples we've written in the current chunk we're working on.
-
-    This gets reset when we switch to a new chunk
-    */
-    int samplesWrittenInChunk = 0;
-
     /** If this exceeds the samples per chunk, were done with that chunk.
     
     This is incremented by the output buffer size and shouldn't be used to calculate
@@ -273,15 +266,17 @@ private:
     bool sustainPressed = false;
 
     /**
-    Keeps track of if we need to do a DFT during rendering this buffer.
+    Keeps track of if there are any active keys.
     
-    This gets flipped to true whenever we change to a different chunk.
-    */
-    bool needCurrentChunkDFT = true;
+    Useful for corssfading.*/
+    bool anyKeysPressed = false;
 
     /**
-    Keeps track of if we need to copy the DFT output to previousDFT.
+    Keeps track of if we need crossfade the previous chunk with the current chunk.
+
+    This gets set true once we've held a a key during a chunk and set back to false 
+    once all keys are released.
     */
-    bool needCopyDFTtoPrev = false;
+    bool shouldCrossfadeChunk = false;
 
 };

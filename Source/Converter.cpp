@@ -42,47 +42,31 @@ void Converter::synthesize(AudioBuffer<float>& buffer)
 
     kiss_fft_cpx zeroCpx = { 0,0 };
     std::fill(shiftedProfile.begin(), shiftedProfile.end(), zeroCpx); // clear the shifted profile data
-    addShiftedProfiles(currentChunk, numSamples); //re-shift
+
+    // Up to halfway through the duration of this chunk, crosffade with the previous DFT.
+    // Afterwards, replace the previous DFT with the current one.
+    // crossfading happens in the frequency domain instead of the time domain so we can keep responding
+    // to the MIDI keyboard
+    float currentDFTgain = 1;
+    float prevDFTgain = 0;
+    if (samplesWritten <= SOUNDSHAPE_CHUNK_SIZE / 2 && shouldCrossfadeChunk) {
+        // fade
+        currentDFTgain = samplesWritten / (SOUNDSHAPE_CHUNK_SIZE / 2.0f);
+        prevDFTgain = 1.0f - currentDFTgain;
+    }
+    int lastChunkIndex = currentChunk - 1 < beginningChunk ? endingChunk - 1 : currentChunk - 1;
+    addShiftedProfiles(currentChunk, numSamples, currentDFTgain); //re-shift
+    addShiftedProfiles(lastChunkIndex, numSamples, prevDFTgain);
 
     // perform an inverse FFT on the shifted profile. This scales according to each key's envelope state
-    if (needCurrentChunkDFT) {
-        kiss_fftri(inverseFFT, shiftedProfile.data(), tempChunk.data());
-        needCurrentChunkDFT = false;
-    }
+    kiss_fftri(inverseFFT, shiftedProfile.data(), tempChunk.data());
 
     float* bufferData = buffer.getWritePointer(0,0);
     for (int i = 0; i < buffer.getNumSamples(); i++) {
-        
-        // Up to halfway through the duration of this chunk, crosffade with the previous DFT.
-        // Afterwards, replace the previous DFT with the current one.
-        float currentDFTgain = 0;
-        float prevDFTgain = 0;
 
-        if (samplesWrittenInChunk < SOUNDSHAPE_CHUNK_SIZE / 2.0f) {
-            currentDFTgain = samplesWrittenInChunk / (SOUNDSHAPE_CHUNK_SIZE / 2.0f);
-            prevDFTgain = 1.0f - currentDFTgain; // complement
-            needCopyDFTtoPrev = true; // we're gonna need this to be true once we hit the halfway point.
-        }
-        else {
-            // we're over halfway through now. Copy the buffer to the previous DFT, but only once
-            if (needCopyDFTtoPrev) {
-                needCopyDFTtoPrev = false;
-                // copy
-                for (int copyInd = 0; copyInd < previousDFT.size(); copyInd++) {
-                    previousDFT[copyInd] = tempChunk[copyInd];
-                }
-            }
-            currentDFTgain = 1.0f;
-            prevDFTgain = 0.0f;
-        }
-
-        // write output to the buffer by mixing the samples from this DFT and the
         // previous DFT (they need to be scaled by fft size)
-        float thisDFTsample = tempChunk[currentIndex] / SOUNDSHAPE_CHUNK_SIZE;
-        float prevDFTsample = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE;
-        bufferData[i] = (thisDFTsample * currentDFTgain) + (prevDFTsample * prevDFTgain);
+        bufferData[i] = tempChunk[currentIndex] / SOUNDSHAPE_CHUNK_SIZE;
         currentIndex++;
-        samplesWrittenInChunk++;
         if (currentIndex == SOUNDSHAPE_CHUNK_SIZE) {
             currentIndex = 0;
         }
@@ -92,10 +76,12 @@ void Converter::synthesize(AudioBuffer<float>& buffer)
     if (samplesWritten > SOUNDSHAPE_CHUNK_SIZE) {
         samplesWritten = 0;
         currentChunk++;
-        samplesWrittenInChunk = 0; // reset
-        needCurrentChunkDFT = true;
        if (currentChunk >= endingChunk || currentChunk > SOUNDSHAPE_PROFILE_ROWS) {
             currentChunk = beginningChunk;
+       }
+       // we moved forward a chunk, so it would be okay to start crossfading chunks now.
+       if (anyKeysPressed) {
+           shouldCrossfadeChunk = true;
        }
     }
 
@@ -110,7 +96,7 @@ void Converter::synthesize(AudioBuffer<float>& buffer)
 }
 
 
-void Converter::addShiftedProfiles(int chunk, int numSamples)
+void Converter::addShiftedProfiles(int chunk, int numSamples, float gain)
 {
 
     // cycles through active notes, adding a shifted profile to a temporary "profile structure" for each.
@@ -129,7 +115,7 @@ void Converter::addShiftedProfiles(int chunk, int numSamples)
                     float targetFreq = j* ratio;
                     if (targetFreq < sampleRate / 2) { // avoid aliasing
                         int bin = freqToBin(targetFreq, sampleRate);
-                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r * currentEnvelopeSample;
+                        shiftedProfile[bin].r += getProfileRawPoint(chunk, j).r * currentEnvelopeSample * gain;
                     }
                 }
             }
@@ -258,7 +244,7 @@ void Converter::handleNoteOn(MidiKeyboardState * source, int midiChannel, int mi
 
     noteStates[midiNoteNumber].adsrEnvelope.noteOn();
     noteStates[midiNoteNumber].sustained = false;
-
+    anyKeysPressed = true;
 }
 
 void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int midiNoteNumber, float velocity)
@@ -268,6 +254,14 @@ void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int m
     }
     else {
         noteStates[midiNoteNumber].sustained = true;
+    }
+    shouldCrossfadeChunk = false;
+    anyKeysPressed = false; // will be reset to true if active key found in following loop
+    for (int i = 0; i < noteStates.size(); i++) {
+        if (noteStates[i].adsrEnvelope.isActive()) {
+            anyKeysPressed = true;
+            break;
+        }
     }
 }
 
