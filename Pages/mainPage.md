@@ -13,3 +13,5 @@ What if it was purple?
 
 
 \endhtmlonly
+
+[Installation Manual](@ref Installation)
