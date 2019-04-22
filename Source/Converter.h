@@ -237,11 +237,33 @@ private:
     /** Object for <b>forward</b> transforms for importing and anlyzing audio data. */
     kiss_fftr_cfg importFFT;
 
-    /**This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading) */
+    /**This keeps track of where we are in copying a DFT into the buffer.
+    
+    This index is incremented until reaching the size of a soundshape chunk,
+    at which point it wraps back to zero. This is to prevent a discontinuity
+    from resetting audio output to the beginning of the DFT while the last sample
+    was at a point that would cause discontinuity.
+    */
     int currentIndex = 0;
+
+    /**
+    \see currentIndex
+    
+    This does a similar job as currentIndex but is used for rednering file IO instead of realtime IO.
+    */
     int currentExportIndex = 0;
 
-    /** If this exceeds the samples per chunk, were done with that chunk.*/
+    /**
+    Keep track of how many samples we've written in the current chunk we're working on.
+
+    This gets reset when we switch to a new chunk
+    */
+    int samplesWrittenInChunk = 0;
+
+    /** If this exceeds the samples per chunk, were done with that chunk.
+    
+    This is incremented by the output buffer size and shouldn't be used to calculate
+    the current position in a loop wirting to the buffer.*/
     int samplesWritten = 0;
 
     /** keep track of where to start and end a sound's playback. This are manged by AudioParameters */
@@ -249,5 +271,17 @@ private:
     int endingChunk = 1;
 
     bool sustainPressed = false;
+
+    /**
+    Keeps track of if we need to do a DFT during rendering this buffer.
+    
+    This gets flipped to true whenever we change to a different chunk.
+    */
+    bool needCurrentChunkDFT = true;
+
+    /**
+    Keeps track of if we need to copy the DFT output to previousDFT.
+    */
+    bool needCopyDFTtoPrev = false;
 
 };

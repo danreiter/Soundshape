@@ -45,26 +45,55 @@ void Converter::synthesize(AudioBuffer<float>& buffer)
     addShiftedProfiles(currentChunk, numSamples); //re-shift
 
     // perform an inverse FFT on the shifted profile. This scales according to each key's envelope state
-    kiss_fftri(inverseFFT, shiftedProfile.data(), previousDFT.data());
+    if (needCurrentChunkDFT) {
+        kiss_fftri(inverseFFT, shiftedProfile.data(), tempChunk.data());
+        needCurrentChunkDFT = false;
+    }
+
     float* bufferData = buffer.getWritePointer(0,0);
     for (int i = 0; i < buffer.getNumSamples(); i++) {
         
-        // copy the current DFT into the temporary chunk
-        bufferData[i] = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE; // kissfft inverse real-only needs scaled by fft size
-        currentIndex += 1;
+        // Up to halfway through the duration of this chunk, crosffade with the previous DFT.
+        // Afterwards, replace the previous DFT with the current one.
+        float currentDFTgain = 0;
+        float prevDFTgain = 0;
+
+        if (samplesWrittenInChunk < SOUNDSHAPE_CHUNK_SIZE / 2.0f) {
+            currentDFTgain = samplesWrittenInChunk / (SOUNDSHAPE_CHUNK_SIZE / 2.0f);
+            prevDFTgain = 1.0f - currentDFTgain; // complement
+            needCopyDFTtoPrev = true; // we're gonna need this to be true once we hit the halfway point.
+        }
+        else {
+            // we're over halfway through now. Copy the buffer to the previous DFT, but only once
+            if (needCopyDFTtoPrev) {
+                needCopyDFTtoPrev = false;
+                // copy
+                for (int copyInd = 0; copyInd < previousDFT.size(); copyInd++) {
+                    previousDFT[copyInd] = tempChunk[copyInd];
+                }
+            }
+            currentDFTgain = 1.0f;
+            prevDFTgain = 0.0f;
+        }
+
+        // write output to the buffer by mixing the samples from this DFT and the
+        // previous DFT (they need to be scaled by fft size)
+        float thisDFTsample = tempChunk[currentIndex] / SOUNDSHAPE_CHUNK_SIZE;
+        float prevDFTsample = previousDFT[currentIndex] / SOUNDSHAPE_CHUNK_SIZE;
+        bufferData[i] = (thisDFTsample * currentDFTgain) + (prevDFTsample * prevDFTgain);
+        currentIndex++;
+        samplesWrittenInChunk++;
         if (currentIndex == SOUNDSHAPE_CHUNK_SIZE) {
             currentIndex = 0;
         }
-	
     }
-
-    //buffer.copyFrom(0,0, tempChunk.data(), numSamples); // left channel
 
     samplesWritten += numSamples;
     if (samplesWritten > SOUNDSHAPE_CHUNK_SIZE) {
         samplesWritten = 0;
-        currentChunk += 1;
-
+        currentChunk++;
+        samplesWrittenInChunk = 0; // reset
+        needCurrentChunkDFT = true;
        if (currentChunk >= endingChunk || currentChunk > SOUNDSHAPE_PROFILE_ROWS) {
             currentChunk = beginningChunk;
        }
