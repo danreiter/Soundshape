@@ -1,7 +1,7 @@
 var searchData=
 [
   ['import_5fbutton',['IMPORT_BUTTON',['../_gui_func_8h.html#a7717431b627e67f2ce40759c33cbbaf2',1,'GuiFunc.h']]],
-  ['importbtn',['importBtn',['../class_gui_func.html#ae82853e5bd33a142c8114dd6f6a0c4ea',1,'GuiFunc']]],
+  ['importbtn',['importBtn',['../class_gui_func.html#a3b4a72254781d23fa1ba105a8ba4dd78',1,'GuiFunc']]],
   ['importconverteraudio',['importConverterAudio',['../class_i_o_handler.html#a87c3ff1beb96a88ce1b5872056baa927',1,'IOHandler']]],
   ['importfft',['importFFT',['../class_converter.html#a6c87f44283e07fc2ca6f20092e76e05f',1,'Converter']]],
   ['importfile',['importFile',['../class_main_component.html#acf1eaa47652c11072b1af391c9a2c807',1,'MainComponent']]],
@@ -9,6 +9,8 @@ var searchData=
   ['initcolors',['initColors',['../struct_custom_look_and_feel.html#a94567969ac4214ecb1d37d9f44e58ef8',1,'CustomLookAndFeel']]],
   ['initialise',['initialise',['../class_take3_application.html#aa0d7fbe3cfdb8e712775869488d865df',1,'Take3Application::initialise()'],['../class_soundshape_filter_app.html#a0cdc825cf04df111b22bfb41e531d427',1,'SoundshapeFilterApp::initialise()']]],
   ['inputmutedchanged',['inputMutedChanged',['../classjuce_1_1_soundshape_filter_window_1_1_main_content_component.html#a602a64f19160594567fdd60473d0428a',1,'juce::SoundshapeFilterWindow::MainContentComponent']]],
+  ['installation',['Installation',['../_installation.html',1,'']]],
+  ['installation_2emd',['Installation.md',['../_installation_8md.html',1,'']]],
   ['inversefft',['inverseFFT',['../class_converter.html#a4bfafa10c635e32e1398fbdc09e3cae1',1,'Converter']]],
   ['iohandler',['IOHandler',['../class_i_o_handler.html',1,'']]],
   ['iohandler_2ecpp',['IOHandler.cpp',['../_i_o_handler_8cpp.html',1,'']]],

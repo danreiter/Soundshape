@@ -24,7 +24,10 @@ pre.fragment, div.line,
 .params .paramdir {
 	font-family: Consolas, 'Courier New', courier, Courier, monospace;
 }
-.title,
+.title{
+    font-size:15px;
+    color:gray;
+},
 .fieldtable th{
 	font-family: "Cambria", serif;
 }

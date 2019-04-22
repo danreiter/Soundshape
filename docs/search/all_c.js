@@ -9,7 +9,7 @@ var searchData=
   ['mainpage_2emd',['mainPage.md',['../main_page_8md.html',1,'']]],
   ['mainwindow',['MainWindow',['../class_take3_application_1_1_main_window.html',1,'Take3Application::MainWindow'],['../class_take3_application_1_1_main_window.html#a6f99b0ba8ca4d06a5cb4bdc7dc8fabfd',1,'Take3Application::MainWindow::MainWindow()'],['../class_take3_application.html#afeffdebbb7547b50ed7c48b57330ba06',1,'Take3Application::mainWindow()'],['../class_soundshape_filter_app.html#a13694af6dc284bbddb6a2f9df32d4b9e',1,'SoundshapeFilterApp::mainWindow()']]],
   ['menubar',['menuBar',['../class_main_component.html#ac16b6f204eea1e2286f9f4f9b94e17ee',1,'MainComponent']]],
-  ['menubarposition',['MenuBarPosition',['../class_main_component.html#a3b0a4357f89dbc067bb25616d210eebc',1,'MainComponent::MenuBarPosition()'],['../class_main_component.html#abca2d988e08968638bba693e2f3b1c12',1,'MainComponent::menuBarPosition()']]],
+  ['menubarposition',['menuBarPosition',['../class_main_component.html#abca2d988e08968638bba693e2f3b1c12',1,'MainComponent::menuBarPosition()'],['../class_main_component.html#a3b0a4357f89dbc067bb25616d210eebc',1,'MainComponent::MenuBarPosition()']]],
   ['menucallback',['menuCallback',['../classjuce_1_1_soundshape_filter_window.html#a209965c8ab6ec80c24fb63fb975d5f80',1,'juce::SoundshapeFilterWindow']]],
   ['menuheader',['menuHeader',['../class_main_component.html#a292cb5aea1629d409ad51332d2b886ac',1,'MainComponent']]],
   ['menuitemselected',['menuItemSelected',['../class_main_component.html#a98dcc5a9c4e4cbc744d93fa9c193d7c6',1,'MainComponent']]],

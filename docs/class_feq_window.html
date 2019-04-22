@@ -97,13 +97,18 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ae2f5996ca8552463286443dae6556c7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfreq_domain_win.html">freqDomainWin</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_feq_window.html#ae2f5996ca8552463286443dae6556c7e">base</a></td></tr>
+<tr class="memdesc:ae2f5996ca8552463286443dae6556c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frequency domian for the GUI.  <a href="#ae2f5996ca8552463286443dae6556c7e">More...</a><br /></td></tr>
 <tr class="separator:ae2f5996ca8552463286443dae6556c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a623edb3b9a542ff2e810c079113ecfc4"><td class="memItemLeft" align="right" valign="top">Viewport&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_feq_window.html#a623edb3b9a542ff2e810c079113ecfc4">view</a></td></tr>
+<tr class="memdesc:a623edb3b9a542ff2e810c079113ecfc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viewport for frequency domain.  <a href="#a623edb3b9a542ff2e810c079113ecfc4">More...</a><br /></td></tr>
 <tr class="separator:a623edb3b9a542ff2e810c079113ecfc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af526c5995b6e8366864b28be18387a25"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_feq_window.html#af526c5995b6e8366864b28be18387a25">zoom</a></td></tr>
+<tr class="memdesc:af526c5995b6e8366864b28be18387a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factor of horizontal zoom for the frequency domain window.  <a href="#af526c5995b6e8366864b28be18387a25">More...</a><br /></td></tr>
 <tr class="separator:af526c5995b6e8366864b28be18387a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div class="dynheader">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Sets a viewport of the currently selected frequency domain profile. Passes references from parent component to the frequency domain component. Handles zooming in and out of thefrequency domain view. </p>
+</div><div class="dynheader">
 Inheritance diagram for FeqWindow:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_feq_window__inherit__graph.png" border="0" usemap="#_feq_window_inherit__map" alt="Inheritance graph"/></div>
@@ -187,6 +192,8 @@ Collaboration diagram for FeqWindow:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Renders viewport for the frequency doamin window according to the zoom settings.</p>
+<p>Function is called using the repaint() function. </p><dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::paint(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -212,6 +219,8 @@ Collaboration diagram for FeqWindow:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Repaints the component on resize.</p>
+<dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::resized(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -229,6 +238,8 @@ Collaboration diagram for FeqWindow:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Calls the frequency domain profile's <a class="el" href="class_feq_window.html#af7c205a749a1ca5f3ed04dcc9feea61c">setProfile()</a> function to single the change of frequency profiles.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classfreq_domain_win.html#afd5159708396162b6151fa8b97c70054">freqDomainWin::setProfile()</a> </dd></dl>
 
 </div>
 </div>
@@ -299,6 +310,21 @@ Collaboration diagram for FeqWindow:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Gets reference varaibles from parent component, set the zoom variable reference and view lookAndFeel, and pass references of parent variables to the frequency domain base component.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classfreq_domain_win.html#ab0bc10c46e489d35e712e37b2da24d15">freqDomainWin::setBase()</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_zoom</td><td>Reference to the level of magnification the viewport renders the frequency domain at. </td></tr>
+    <tr><td class="paramname">_harm</td><td>Reference whether the harmic correctness filter is on. </td></tr>
+    <tr><td class="paramname">_parent</td><td>Reference to a slider listener to handle slider changes in mainComponent. </td></tr>
+    <tr><td class="paramname">_bParent</td><td>Reference to a button listener to handle button changes in the mainComponent. </td></tr>
+    <tr><td class="paramname">_profile</td><td>Reference to a <a class="el" href="class_converter.html">Converter</a> to get frequency values from the back-end. </td></tr>
+    <tr><td class="paramname">_size</td><td>Reference to the number of frequency spikes per frequency profile. </td></tr>
+    <tr><td class="paramname">_chunk</td><td>Reference to the index number of the currently selected frequency profile. </td></tr>
+    <tr><td class="paramname">_laf</td><td>Reference to the current lookAndFeel theme. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -323,6 +349,8 @@ Collaboration diagram for FeqWindow:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Frequency domian for the GUI. </p>
+
 </div>
 </div>
 <a id="a623edb3b9a542ff2e810c079113ecfc4"></a>
@@ -345,6 +373,8 @@ Collaboration diagram for FeqWindow:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Viewport for frequency domain. </p>
+
 </div>
 </div>
 <a id="af526c5995b6e8366864b28be18387a25"></a>
@@ -366,6 +396,8 @@ Collaboration diagram for FeqWindow:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Factor of horizontal zoom for the frequency domain window. </p>
 
 </div>
 </div>

@@ -69,7 +69,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-types">Private Types</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -81,12 +80,6 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="_gui_func_8h_source.html">GuiFunc.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a928fec71dd99efa16892a485f2ee34da"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvolume_box.html#a928fec71dd99efa16892a485f2ee34da">ColourIds</a> { <a class="el" href="classvolume_box.html#a928fec71dd99efa16892a485f2ee34daa28fa140002e4a1ce7de61f284b2ddd9b">volColourIds</a> = 80000
- }</td></tr>
-<tr class="separator:a928fec71dd99efa16892a485f2ee34da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae42c0d70b83e198a3747a9fc8179af7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvolume_box.html#ae42c0d70b83e198a3747a9fc8179af7d">volumeBox</a> (AudioProcessorValueTreeState &amp;_valueTreeState)</td></tr>
@@ -103,16 +96,27 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-types"></a>
 Private Types</h2></td></tr>
 <tr class="memitem:a6adcb81e3bd6b0e9d6d7df50a921136c"><td class="memItemLeft" align="right" valign="top">typedef AudioProcessorValueTreeState::SliderAttachment&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvolume_box.html#a6adcb81e3bd6b0e9d6d7df50a921136c">SliderAttachment</a></td></tr>
+<tr class="memdesc:a6adcb81e3bd6b0e9d6d7df50a921136c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle the event listening for value tree state.  <a href="#a6adcb81e3bd6b0e9d6d7df50a921136c">More...</a><br /></td></tr>
 <tr class="separator:a6adcb81e3bd6b0e9d6d7df50a921136c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a2bbec15d003fe6bbe00104163735ba21"><td class="memItemLeft" align="right" valign="top">Slider *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvolume_box.html#a2bbec15d003fe6bbe00104163735ba21">volume</a></td></tr>
+<tr class="memdesc:a2bbec15d003fe6bbe00104163735ba21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slider to change volume.  <a href="#a2bbec15d003fe6bbe00104163735ba21">More...</a><br /></td></tr>
 <tr class="separator:a2bbec15d003fe6bbe00104163735ba21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69e02dc0b273c1b3c5fa61aba9e00dda"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classvolume_box.html#a6adcb81e3bd6b0e9d6d7df50a921136c">SliderAttachment</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvolume_box.html#a69e02dc0b273c1b3c5fa61aba9e00dda">gainAttachment</a></td></tr>
+<tr class="memdesc:a69e02dc0b273c1b3c5fa61aba9e00dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lets the back and front end volume control each other.  <a href="#a69e02dc0b273c1b3c5fa61aba9e00dda">More...</a><br /></td></tr>
 <tr class="separator:a69e02dc0b273c1b3c5fa61aba9e00dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div class="dynheader">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Volume Box is a slider component drawn in a box with volume symbols.</p>
+<p>Componet is used to change Soundshapes volume settings. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_valueTreeState</td><td>Used to update the back-end of Soundshape on setting changes for volume. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><div class="dynheader">
 Inheritance diagram for volumeBox:</div>
 <div class="dyncontent">
 <div class="center"><img src="classvolume_box__inherit__graph.png" border="0" usemap="#volume_box_inherit__map" alt="Inheritance graph"/></div>
@@ -151,23 +155,7 @@ Collaboration diagram for volumeBox:</div>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a928fec71dd99efa16892a485f2ee34da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a928fec71dd99efa16892a485f2ee34da">&#9670;&nbsp;</a></span>ColourIds</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classvolume_box.html#a928fec71dd99efa16892a485f2ee34da">volumeBox::ColourIds</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a928fec71dd99efa16892a485f2ee34daa28fa140002e4a1ce7de61f284b2ddd9b"></a>volColourIds&#160;</td><td class="fielddoc"></td></tr>
-</table>
+<p>Handle the event listening for value tree state. </p>
 
 </div>
 </div>
@@ -231,6 +219,8 @@ Collaboration diagram for volumeBox:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Sets slider and draws volume symbols in a rectangle.</p>
+<p>Function is called using the repaint() function. </p><dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::paint(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -256,6 +246,8 @@ Collaboration diagram for volumeBox:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Repaints the component on resize.</p>
+<dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::resized(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -274,6 +266,13 @@ Collaboration diagram for volumeBox:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set an event listener on the volume slider.</p>
+<p>Used to call repaint() in mainComponent on updates. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_listener</td><td>Is adds an event listener to the volume slider. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -298,6 +297,8 @@ Collaboration diagram for volumeBox:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Lets the back and front end volume control each other. </p>
+
 </div>
 </div>
 <a id="a2bbec15d003fe6bbe00104163735ba21"></a>
@@ -319,6 +320,8 @@ Collaboration diagram for volumeBox:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Slider to change volume. </p>
 
 </div>
 </div>

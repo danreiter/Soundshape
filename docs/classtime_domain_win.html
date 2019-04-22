@@ -97,15 +97,18 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a6b67f2a2eb6e84dd07f19ee21ee89900"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtime_domain_win.html#a6b67f2a2eb6e84dd07f19ee21ee89900">chunk_size</a></td></tr>
+<tr class="memdesc:a6b67f2a2eb6e84dd07f19ee21ee89900"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to the number of frequency spikes in a frequency profile.  <a href="#a6b67f2a2eb6e84dd07f19ee21ee89900">More...</a><br /></td></tr>
 <tr class="separator:a6b67f2a2eb6e84dd07f19ee21ee89900"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97b18b81a0307db213198ba0312752b7"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtime_domain_win.html#a97b18b81a0307db213198ba0312752b7">currentProfile</a></td></tr>
+<tr class="memdesc:a97b18b81a0307db213198ba0312752b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to the index of the currently selected frequency profile.  <a href="#a97b18b81a0307db213198ba0312752b7">More...</a><br /></td></tr>
 <tr class="separator:a97b18b81a0307db213198ba0312752b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a38b86d27f5035e0c24caeae1a9143e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_converter.html">Converter</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtime_domain_win.html#a8a38b86d27f5035e0c24caeae1a9143e">converterPtr</a></td></tr>
+<tr class="memdesc:a8a38b86d27f5035e0c24caeae1a9143e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to a <a class="el" href="class_converter.html">Converter</a> to get frequency values from the back-end.  <a href="#a8a38b86d27f5035e0c24caeae1a9143e">More...</a><br /></td></tr>
 <tr class="separator:a8a38b86d27f5035e0c24caeae1a9143e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88f58e7f973ede584f7cee1a4aeb3a7c"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; AudioFormatReaderSource &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtime_domain_win.html#a88f58e7f973ede584f7cee1a4aeb3a7c">readerSource</a></td></tr>
-<tr class="separator:a88f58e7f973ede584f7cee1a4aeb3a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div class="dynheader">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Renders Soundshape's sound in the time domain as a wave. Draws background of the time domain window including scale in seconds, background color, and a different background color for the currently selected frequency profile. </p>
+</div><div class="dynheader">
 Inheritance diagram for timeDomainWin:</div>
 <div class="dyncontent">
 <div class="center"><img src="classtime_domain_win__inherit__graph.png" border="0" usemap="#time_domain_win_inherit__map" alt="Inheritance graph"/></div>
@@ -186,6 +189,8 @@ Collaboration diagram for timeDomainWin:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Sets locations and size of of the sound wave in the time domain. Draws the background and scale for the time domain.</p>
+<p>Function is called using the repaint() function. </p><dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::paint(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -211,6 +216,8 @@ Collaboration diagram for timeDomainWin:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Repaints the component on resize.</p>
+<dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::resized(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -229,6 +236,16 @@ Collaboration diagram for timeDomainWin:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Sets a reference to the back-end's converter for rendering the sond wave.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classsmall_time.html#a300ee515dd4c7c5993e9d2ba00e8d5ae">smallTime::setTimeDomain()</a> </dd>
+<dd>
+<a class="el" href="classbig_time.html#ac462d7d2a5ae8a02e31a370389a56618">bigTime::setProfile()</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_conPtr</td><td>Reference to the converter on Soundshape's back-end. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -247,6 +264,16 @@ Collaboration diagram for timeDomainWin:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Sets a reference to the back-end's converter for rendering the sond wave.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classsmall_time.html#a300ee515dd4c7c5993e9d2ba00e8d5ae">smallTime::setTimeDomain()</a> </dd>
+<dd>
+<a class="el" href="classbig_time.html#ac462d7d2a5ae8a02e31a370389a56618">bigTime::setProfile()</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_currentProfile</td><td>Reference to the currently selected on frequency profile. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -271,6 +298,8 @@ Collaboration diagram for timeDomainWin:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Reference to the number of frequency spikes in a frequency profile. </p>
+
 </div>
 </div>
 <a id="a8a38b86d27f5035e0c24caeae1a9143e"></a>
@@ -292,6 +321,8 @@ Collaboration diagram for timeDomainWin:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reference to a <a class="el" href="class_converter.html">Converter</a> to get frequency values from the back-end. </p>
 
 </div>
 </div>
@@ -315,27 +346,7 @@ Collaboration diagram for timeDomainWin:</div>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a88f58e7f973ede584f7cee1a4aeb3a7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88f58e7f973ede584f7cee1a4aeb3a7c">&#9670;&nbsp;</a></span>readerSource</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt;AudioFormatReaderSource&gt; timeDomainWin::readerSource</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Reference to the index of the currently selected frequency profile. </p>
 
 </div>
 </div>

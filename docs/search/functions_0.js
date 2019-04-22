@@ -1,7 +1,7 @@
 var searchData=
 [
   ['acceptsmidi',['acceptsMidi',['../class_soundshape__plugin_audio_processor.html#ad2b6f60fff3c0c4239e8b1ca5bc24ac2',1,'Soundshape_pluginAudioProcessor']]],
-  ['addshiftedprofiles',['addShiftedProfiles',['../class_converter.html#a44d99a1d55ab5bcce6488aeae0fff1f1',1,'Converter']]],
+  ['addshiftedprofiles',['addShiftedProfiles',['../class_converter.html#a6d025d752c2f54f1866ed2aabd95658e',1,'Converter']]],
   ['addtolist',['addToList',['../classbig_time.html#afc72b2fd19d12de1bc57c0ed00abca17',1,'bigTime::addToList()'],['../classfreq_domain_win.html#a38b301ed0df65980f9565e1ef5359fa8',1,'freqDomainWin::addToList()'],['../classsmall_time.html#a780f7898decfcbf631708b4f1b87ff93',1,'smallTime::addToList()']]],
   ['analyzechunkintoprofile',['analyzeChunkIntoProfile',['../class_converter.html#a2d8daaed7294b4436aa19c582edebfac',1,'Converter']]],
   ['anotherinstancestarted',['anotherInstanceStarted',['../class_take3_application.html#af1777820143501f0290fecdfc166c3e6',1,'Take3Application::anotherInstanceStarted()'],['../class_soundshape_filter_app.html#ab016165428b65c49854742cf2df53f28',1,'SoundshapeFilterApp::anotherInstanceStarted()']]],

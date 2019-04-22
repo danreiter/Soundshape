@@ -10,7 +10,6 @@ var searchData=
   ['_7efundfreq',['~fundFreq',['../classfund_freq.html#ab133543274ecc0bd8f8d9adba4a77ca6',1,'fundFreq']]],
   ['_7eguifunc',['~GuiFunc',['../class_gui_func.html#a75cd76ad3a0737ec87874b2bca591aae',1,'GuiFunc']]],
   ['_7ekeyboardpopup',['~keyboardPopup',['../classkeyboard_popup.html#a3e31038ab1cf76f178834506cf71529a',1,'keyboardPopup']]],
-  ['_7elwindow',['~LWindow',['../class_l_window.html#af68c1bc281d324510900d66bfccaf8f5',1,'LWindow']]],
   ['_7emaincomponent',['~MainComponent',['../class_main_component.html#aa96a2a286f35edf4000deec5f327d1c3',1,'MainComponent']]],
   ['_7emaincontentcomponent',['~MainContentComponent',['../classjuce_1_1_soundshape_filter_window_1_1_main_content_component.html#a490472e42dff90ad51c524ec34badca8',1,'juce::SoundshapeFilterWindow::MainContentComponent']]],
   ['_7esmalltime',['~smallTime',['../classsmall_time.html#afbe3974cda6fabeca850d16da3b92fbf',1,'smallTime']]],

@@ -23,7 +23,7 @@ var searchData=
   ['setstateinformation',['setStateInformation',['../class_soundshape__plugin_audio_processor.html#a75e240cf732f2e54be49236dd620903d',1,'Soundshape_pluginAudioProcessor']]],
   ['setsustain',['setSustain',['../class_converter.html#ab934010c44d59564170fe1b775fd2a02',1,'Converter']]],
   ['settheme',['setTheme',['../class_main_component.html#a69ac2fcde4bde496efa2668b6a40c657',1,'MainComponent']]],
-  ['settimedomain',['setTimeDomain',['../classsmall_time.html#a3c4ad097b96e042b044328b6e3d74ab7',1,'smallTime']]],
+  ['settimedomain',['setTimeDomain',['../classsmall_time.html#a300ee515dd4c7c5993e9d2ba00e8d5ae',1,'smallTime']]],
   ['settingscomponent',['SettingsComponent',['../classjuce_1_1_soundshape_plugin_holder_1_1_settings_component.html#a0f499567a12c8d6f7563fd9851d157db',1,'juce::SoundshapePluginHolder::SettingsComponent']]],
   ['setupaudiodevices',['setupAudioDevices',['../classjuce_1_1_soundshape_plugin_holder.html#aff3661cfc7088ec31b204dc17af2e120',1,'juce::SoundshapePluginHolder']]],
   ['setvolumelistener',['setVolumeListener',['../classvolume_box.html#af53dbb30815c9dfa406bcbb5fa3148e3',1,'volumeBox']]],
