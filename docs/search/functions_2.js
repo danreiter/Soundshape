@@ -1,6 +1,7 @@
 var searchData=
 [
   ['changeprogramname',['changeProgramName',['../class_soundshape__plugin_audio_processor.html#a7a2753c24afb26fe2b51e69ce1e06a8c',1,'Soundshape_pluginAudioProcessor']]],
+  ['checkissoundshapefile',['checkIsSoundshapeFile',['../class_i_o_handler.html#ae2a9c176a556e63b789b23b1c516c0ec',1,'IOHandler']]],
   ['clearchunk',['clearChunk',['../class_converter.html#ac392e475808059f8ccd5a12f54f58e78',1,'Converter']]],
   ['closebuttonpressed',['closeButtonPressed',['../class_take3_application_1_1_main_window.html#afe34ba385c27d88856f42bb82835b90d',1,'Take3Application::MainWindow::closeButtonPressed()'],['../classjuce_1_1_soundshape_filter_window.html#a13fcada69bbbddc38337ca0d547553af',1,'juce::SoundshapeFilterWindow::closeButtonPressed()']]],
   ['comboboxchanged',['comboBoxChanged',['../class_main_component.html#a1de489a846a01b6499f6e2cd2f0f65d9',1,'MainComponent']]],

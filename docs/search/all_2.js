@@ -3,6 +3,7 @@ var searchData=
   ['cb',['cb',['../class_main_component.html#a04aa4622c0bde562dc22b68d0dfe066f',1,'MainComponent']]],
   ['changeprogramname',['changeProgramName',['../class_soundshape__plugin_audio_processor.html#a7a2753c24afb26fe2b51e69ce1e06a8c',1,'Soundshape_pluginAudioProcessor']]],
   ['channelconfiguration',['channelConfiguration',['../classjuce_1_1_soundshape_plugin_holder.html#ad3118fe4746e3a060f5027d306b001ea',1,'juce::SoundshapePluginHolder']]],
+  ['checkissoundshapefile',['checkIsSoundshapeFile',['../class_i_o_handler.html#ae2a9c176a556e63b789b23b1c516c0ec',1,'IOHandler']]],
   ['chunk',['chunk',['../classfreq_domain_win.html#a75b7b3a6bf827633881f076dfa26de54',1,'freqDomainWin']]],
   ['chunk_5fsize',['chunk_size',['../classtime_domain_win.html#a6b67f2a2eb6e84dd07f19ee21ee89900',1,'timeDomainWin']]],
   ['clearchunk',['clearChunk',['../class_converter.html#ac392e475808059f8ccd5a12f54f58e78',1,'Converter']]],

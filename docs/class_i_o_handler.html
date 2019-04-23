@@ -93,6 +93,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a021b7d2710b6246bef0be8d0cc077cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad33d062603b0dc8d86695d3c298a6bed"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_o_handler.html#ad33d062603b0dc8d86695d3c298a6bed">restoreParamsFromXml</a> (AudioProcessorValueTreeState &amp;valueTreeState, XmlElement *xml)</td></tr>
 <tr class="separator:ad33d062603b0dc8d86695d3c298a6bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a9c176a556e63b789b23b1c516c0ec"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_o_handler.html#ae2a9c176a556e63b789b23b1c516c0ec">checkIsSoundshapeFile</a> (File _file)</td></tr>
+<tr class="separator:ae2a9c176a556e63b789b23b1c516c0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72ed0d667907b063cfd3cc8531a940b9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_o_handler.html#a72ed0d667907b063cfd3cc8531a940b9">restoreStateFromXml</a> (AudioProcessorValueTreeState &amp;valueTreeState, <a class="el" href="class_converter.html">Converter</a> &amp;converter, std::unique_ptr&lt; XmlElement &gt; &amp;xml)</td></tr>
 <tr class="separator:a72ed0d667907b063cfd3cc8531a940b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a621f63d236185b4c7ee9af473ad4e79a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_o_handler.html#a621f63d236185b4c7ee9af473ad4e79a">exportConverterAudio</a> (File &amp;outFile, <a class="el" href="class_converter.html">Converter</a> *converterPtr)</td></tr>
@@ -115,6 +117,40 @@ Static Public Attributes</h2></td></tr>
 <div class="textblock"><p>Class with helper functions for getting data ready for import/export.</p>
 <p>This class has helper functions that can convert a profile object in the converter into an XML element and also update a converter's state to match a certain XML element.</p>
 <p>Soundshape's XML structure is like: </p><div class="fragment"><div class="line">&lt;Soundshape&gt;</div><div class="line">  &lt;Parameters&gt;</div><div class="line">    &lt;PARAM <span class="keywordtype">id</span>=<span class="stringliteral">&quot;attack&quot;</span> value=<span class="stringliteral">&quot;2.5e-1&quot;</span>/&gt;</div><div class="line">    &lt;PARAM <span class="keywordtype">id</span>=<span class="stringliteral">&quot;beginningChunk&quot;</span> value=<span class="stringliteral">&quot;0&quot;</span>/&gt;</div><div class="line">    &lt;PARAM <span class="keywordtype">id</span>=<span class="stringliteral">&quot;decay&quot;</span> value=<span class="stringliteral">&quot;2.5e-1&quot;</span>/&gt;</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">  &lt;/Parameters&gt;</div><div class="line">  &lt;Profile&gt;</div><div class="line">    &lt;Chunk index=<span class="stringliteral">&quot;0&quot;</span>&gt;</div><div class="line">      &lt;f bin=<span class="stringliteral">&quot;440&quot;</span> val=<span class="stringliteral">&quot;5e2&quot;</span>/&gt;</div><div class="line">      &lt;f bin=<span class="stringliteral">&quot;880&quot;</span> val=<span class="stringliteral">&quot;3e2&quot;</span>/&gt;</div><div class="line">      &lt;f bin=<span class="stringliteral">&quot;1760&quot;</span> val=<span class="stringliteral">&quot;2e2&quot;</span>/&gt;</div><div class="line">      &lt;f bin=<span class="stringliteral">&quot;2640&quot;</span> val=<span class="stringliteral">&quot;1e2&quot;</span>/&gt;</div><div class="line">      &lt;f bin=<span class="stringliteral">&quot;3520&quot;</span> val=<span class="stringliteral">&quot;5e1&quot;</span>/&gt;</div><div class="line">      ...</div><div class="line">    &lt;/Chunk&gt;</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">  &lt;/Profile&gt;</div><div class="line">&lt;/Soundshape&gt;</div></div><!-- fragment --> </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae2a9c176a556e63b789b23b1c516c0ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2a9c176a556e63b789b23b1c516c0ec">&#9670;&nbsp;</a></span>checkIsSoundshapeFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IOHandler::checkIsSoundshapeFile </td>
+          <td>(</td>
+          <td class="paramtype">File&#160;</td>
+          <td class="paramname"><em>_file</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Tests an xml element to see if it has the soundshape tag</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">xml</td><td>A pointer to an Xml element </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whether it was a soundshape element </dd></dl>
+
+</div>
+</div>
 <a id="a7f86e5949d4b09ac7a2c4ef13fddc793"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7f86e5949d4b09ac7a2c4ef13fddc793">&#9670;&nbsp;</a></span>createParamsXML()</h2>
 

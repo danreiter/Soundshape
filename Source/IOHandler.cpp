@@ -79,6 +79,7 @@ bool IOHandler::checkIsSoundshapeFile(File _file)
 	if (stateXml != nullptr) {
 		return stateXml->hasTagName("Soundshape");
 	}
+	return false;
 }
 
 void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
