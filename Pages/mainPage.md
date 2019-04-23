@@ -6,9 +6,9 @@
 
 ## Overview
 
-Soundshape is free audio software that lets you create sounds by designing 
+Soundshape is a free audio synthesizer that lets you create sounds by designing 
 their spectrum. It runs as a standalone plugin or a VST. Soundshape takes 
-advtangae of *Fast Fourier Transforms* to synthesize the 
+advantage of *Fast Fourier Transforms* to display the spectrum and the wave of the 
 sound you design in real time.
 
 Soundshape is a software instrument but can also be used for

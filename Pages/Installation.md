@@ -3,7 +3,7 @@
 
 # Soundshape Installation Manual
 
-Steps for getting this software runnong on Windows and Linux are below.
+Steps for getting this software running on Windows and Linux are below.
 
 The plugin version of Soundshape needs to run in a host like a DAW.
 In case you don't have on, some decent free DAWs (or dedicated hosts) are:
