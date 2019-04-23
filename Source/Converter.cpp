@@ -260,6 +260,7 @@ void Converter::handleNoteOff(MidiKeyboardState * source, int midiChannel, int m
     for (int i = 0; i < noteStates.size(); i++) {
         if (noteStates[i].adsrEnvelope.isActive()) {
             anyKeysPressed = true;
+            shouldCrossfadeChunk = true;
             break;
         }
     }
