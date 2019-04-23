@@ -38,14 +38,6 @@ freqDomainWin::freqDomainWin()
 
 freqDomainWin::~freqDomainWin()
 {
-	delete laf;
-	delete harm;
-	delete add;
-	delete chunk;
-	delete profile;
-	delete parent;
-	delete buttonParent;
-	emptyList();
 
 }
 //==============================================================================

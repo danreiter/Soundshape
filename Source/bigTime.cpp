@@ -66,12 +66,7 @@ bigTime::~bigTime()
 {
     valueTreeState.removeParameterListener("beginningChunk",this);
     valueTreeState.removeParameterListener("endingChunk",this);
-    free(playTime);
-	free(xPoint);
-	free(time);				
-	free(parent); 
-	free(sliderParent);
-	components.clear(true);
+    delete playTime;
 }
 //==============================================================================
 

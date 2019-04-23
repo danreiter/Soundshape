@@ -252,7 +252,6 @@ MainComponent::~MainComponent()
 	delete addButton;
 	delete zoomSlider;
 	delete writeButton;
-	delete laf;
 
 }
 //------------------------------------------------------------------------------------

@@ -71,10 +71,10 @@ envelope::envelope(AudioProcessorValueTreeState& _valueTreeState):
 
 envelope::~envelope()
 {
-	free(Attack);
-	free(Decay);
-	free(Sustain);
-	free(Release);
+	delete Attack;
+    delete Decay;
+    delete Sustain;
+    delete Release;
 }
 
 void envelope::paint (Graphics& g)

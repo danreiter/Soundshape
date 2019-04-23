@@ -47,10 +47,7 @@ smallTime::smallTime()
 
 smallTime::~smallTime()
 {
-	delete xStart;
-	delete currentProfile;
-	delete time;
-	delete parent;
+
 }
 //==============================================================================
 

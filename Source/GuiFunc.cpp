@@ -28,7 +28,7 @@ volumeBox::volumeBox(AudioProcessorValueTreeState& _valueTreeState)
 }
 volumeBox::~volumeBox()
 {
-	free(volume);
+	delete volume;
 }
 
 void volumeBox::paint(Graphics& g)
@@ -114,12 +114,11 @@ GuiFunc::GuiFunc(AudioProcessorValueTreeState& _valueTreeState) : valueTreeState
 
 GuiFunc::~GuiFunc()
 {
-    free(volBox);
-	free(panicBtn);
-	free(exportBtn);
-	free(playBtn);
-	free(importBtn);
-	free(sustainPlyBtn);
+    delete volBox;
+    delete panicBtn;
+    delete exportBtn;
+    delete importBtn;
+    delete sustainPlyBtn;
 }
 
 void GuiFunc::paint(Graphics& g)
@@ -220,9 +219,8 @@ fundFreq::fundFreq()
 
 fundFreq::~fundFreq()
 {
-	free(txtBox);
-	free(fundFreqSlider);
-
+    delete txtBox;
+    delete fundFreqSlider;
 }
 
 void fundFreq::paint(Graphics & g)
