@@ -134,14 +134,14 @@ public:
 	*/
 	void sliderValueChanged(Slider* slider) override;
 	/**
-	Event listener lisetens for changes button sub-components.
+	Event listener listens for changes button sub-components.
 
 	This will trigger on events including button hover over as well as button clicks.
 	@see
 	JUCE documentation:
 		Button::Listener ButtonStateChanged()
 
-	@param button Refenece to the button that's state changed.
+	@param button Reference to the button that's state changed.
 	*/
     void buttonStateChanged(Button* button) override;
 
@@ -153,7 +153,7 @@ public:
 	*/
     void drawSound();
 	/**
-	Event listener lisetens for clicked event of button sub-components.
+	Event listener listens for clicked event of button sub-components.
 
 	@see 
 	JUCE documentation: Button::Listener ButtonClicked()

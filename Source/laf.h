@@ -53,6 +53,8 @@ public:
 	
 	background2ID - the background of the combo box, the frequency domain window and the
 	portions of the	time domain window that correspond to the frequency domain.
+
+
 	background3ID - the background of the portion of the big time domain window that
 	corresponds to the small time domain window
 	*/

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="OEfazO" name="Soundshape_plugin" projectType="audioplug"
-              jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST,buildVST3"
+              jucerVersion="5.4.3" pluginFormats="buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               companyName="Soundshape" pluginName="Soundshape" pluginDesc="Spectral synthesizer"
               pluginManufacturerCode="Soun" pluginCode="Shap" pluginVST3Category="Instrument,Stereo,Synth">

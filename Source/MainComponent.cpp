@@ -162,7 +162,7 @@ void MainComponent::showKey(bool vis)
 //------------------------------------------------------------------------------------
 void MainComponent::showLic()
 {
-		String m = "Soundshape. Spectral synthesis applicaiton / audio plugin. \n"
+		String m = "Soundshape. Spectral synthesis application / audio plugin. \n"
             "Copyright(C) 2019 by Mardigon Toler, Daniel Reiter, Gregory Hughes \n"
             "\n"
             "This program is free software : you can redistribute it and/or modify\n"
@@ -214,7 +214,10 @@ void MainComponent::showLic()
 //------------------------------------------------------------------------------------
 void MainComponent::showDevs()
 {
-	String m = "Soundshape. Spectral synthesis applicaiton / audio plugin.";
+	String m = "Soundshape is a free audio synthesizer that lets you create sounds by designing their spectrum. It\n"
+		"runs as a standalone plugin or a VST. Soundshape takes advantage of Fast Fourier Transforms to synthesize the sound you design in real time.\n"
+		"\nSoundshape is a software instrument but can also be used for education or as a sound effect\n"
+		"generator, or any other use you might have for sound synthesis.";
 
 
 	DialogWindow::LaunchOptions options;
