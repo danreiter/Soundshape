@@ -36,7 +36,7 @@ you might have for sound synthesis.
 
 ## Download
 - [Binary Releases are available here.]
-( https://github.com/danreiter/Soundshape/releases )
+( https://github.com/danreiter/Soundshape/releases/latest )
 Download the correct version for your operating system.
 - To see the source or build Soundshape yourself, clone 
     [the Soundshape repository at GitHub](https://www.github.com/danreiter/Soundshape)

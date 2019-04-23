@@ -217,7 +217,9 @@ void MainComponent::showDevs()
 	String m = "Soundshape is a free audio synthesizer that lets you create sounds by designing their spectrum. It\n"
 		"runs as a standalone plugin or a VST. Soundshape takes advantage of Fast Fourier Transforms to synthesize the sound you design in real time.\n"
 		"\nSoundshape is a software instrument but can also be used for education or as a sound effect\n"
-		"generator, or any other use you might have for sound synthesis.";
+		"generator, or any other use you might have for sound synthesis. " 
+        "Learn more about it at its website:\n"
+        "danreiter.github.io/Soundshape";
 
 
 	DialogWindow::LaunchOptions options;
