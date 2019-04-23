@@ -1,33 +1,32 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,56,208,83"/>
-<area shape="rect" id="node2" href="$class_main_component.html" title=" " alt="" coords="343,81,472,108"/>
-<area shape="rect" id="node3" title=" " alt="" coords="58,444,155,471"/>
-<area shape="rect" id="node4" href="$classbig_time.html" title=" " alt="" coords="370,837,445,864"/>
-<area shape="rect" id="node5" href="$struct_burger_menu_header.html" title=" " alt="" coords="333,132,481,159"/>
-<area shape="rect" id="node6" href="$classenvelope.html" title=" " alt="" coords="366,183,449,209"/>
-<area shape="rect" id="node7" href="$class_feq_window.html" title=" " alt="" coords="358,233,457,260"/>
-<area shape="rect" id="node8" href="$classfreq_domain_win.html" title=" " alt="" coords="345,284,469,311"/>
-<area shape="rect" id="node9" href="$classfund_freq.html" title=" " alt="" coords="368,335,447,361"/>
-<area shape="rect" id="node10" href="$class_gui_func.html" title=" " alt="" coords="370,385,445,412"/>
-<area shape="rect" id="node11" href="$classjuce_1_1_soundshape_filter_window_1_1_main_content_component.html" title=" " alt="" coords="296,771,519,813"/>
-<area shape="rect" id="node12" href="$classjuce_1_1_soundshape_filter_window_1_1_main_content_component_1_1_notification_area.html" title=" " alt="" coords="256,437,559,478"/>
-<area shape="rect" id="node13" href="$classjuce_1_1_soundshape_plugin_holder_1_1_settings_component.html" title=" " alt="" coords="298,502,517,543"/>
-<area shape="rect" id="node14" href="$classkeyboard_popup.html" title=" " alt="" coords="346,568,469,595"/>
-<area shape="rect" id="node15" href="$classsmall_time.html" title=" " alt="" coords="362,619,453,645"/>
-<area shape="rect" id="node16" href="$classtime_domain_win.html" title=" " alt="" coords="343,669,471,696"/>
-<area shape="rect" id="node17" href="$classvolume_box.html" title=" " alt="" coords="359,720,455,747"/>
-<area shape="rect" id="node18" title=" " alt="" coords="32,728,181,755"/>
-<area shape="rect" id="node19" title=" " alt="" coords="36,1040,177,1067"/>
-<area shape="rect" id="node20" href="$classjuce_1_1_soundshape_filter_window.html" title=" " alt="" coords="296,888,519,915"/>
-<area shape="rect" id="node21" href="$class_l_window.html" title=" " alt="" coords="368,1040,447,1067"/>
-<area shape="rect" id="node22" href="$class_take3_application_1_1_main_window.html" title=" " alt="" coords="295,1091,520,1117"/>
-<area shape="rect" id="node23" title=" " alt="" coords="69,939,144,965"/>
-<area shape="rect" id="node24" href="$class_converter.html" title=" " alt="" coords="364,989,451,1016"/>
-<area shape="rect" id="node25" href="$class_envelope_params.html" title=" " alt="" coords="342,939,473,965"/>
-<area shape="rect" id="node26" title=" " alt="" coords="69,779,144,805"/>
-<area shape="rect" id="node27" title=" " alt="" coords="69,829,144,856"/>
-<area shape="rect" id="node28" title=" " alt="" coords="69,107,144,133"/>
-<area shape="rect" id="node29" title=" " alt="" coords="69,157,144,184"/>
-<area shape="rect" id="node30" title=" " alt="" coords="47,5,167,32"/>
-<area shape="rect" id="node31" title=" " alt="" coords="7,989,206,1016"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,187,83"/>
+<area shape="rect" id="node2" href="$class_main_component.html" title=" " alt="" coords="311,81,427,108"/>
+<area shape="rect" id="node3" title=" " alt="" coords="52,467,140,493"/>
+<area shape="rect" id="node4" href="$classbig_time.html" title=" " alt="" coords="335,837,402,864"/>
+<area shape="rect" id="node5" href="$struct_burger_menu_header.html" title=" " alt="" coords="302,619,435,645"/>
+<area shape="rect" id="node6" href="$classenvelope.html" title=" " alt="" coords="333,669,405,696"/>
+<area shape="rect" id="node7" href="$class_feq_window.html" title=" " alt="" coords="323,720,414,747"/>
+<area shape="rect" id="node8" href="$classfreq_domain_win.html" title=" " alt="" coords="313,132,424,159"/>
+<area shape="rect" id="node9" href="$classfund_freq.html" title=" " alt="" coords="333,183,405,209"/>
+<area shape="rect" id="node10" href="$class_gui_func.html" title=" " alt="" coords="333,233,404,260"/>
+<area shape="rect" id="node11" href="$classjuce_1_1_soundshape_filter_window_1_1_main_content_component.html" title=" " alt="" coords="268,771,469,813"/>
+<area shape="rect" id="node12" href="$classjuce_1_1_soundshape_filter_window_1_1_main_content_component_1_1_notification_area.html" title=" " alt="" coords="235,285,503,326"/>
+<area shape="rect" id="node13" href="$classjuce_1_1_soundshape_plugin_holder_1_1_settings_component.html" title=" " alt="" coords="269,350,468,391"/>
+<area shape="rect" id="node14" href="$classkeyboard_popup.html" title=" " alt="" coords="313,416,425,443"/>
+<area shape="rect" id="node15" href="$classsmall_time.html" title=" " alt="" coords="328,467,409,493"/>
+<area shape="rect" id="node16" href="$classtime_domain_win.html" title=" " alt="" coords="311,517,426,544"/>
+<area shape="rect" id="node17" href="$classvolume_box.html" title=" " alt="" coords="326,568,411,595"/>
+<area shape="rect" id="node18" title=" " alt="" coords="29,728,163,755"/>
+<area shape="rect" id="node19" title=" " alt="" coords="33,989,159,1016"/>
+<area shape="rect" id="node20" href="$classjuce_1_1_soundshape_filter_window.html" title=" " alt="" coords="268,888,469,915"/>
+<area shape="rect" id="node21" href="$class_take3_application_1_1_main_window.html" title=" " alt="" coords="267,989,470,1016"/>
+<area shape="rect" id="node22" title=" " alt="" coords="62,939,130,965"/>
+<area shape="rect" id="node23" href="$class_converter.html" title=" " alt="" coords="331,1040,407,1067"/>
+<area shape="rect" id="node24" href="$class_envelope_params.html" title=" " alt="" coords="309,939,428,965"/>
+<area shape="rect" id="node25" title=" " alt="" coords="62,779,130,805"/>
+<area shape="rect" id="node26" title=" " alt="" coords="62,829,130,856"/>
+<area shape="rect" id="node27" title=" " alt="" coords="62,107,130,133"/>
+<area shape="rect" id="node28" title=" " alt="" coords="62,157,130,184"/>
+<area shape="rect" id="node29" title=" " alt="" coords="41,5,151,32"/>
+<area shape="rect" id="node30" title=" " alt="" coords="7,1040,185,1067"/>
 </map>

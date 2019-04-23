@@ -3,7 +3,11 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
-    <tab type="pages" visible="yes" title="" intro=""/>
+    <!--<tab type="pages" visible="yes" title="" intro=""/> -->
+    <tab type="user" url="@ref Installation" visible="yes" title="Installation"/>
+    <tab type="user" url="@ref UserManual" visible="yes" title="Manual"/>
+    <tab type="user" url="@ref ProgrammerManual" visible="yes" title="Programmer's Manual"/>
+    <tab type="user" url="@ref Tutorials" visible="yes" title="Tutorials"/>
     <tab type="modules" visible="yes" title="" intro=""/>
     <tab type="namespaces" visible="yes" title="">
       <tab type="namespacelist" visible="yes" title="" intro=""/>

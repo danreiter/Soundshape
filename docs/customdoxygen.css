@@ -24,7 +24,7 @@ pre.fragment, div.line,
 .params .paramdir {
 	font-family: Consolas, 'Courier New', courier, Courier, monospace;
 }
-.title,
+.title{},
 .fieldtable th{
 	font-family: "Cambria", serif;
 }
@@ -39,12 +39,12 @@ h1, h2, h3 {
 h1,h2,h3{color: #000;}
 /* @group Heading Levels */
 .title {
-	color: #333;
+	color: #000;
 	letter-spacing: 0.00em;
-	font-size: 2rem;
+	font-size: 20px;
 	line-height: 2.1rem;
 	font-weight: 500;
-	margin: 10px 2px;
+	margin: auto;
 }
 h1, h1.groupheader {
 	font-weight: 200;

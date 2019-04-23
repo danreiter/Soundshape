@@ -129,8 +129,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a0f0951c4ab18cc53d45d760fc4dd4202"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a950b4fb5fa4df4756064e1f067d8568c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_converter.html#a950b4fb5fa4df4756064e1f067d8568c">handleNoteOff</a> (MidiKeyboardState *source, int midiChannel, int midiNoteNumber, float velocity) override</td></tr>
 <tr class="separator:a950b4fb5fa4df4756064e1f067d8568c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44d99a1d55ab5bcce6488aeae0fff1f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_converter.html#a44d99a1d55ab5bcce6488aeae0fff1f1">addShiftedProfiles</a> (int chunk, int numSamples)</td></tr>
-<tr class="separator:a44d99a1d55ab5bcce6488aeae0fff1f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d025d752c2f54f1866ed2aabd95658e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_converter.html#a6d025d752c2f54f1866ed2aabd95658e">addShiftedProfiles</a> (int chunk, int numSamples, float <a class="el" href="class_converter.html#a5536f5637de0416637ec91c7867b6a26">gain</a>)</td></tr>
+<tr class="separator:a6d025d752c2f54f1866ed2aabd95658e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -188,6 +188,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:af2bfe2281c2b23dcc2ddc277f0af9fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56aaf853ce473fdcad53da118062c423"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_converter.html#a56aaf853ce473fdcad53da118062c423">sustainPressed</a> = false</td></tr>
 <tr class="separator:a56aaf853ce473fdcad53da118062c423"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae294481792c7231fb5284b21e7e86b96"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_converter.html#ae294481792c7231fb5284b21e7e86b96">anyKeysPressed</a> = false</td></tr>
+<tr class="separator:ae294481792c7231fb5284b21e7e86b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93616430bb7cf3bb6f6d7842adeb1086"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_converter.html#a93616430bb7cf3bb6f6d7842adeb1086">shouldCrossfadeChunk</a> = false</td></tr>
+<tr class="separator:a93616430bb7cf3bb6f6d7842adeb1086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stores parameters like the envelope and performs common tasks for time domain &lt;-&gt; frequency domain transformations.</p>
@@ -252,8 +256,8 @@ Collaboration diagram for Converter:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a44d99a1d55ab5bcce6488aeae0fff1f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44d99a1d55ab5bcce6488aeae0fff1f1">&#9670;&nbsp;</a></span>addShiftedProfiles()</h2>
+<a id="a6d025d752c2f54f1866ed2aabd95658e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d025d752c2f54f1866ed2aabd95658e">&#9670;&nbsp;</a></span>addShiftedProfiles()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +275,13 @@ Collaboration diagram for Converter:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numSamples</em>&#160;</td>
+          <td class="paramname"><em>numSamples</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>gain</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -945,6 +955,30 @@ Collaboration diagram for Converter:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ae294481792c7231fb5284b21e7e86b96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae294481792c7231fb5284b21e7e86b96">&#9670;&nbsp;</a></span>anyKeysPressed</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Converter::anyKeysPressed = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Keeps track of if there are any active keys.</p>
+<p>Useful for corssfading. </p>
+
+</div>
+</div>
 <a id="a1ab393ad51035cc6fd60f0aa9e448deb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1ab393ad51035cc6fd60f0aa9e448deb">&#9670;&nbsp;</a></span>beginningChunk</h2>
 
@@ -1009,6 +1043,8 @@ Collaboration diagram for Converter:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_converter.html#afe996f4775ac56e89cc9209c17c6f66c">currentIndex</a></dd></dl>
+<p>This does a similar job as currentIndex but is used for rednering file IO instead of realtime IO. </p>
 
 </div>
 </div>
@@ -1031,7 +1067,8 @@ Collaboration diagram for Converter:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>This keeps track of where we are in copying a DFT into the buffer (need to rethink this once we add crosfading) </p>
+<p>This keeps track of where we are in copying a DFT into the buffer.</p>
+<p>This index is incremented until reaching the size of a soundshape chunk, at which point it wraps back to zero. This is to prevent a discontinuity from resetting audio output to the beginning of the DFT while the last sample was at a point that would cause discontinuity. </p>
 
 </div>
 </div>
@@ -1212,7 +1249,7 @@ Collaboration diagram for Converter:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Stores an ADSR envelope for each note. In <a class="el" href="class_converter.html#a44d99a1d55ab5bcce6488aeae0fff1f1">Converter::addShiftedProfiles</a>, this lets us giuve each note on a keyboard its own "voice." </p>
+<p>Stores an ADSR envelope for each note. In <a class="el" href="class_converter.html#a6d025d752c2f54f1866ed2aabd95658e">Converter::addShiftedProfiles</a>, this lets us giuve each note on a keyboard its own "voice." </p>
 
 </div>
 </div>
@@ -1393,7 +1430,8 @@ Collaboration diagram for Converter:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>If this exceeds the samples per chunk, were done with that chunk. </p>
+<p>If this exceeds the samples per chunk, were done with that chunk.</p>
+<p>This is incremented by the output buffer size and shouldn't be used to calculate the current position in a loop wirting to the buffer. </p>
 
 </div>
 </div>
@@ -1417,6 +1455,30 @@ Collaboration diagram for Converter:</div>
 </table>
 </div><div class="memdoc">
 <p>Temporary chunk for copying/intermediate work during synthesis. Twice as long as the actual chunks because the IFFT might need the extra samples to work <b> THIS STRUCTURES SHOULD NEVER BE ALLOWED TO RESIZE AS THIS CAN CAUSE MEMORY ALLOCATION TO OCCUR DURING THE AUDIO CALLBACK. </b> </p>
+
+</div>
+</div>
+<a id="a93616430bb7cf3bb6f6d7842adeb1086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93616430bb7cf3bb6f6d7842adeb1086">&#9670;&nbsp;</a></span>shouldCrossfadeChunk</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Converter::shouldCrossfadeChunk = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Keeps track of if we need crossfade the previous chunk with the current chunk.</p>
+<p>This gets set true once we've held a a key during a chunk and set back to false once all keys are released. </p>
 
 </div>
 </div>

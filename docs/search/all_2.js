@@ -6,8 +6,7 @@ var searchData=
   ['chunk',['chunk',['../classfreq_domain_win.html#a75b7b3a6bf827633881f076dfa26de54',1,'freqDomainWin']]],
   ['chunk_5fsize',['chunk_size',['../classtime_domain_win.html#a6b67f2a2eb6e84dd07f19ee21ee89900',1,'timeDomainWin']]],
   ['clearchunk',['clearChunk',['../class_converter.html#ac392e475808059f8ccd5a12f54f58e78',1,'Converter']]],
-  ['closebuttonpressed',['closeButtonPressed',['../class_take3_application_1_1_main_window.html#afe34ba385c27d88856f42bb82835b90d',1,'Take3Application::MainWindow::closeButtonPressed()'],['../class_l_window.html#aaca99f40fe3f6f2811dc82d3659f28de',1,'LWindow::closeButtonPressed()'],['../classjuce_1_1_soundshape_filter_window.html#a13fcada69bbbddc38337ca0d547553af',1,'juce::SoundshapeFilterWindow::closeButtonPressed()']]],
-  ['colourids',['ColourIds',['../classvolume_box.html#a928fec71dd99efa16892a485f2ee34da',1,'volumeBox']]],
+  ['closebuttonpressed',['closeButtonPressed',['../class_take3_application_1_1_main_window.html#afe34ba385c27d88856f42bb82835b90d',1,'Take3Application::MainWindow::closeButtonPressed()'],['../classjuce_1_1_soundshape_filter_window.html#a13fcada69bbbddc38337ca0d547553af',1,'juce::SoundshapeFilterWindow::closeButtonPressed()']]],
   ['comboboxchanged',['comboBoxChanged',['../class_main_component.html#a1de489a846a01b6499f6e2cd2f0f65d9',1,'MainComponent']]],
   ['commandids',['CommandIDs',['../class_main_component.html#a9d7ddc68ebc8f05ba8c6004bd2b538f7',1,'MainComponent']]],
   ['commandmanager',['commandManager',['../class_main_component.html#af4dd6572c04b3326c9f7b4ecd02b4e6e',1,'MainComponent']]],
@@ -31,7 +30,7 @@ var searchData=
   ['currentexportindex',['currentExportIndex',['../class_converter.html#a31cc3d0e4dda0bf45120274b99edc56c',1,'Converter']]],
   ['currentindex',['currentIndex',['../class_converter.html#afe996f4775ac56e89cc9209c17c6f66c',1,'Converter']]],
   ['currentnotefreq',['currentNoteFreq',['../class_main_component.html#a33e97b182bf085cb2c8c021803f750bd',1,'MainComponent']]],
-  ['currentprofile',['currentProfile',['../classfreq_domain_win.html#a2168fd90a77b5a1395483e96eb277d9f',1,'freqDomainWin::currentProfile()'],['../class_main_component.html#ab42cc211294581ace51968dde9478504',1,'MainComponent::currentProfile()'],['../classsmall_time.html#a8f719ecd01e7db61b7b4846cfb5f0157',1,'smallTime::currentProfile()'],['../classtime_domain_win.html#a97b18b81a0307db213198ba0312752b7',1,'timeDomainWin::currentProfile()']]],
+  ['currentprofile',['currentProfile',['../class_main_component.html#ab42cc211294581ace51968dde9478504',1,'MainComponent::currentProfile()'],['../classsmall_time.html#a8f719ecd01e7db61b7b4846cfb5f0157',1,'smallTime::currentProfile()'],['../classtime_domain_win.html#a97b18b81a0307db213198ba0312752b7',1,'timeDomainWin::currentProfile()']]],
   ['currenttheme',['currentTheme',['../class_main_component.html#a4588555a6e45e315b93cc4775d8e230a',1,'MainComponent']]],
   ['customlookandfeel',['CustomLookAndFeel',['../struct_custom_look_and_feel.html',1,'']]]
 ];

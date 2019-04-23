@@ -99,19 +99,22 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:aed823494bfef569a5bb873c316f73ae8"><td class="memItemLeft" align="right" valign="top">Label *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfund_freq.html#aed823494bfef569a5bb873c316f73ae8">txtBox</a></td></tr>
+<tr class="memdesc:aed823494bfef569a5bb873c316f73ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays fundmental frequency as a letter value.  <a href="#aed823494bfef569a5bb873c316f73ae8">More...</a><br /></td></tr>
 <tr class="separator:aed823494bfef569a5bb873c316f73ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a1c3f5c3ebbf99622afdf798cf5719e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfund_freq.html#a9a1c3f5c3ebbf99622afdf798cf5719e">num</a></td></tr>
+<tr class="memdesc:a9a1c3f5c3ebbf99622afdf798cf5719e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the current fundamental frequency value as integer to index an array.  <a href="#a9a1c3f5c3ebbf99622afdf798cf5719e">More...</a><br /></td></tr>
 <tr class="separator:a9a1c3f5c3ebbf99622afdf798cf5719e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d8a9fea8866838cbb4775dec8a7636b"><td class="memItemLeft" align="right" valign="top">Slider::Listener *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfund_freq.html#a1d8a9fea8866838cbb4775dec8a7636b">sListener</a></td></tr>
+<tr class="memdesc:a1d8a9fea8866838cbb4775dec8a7636b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to parent as slider listener.  <a href="#a1d8a9fea8866838cbb4775dec8a7636b">More...</a><br /></td></tr>
 <tr class="separator:a1d8a9fea8866838cbb4775dec8a7636b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbc8531e9060ae111b3117d106bf7bde"><td class="memItemLeft" align="right" valign="top">DrawableButton *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfund_freq.html#acbc8531e9060ae111b3117d106bf7bde">upBtn</a></td></tr>
-<tr class="separator:acbc8531e9060ae111b3117d106bf7bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ae7d6cbee4b55eb2cde44f1dc04aef9"><td class="memItemLeft" align="right" valign="top">DrawableButton *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfund_freq.html#a3ae7d6cbee4b55eb2cde44f1dc04aef9">downBtn</a></td></tr>
-<tr class="separator:a3ae7d6cbee4b55eb2cde44f1dc04aef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa68c0f7459fdca1d19234c1e65566e45"><td class="memItemLeft" align="right" valign="top">Slider *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfund_freq.html#aa68c0f7459fdca1d19234c1e65566e45">fundFreqSlider</a></td></tr>
+<tr class="memdesc:aa68c0f7459fdca1d19234c1e65566e45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slider to change fundamental frequency value.  <a href="#aa68c0f7459fdca1d19234c1e65566e45">More...</a><br /></td></tr>
 <tr class="separator:aa68c0f7459fdca1d19234c1e65566e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div class="dynheader">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Component contains controls and displays fundemental frequency.</p>
+<p>Component returns the fundmental frequency (The note which Soundshape's stand alone mode plays sound in). Comprised of a slider and a text box to display the note as a letter value. </p>
+</div><div class="dynheader">
 Inheritance diagram for fundFreq:</div>
 <div class="dyncontent">
 <div class="center"><img src="classfund_freq__inherit__graph.png" border="0" usemap="#fund_freq_inherit__map" alt="Inheritance graph"/></div>
@@ -179,6 +182,7 @@ Collaboration diagram for fundFreq:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Returns the index of the current note that the fundmental frequency is set to. </p>
 
 </div>
 </div>
@@ -205,6 +209,8 @@ Collaboration diagram for fundFreq:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Sets the placement and paints of slider and text box components.</p>
+<p>Function is called using the repaint() function. </p><dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::paint(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -230,6 +236,8 @@ Collaboration diagram for fundFreq:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Repaints the component on resize.</p>
+<dl class="section see"><dt>See also</dt><dd>JUCE documentation: Component::resized(), Component::repaint() </dd></dl>
 
 </div>
 </div>
@@ -248,6 +256,14 @@ Collaboration diagram for fundFreq:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Sets event listener for the fundFreqSlider.</p>
+<dl class="section see"><dt>See also</dt><dd>Slider::Listener </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_listener</td><td>Passes an event handler to the fundFreqSlider slider. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -265,32 +281,11 @@ Collaboration diagram for fundFreq:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Updates the text box to display fundmental frequency as a letter note. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a3ae7d6cbee4b55eb2cde44f1dc04aef9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ae7d6cbee4b55eb2cde44f1dc04aef9">&#9670;&nbsp;</a></span>downBtn</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">DrawableButton * fundFreq::downBtn</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="aa68c0f7459fdca1d19234c1e65566e45"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa68c0f7459fdca1d19234c1e65566e45">&#9670;&nbsp;</a></span>fundFreqSlider</h2>
 
@@ -310,6 +305,8 @@ Collaboration diagram for fundFreq:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Slider to change fundamental frequency value. </p>
 
 </div>
 </div>
@@ -333,6 +330,8 @@ Collaboration diagram for fundFreq:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Stores the current fundamental frequency value as integer to index an array. </p>
+
 </div>
 </div>
 <a id="a1d8a9fea8866838cbb4775dec8a7636b"></a>
@@ -354,6 +353,8 @@ Collaboration diagram for fundFreq:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reference to parent as slider listener. </p>
 
 </div>
 </div>
@@ -377,27 +378,7 @@ Collaboration diagram for fundFreq:</div>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="acbc8531e9060ae111b3117d106bf7bde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbc8531e9060ae111b3117d106bf7bde">&#9670;&nbsp;</a></span>upBtn</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">DrawableButton* fundFreq::upBtn</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Displays fundmental frequency as a letter value. </p>
 
 </div>
 </div>

@@ -123,7 +123,7 @@ MainComponent::MainComponent(Soundshape_pluginAudioProcessor& p, AudioProcessorV
 	// this is necessary to give the component focus so the menu isn't grayed out
 	Timer::callAfterDelay(250, [this](void){this->grabKeyboardFocus();});
 
-	setSize(600, 400);
+	setSize(800, 400);
 }
 //------------------------------------------------------------------------------------
 
@@ -962,6 +962,7 @@ void MainComponent::getAllCommands(Array<CommandID>& c)
 //-------------------------------------------------------------------------------------
 bool MainComponent::perform(const InvocationInfo & info)
 {
+    URL tutorialUrl("https://danreiter.github.io/Soundshape/_tutorials.html");
 	switch (info.commandID)
 	{
 	case CommandIDs::menuPositionInsideWindow:
@@ -1003,6 +1004,7 @@ bool MainComponent::perform(const InvocationInfo & info)
 			ttp.setMillisecondsBeforeTipAppears(700);
 		break;
 	case CommandIDs::Tutorial:
+        tutorialUrl.launchInDefaultBrowser();
 		break;	
 	case CommandIDs::Developers:
 		showDevs();

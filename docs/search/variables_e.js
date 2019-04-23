@@ -2,7 +2,7 @@ var searchData=
 [
   ['panicbtn',['panicBtn',['../class_gui_func.html#addfe5013b1b28e323225f72b28cb9077',1,'GuiFunc']]],
   ['parent',['parent',['../classbig_time.html#a791896eea60e7f35063abfaa560de8d1',1,'bigTime::parent()'],['../classfreq_domain_win.html#a3cfd43bcc56b239b01f300023c024a82',1,'freqDomainWin::parent()'],['../classsmall_time.html#aac11a5d9d2032fa964a83b8a455be910',1,'smallTime::parent()']]],
-  ['playbtn',['playBtn',['../class_gui_func.html#a721f8510dbf39e24c83e32ccf129dd42',1,'GuiFunc']]],
+  ['playbtn',['playBtn',['../class_gui_func.html#a1587154d8a18303b7913e9bbf7d4e2dc',1,'GuiFunc']]],
   ['player',['player',['../classjuce_1_1_soundshape_plugin_holder.html#a9e62c6e4949485af564b931aa73b180f',1,'juce::SoundshapePluginHolder']]],
   ['playtime',['playTime',['../classbig_time.html#aaab97cca2f2af12b97ec997f826a3410',1,'bigTime']]],
   ['pluginholder',['pluginHolder',['../classjuce_1_1_soundshape_filter_window.html#ae307c60ce036db4469688cdc2ef0a1e1',1,'juce::SoundshapeFilterWindow']]],

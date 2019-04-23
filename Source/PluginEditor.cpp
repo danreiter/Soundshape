@@ -20,7 +20,7 @@ Soundshape_pluginAudioProcessorEditor::Soundshape_pluginAudioProcessorEditor(Sou
     // editor's size to whatever you need it to be.
     setResizable(true, true);
     setResizeLimits(300, 300, 1920, 1080);
-    setSize(700, 600);
+    setSize(900, 600);
     addAndMakeVisible(&mainComp);
 
 }
