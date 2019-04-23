@@ -6,7 +6,7 @@
 ## General Operation
 Soundshape's primary purpose is to output sound.
 It has virtual MIDI inputs and as it receives input notes,
-it will play various sections of its spectrum.
+it will play various sections of its spectrum. 
 
 ## Modes of Operation
 Soundshape has two major modes of operation:
@@ -16,9 +16,12 @@ Soundshape has two major modes of operation:
     MIDI input from the DAW and output its audio to the DAW. 
     Check your DAW user manual for more information about how to
     set up a VST plugin instrument.
-    In this mode, the DAW can directly record the software's 
+    + In this mode, the DAW can directly record the software's 
     output and also allow the user to route the output through
     other plugins. (Try applying a reverb effect to Soundshape!)
+    + Soundshape's parameters ( such as its volume and envelope)
+    can be automated from the DAW or controlled with a MIDI 
+    controller with your DAW's MIDI-Learn feature.
     
 - Standalone
     + Runs as a standalone application. In this mode, Soundshape
@@ -32,6 +35,11 @@ Soundshape has two major modes of operation:
     and running on your system.
     
 ## User Interface Overview
+!["Soundshape GUI"](GUI_diagram.png)
+
+<br/>
+<br/>
+
 Soundshape features two time-domain veiws of your data, as you can see 
 in this part of the interface.
 ![](timeWindows.png)
@@ -73,6 +81,24 @@ Soundshape will assume that the fundamental frequency of your sound is
 440 Hz, so it's a good idea to always have the first harmonic be nonzero.
 
 ![](harmonics.png)
+
+<br/>
+<br/>
+
+In addition to editing the *spectrum* of your sound, you can edit its
+*envelope*. The envelope is controlled by four parameters:
+- Attack
+    + How long it takes the sound to fade in when you press a key.
+    Make the attack small to make your sound "punchier."
+- Decay
+    + How long it takes the sound's volume to reach the Sustain level.
+- Sustain
+    + The volume that a sound remains at while its key is being held.
+- Release
+    + How long it takes the sound to fade out once you've released its
+    key.
+    
+    ![](envelope.png)
 
 <br/>
 <br/>
