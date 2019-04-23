@@ -92,6 +92,14 @@ public:
     static void restoreParamsFromXml(AudioProcessorValueTreeState& valueTreeState,
         XmlElement* xml);
 
+	/**
+	Tests an xml element to see if it has the soundshape tag
+	
+	@param xml A pointer to an Xml element
+	@return Whether it was a soundshape element
+	*/
+	static bool checkIsSoundshapeFile(File _file);
+
     /**
     Restores an AudioProcessorValueTreeState and profile data to the values in a Soundshape parameters XmlElement.
 

@@ -1104,8 +1104,11 @@ void MainComponent::loadPresetPath()
 	while(iter.next())
 	{
 		File nextSound(iter.getFile());
-		pushedWriteBtn = true;
-		cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
+		if (IOHandler::checkIsSoundshapeFile(nextSound))
+		{
+			pushedWriteBtn = true;
+			cb.addItem(nextSound.getFileName().dropLastCharacters(4), i);
+		}
 		i++;
 	}
 	selectedFile = newFile;

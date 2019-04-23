@@ -72,6 +72,15 @@ void IOHandler::restoreParamsFromXml(AudioProcessorValueTreeState& valueTreeStat
     valueTreeState.replaceState(ValueTree::fromXml(*xml));
 }
 
+bool IOHandler::checkIsSoundshapeFile(File _file)
+{
+	//file handling here
+	std::unique_ptr<XmlElement> stateXml(XmlDocument::parse(_file));
+	if (stateXml != nullptr) {
+		return stateXml->hasTagName("Soundshape");
+	}
+}
+
 void IOHandler::restoreStateFromXml(AudioProcessorValueTreeState& valueTreeState, Converter& converter,
         std::unique_ptr<XmlElement>&  xml)
 {
