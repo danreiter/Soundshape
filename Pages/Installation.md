@@ -19,7 +19,7 @@ supports this plugin format.
 
 ## To run Soundshape on Windows (Only tested on Windows 10):
 
-Extract Soundshape.zip to C:/Program Files/Common Files/VST3.
+Extract Soundshape.zip to `C:/Program Files/Common Files/VST3`.
 Create that folder if it does not exist. Once extracted, Soundshape.exe
 can be relocated anywhere desired. We recommend having a folder for
 presets in the same folder as Soundshape.exe. Run Soundshape.exe to start
@@ -31,7 +31,7 @@ Soundshape's tutorial option to learn more.
 The Linux version of Soundshape is a VST2 plugin, a format
 which we are unfortunately not allowed to release source code or binary for.
 To run on Linux, build soundshape from source, 
-extract the vst .so file to ~/.vst, and scan for it with your DAW.
+extract the vst .so file to `~/.vst`, and scan for it with your DAW.
 Create that directory if it does not exist. Instructions for building on
 Linux follow.
 
