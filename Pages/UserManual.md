@@ -113,7 +113,7 @@ recall a sound you were working on. There are two types of presets:
      + You can use the `Write` button to save your current sound as a preset.
      **Make sure your preset is saved with the `.xml` extension when asked.**
      + The built-in presets in the current preset directory will show up in
-     the preset selector. To change which directory you are loading rpesets
+     the preset selector. To change which directory you are loading presets
      from, got to `Settings -> preset file path`.
      
 ![](presets.png)
