@@ -86,17 +86,81 @@ $(function() {
 <li>Standalone<ul>
 <li>Runs as a standalone application. In this mode, Soundshape will have an <code>Options</code> button at the top of its window. This presents options for selecting your MIDI input device, audio output device, and a buffer size. Samller buffer sizes lead to lower latencies, so try changing this setting if you feel like there is too much lag between playing a note and hearing its sound.</li>
 <li>This mode supports JACK Audio output if JACK is installed and running on your system.</li>
+<li>In this mode, use the <code>Options</code> button at the top to confiugre your audio settings and choose MIDI input sources.</li>
 </ul>
 </li>
 </ul>
+<p>Soundshape works best with small buffer sizes ( choose buffers that give about 5 milliseconds or less). However, if your sound is popping or crackling, try increasing the buffer size until it goes away.</p>
 <h2>User Interface Overview</h2>
 <div class="image">
 <img src="GUI_diagram.png" alt="GUI_diagram.png"/>
-</div>
-<p>Soundshape GUI"" Soundshape GUI"" Soundshape GUI"" Soundshape GUI""</p>
+<div class="caption">
+Soundshape GUI</div></div>
 <p><br />
  <br />
 </p>
+<p>Brief descriptions of each of the components from above:</p><ul>
+<li>Menu Bar<ul>
+<li>Contains settings for Soundshape, like activating an on-screen keyboard and showing help.</li>
+</ul>
+</li>
+<li>Frequency Domain<ul>
+<li>This windows shows you spikes for each frequency that makes up the currently selected region of sound.</li>
+</ul>
+</li>
+<li>Zoomed-In/Zoomed-Out Time Domain<ul>
+<li>The bottom windows shows the entire interval of time you can edit. It has buttons at the bottom that let you select a region. This region appears in the zoomed-in portion. You select a portion of this region to edit in the frequency domain. Also contains a double-sided slider that controls which regions of sound get played.</li>
+</ul>
+</li>
+<li>MIDI Panic<ul>
+<li>Turns off all currently active MIDI notes.</li>
+</ul>
+</li>
+<li>Import Audio<ul>
+<li>Prompts for a file to analyze the frequency content of. This overwrites all your frequency domain data with the Fourier Transform of the input audio.</li>
+</ul>
+</li>
+<li>Volume<ul>
+<li>Makes Soundshape louder or softer.</li>
+</ul>
+</li>
+<li>Export<ul>
+<li>Write the entire time domain to an audio file.</li>
+</ul>
+</li>
+<li>Sustain Play<ul>
+<li>Plays the current fundamental frequency using the current play region. Sustains until clicked again.</li>
+</ul>
+</li>
+<li>Play<ul>
+<li>Also plays the sound, but only until released.</li>
+</ul>
+</li>
+<li>Preset Box<ul>
+<li>Browse presets in the currently configured directory. The write button prompts you to save your current presets as XML files.</li>
+</ul>
+</li>
+<li>Envelope<ul>
+<li>Changes the dynamics of your sound at different points of being activated and released on the keyboard.</li>
+</ul>
+</li>
+<li>Fundamental Frequency<ul>
+<li>Which note is played by the play buttons</li>
+</ul>
+</li>
+<li>Add button<ul>
+<li>Displays dots in the frequency domain to add spikes that you can slide.</li>
+</ul>
+</li>
+<li>Harmonic Button<ul>
+<li>When this active, the Add button only shows dots in places that would be harmonics of 440Hz.</li>
+</ul>
+</li>
+<li>Zoom Editor<ul>
+<li><code>+</code> and <code>-</code> buttons increase or decrease zoom in the frequency domain. You can also type in a zoom level into the box.</li>
+</ul>
+</li>
+</ul>
 <p>Soundshape features two time-domain veiws of your data, as you can see in this part of the interface. </p><div class="image">
 <img src="timeWindows.png" alt="timeWindows.png"/>
 </div>

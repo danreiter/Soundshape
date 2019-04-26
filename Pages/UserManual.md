@@ -33,12 +33,69 @@ Soundshape has two major modes of operation:
     playing a note and hearing its sound.
     + This mode supports JACK Audio output if JACK is installed
     and running on your system.
+    + In this mode, use the `Options` button at the top to confiugre
+    your audio settings and choose MIDI input sources.
+    
+Soundshape works best with small buffer sizes (
+choose buffers that give about 5 milliseconds
+or less). However, if your sound is popping or crackling, try
+increasing the buffer size until it goes away.
     
 ## User Interface Overview
-!["Soundshape GUI"](GUI_diagram.png)
+![Soundshape GUI](GUI_diagram.png)
 
 <br/>
 <br/>
+
+Brief descriptions of each of the components from above:
+ - Menu Bar
+   + Contains settings for Soundshape, like activating an on-screen keyboard
+   and showing help.
+ - Frequency Domain
+   + This windows shows you spikes for each frequency that makes up the 
+   currently selected region of sound.
+ - Zoomed-In/Zoomed-Out Time Domain
+   + The bottom windows shows the entire interval of time you can edit. 
+   It has buttons at the bottom that let you select a region.
+   This region appears in the zoomed-in portion. You select a portion
+   of this region to edit in the frequency domain.
+   Also contains a double-sided slider that controls which regions of sound
+   get played.
+ - MIDI Panic
+   + Turns off all currently active MIDI notes.
+ - Import Audio
+   + Prompts for a file to analyze the frequency content of. This
+   overwrites all your frequency domain data with the Fourier Transform
+   of the input audio.
+ - Volume
+   + Makes Soundshape louder or softer.
+ - Export
+   + Write the entire time domain to an audio file.
+ - Sustain Play
+   + Plays the current fundamental frequency using the current
+   play region. Sustains until clicked again.
+ - Play
+   + Also plays the sound, but only until released.
+ - Preset Box
+   + Browse presets in the currently configured directory.
+   The write button prompts you to save your current presets
+   as XML files.
+ - Envelope 
+   + Changes the dynamics of your sound at different points of
+   being activated and released on the keyboard.
+ - Fundamental Frequency
+   + Which note is played by the play buttons
+ - Add button
+   + Displays dots in the frequency domain to add spikes that
+   you can slide.
+ - Harmonic Button
+   + When this active, the Add button only shows dots in places
+   that would be harmonics of 440Hz.
+ - Zoom Editor
+   + `+` and `-` buttons increase or decrease zoom in the frequency domain.
+   You can also type in a zoom level into the box.
+   
+
 
 Soundshape features two time-domain veiws of your data, as you can see 
 in this part of the interface.
