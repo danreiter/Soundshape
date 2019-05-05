@@ -61,7 +61,7 @@ The source code and application come with a copy of this license.
 
 Copyright (C) 2019. Mardigon Toler, Daneil Reiter, Gregory Hughes.
 
-Contact: <mmtoler@mix.wvu.edu>, <ddreiter@miux.wvu.edu>, <gshughes@mix.wvu.edu>
+Contact: <mmtoler@mix.wvu.edu>, <ddreiter@mix.wvu.edu>, <gshughes@mix.wvu.edu>
 
 ![](VST_Compatible.png)
 
